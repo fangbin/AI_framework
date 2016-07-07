@@ -13,6 +13,10 @@ mman_emls.cmo : mman_svar.cmo mman_options.cmo mman_env.cmo mman_dabs.cmo \
     mman_asyn.cmo
 mman_emls.cmx : mman_svar.cmx mman_options.cmx mman_env.cmx mman_dabs.cmx \
     mman_asyn.cmx
+mman_emfls.cmo : mman_svar.cmo mman_options.cmo mman_env.cmo mman_dabs.cmo \
+    mman_asyn.cmo
+mman_emfls.cmx : mman_svar.cmx mman_options.cmx mman_env.cmx mman_dabs.cmx \
+    mman_asyn.cmx
 mman_valap.cmo : mman_svar.cmo mman_options.cmo mman_env.cmo mman_asyn.cmo
 mman_valap.cmx : mman_svar.cmx mman_options.cmx mman_env.cmx mman_asyn.cmx
 mman_dflap.cmo : mman_valap.cmo mman_svar.cmo mman_options.cmo mman_env.cmo \
