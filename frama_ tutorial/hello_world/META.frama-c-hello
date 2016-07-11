@@ -1,0 +1,8 @@
+description = "Frama-C Hello plug-in"
+version = "Aluminium-20160501"
+requires = ""
+archive(byte) = "top/Hello.cmo"
+archive(native) = "top/Hello.cmx"
+plugin(native) = "top/Hello.cmxs"
+plugin(byte) = "top/Hello.cmo"
+directory = ""

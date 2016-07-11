@@ -24,7 +24,8 @@ let mman_msg = "analyse the free-list based memory allocator in the input file"
 
 module Self = Plugin.Register
     (struct
-      let name = "Memory manager analyser"
+      (*let name = "Memory manager analyser"*)
+      let name = "Mman"
       let shortname = "mman"
       let help = mman_msg
     end)
@@ -37,7 +38,7 @@ module OptEnabled = Self.False
 
 module OptOutFile = Self.String
     (struct
-      let option_name = "-mman-output"
+      let option_name = "-mman-out"
       let default = "-"
       let arg_name = "output-file"
       let help =

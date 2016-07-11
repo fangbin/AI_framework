@@ -58,6 +58,7 @@ let run_and_catch_error =
     run_and_catch_error
 
 let main () = if Mman_options.OptEnabled.get () then run_and_catch_error ()
+
 (** Static *)
 let () = Db.Main.extend main 
 
