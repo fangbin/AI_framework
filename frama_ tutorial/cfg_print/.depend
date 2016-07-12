@@ -1,0 +1,10 @@
+ViewCfg.cmi :
+cfg_options.cmo :
+cfg_options.cmx :
+cfg_core.cmo : cfg_options.cmo
+cfg_core.cmx : cfg_options.cmx
+cfg_register.cmo : cfg_options.cmo cfg_core.cmo
+cfg_register.cmx : cfg_options.cmx cfg_core.cmx
+cfg_gui.cmo : cfg_options.cmo cfg_core.cmo
+cfg_gui.cmx : cfg_options.cmx cfg_core.cmx
+ViewCfg.cmi :

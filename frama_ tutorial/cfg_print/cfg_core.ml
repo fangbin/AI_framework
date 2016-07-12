@@ -1,3 +1,4 @@
+module Options = Cfg_options
 open Cil_types
 
 let print_stmt out = function
@@ -58,10 +59,8 @@ class print_cfg out = object
     Cil.DoChildren
 end
 
-let run () =
-  let chan = open_out "cfg.out" in
-  let fmt = Format.formatter_of_out_channel chan in
-  Visitor.visitFramacFileSameGlobals (new print_cfg fmt) (Ast.get ());
-  close_out chan
 
-let () = Db.Main.extend run
+let dump_function fundec fmt =
+  Format.fprintf fmt "@[< hov 2> digraph cfg {@ ";
+  ignore(Visitor.visitFramacFunction (new print_cfg fmt) fundec);
+  Format.fprintf fmt "}@]@\n"
