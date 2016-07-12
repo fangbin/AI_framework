@@ -21,3 +21,5 @@ Do
 or with debug information from frama-c
 > frama-c -kernel-msg-key dynlink -kernel-debug 2 -val -load-module ./Mman -mman -debug 1 DMAmain.c
 
+
+frama-c -mman
