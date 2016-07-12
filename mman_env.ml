@@ -569,7 +569,7 @@ let penvs_init () =
     (* print computed mappings *)
     Mman_options.Self.debug ~level:1 "stmt2penvs:\n%a@."
       pretty_stmt2penv 1 ; 
-    Mman_options.Self.debug ~level:1 "envs:\n%a@."
+    Mman_options.Self.debug ~level:1 "ENVS:\n%a@."
       pretty_penvs 1  
   end
 

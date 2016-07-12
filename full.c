@@ -86,7 +86,7 @@ axiomatic MemCmp {
     ∀ char *s1, char *s2;
     ∀ ℤ n;
       memcmp{L1, L2}(s1, s2, n) ≡ 0 ⇔
-      (∀ ℤ i; 0 ≤ i < n ⇒ \at(*(s1+i),L1) ≡ \at(*(s2+i),L2));
+      (∀ ℤ i; 0 ≤ i ∧ i < n ⇒ \at(*(s1+i),L1) ≡ \at(*(s2+i),L2));
   
   }
  */
@@ -99,7 +99,8 @@ axiomatic MemChr {
     ∀ char *s;
     ∀ ℤ c;
     ∀ ℤ n;
-      memchr(s, c, n) ≡ \true ⇔ (∃ int i; 0 ≤ i < n ∧ *(s+i) ≡ c);
+      memchr{L}(s, c, n) ≡ \true ⇔
+      (∃ int i; (0 ≤ i ∧ i < n) ∧ *(s+i) ≡ c);
   
   }
  */
@@ -112,7 +113,8 @@ axiomatic MemSet {
     ∀ char *s;
     ∀ ℤ c;
     ∀ ℤ n;
-      memset(s, c, n) ≡ \true ⇔ (∀ ℤ i; 0 ≤ i < n ⇒ *(s+i) ≡ c);
+      memset{L}(s, c, n) ≡ \true ⇔
+      (∀ ℤ i; 0 ≤ i ∧ i < n ⇒ *(s+i) ≡ c);
   
   }
  */
@@ -124,82 +126,92 @@ axiomatic StrLen {
   axiom strlen_pos_or_null{L}:
     ∀ char *s;
     ∀ ℤ i;
-      0 ≤ i ∧ (∀ ℤ j; 0 ≤ j < i ⇒ *(s+j) ≢ '\000') ∧
-      *(s+i) ≡ '\000' ⇒ strlen(s) ≡ i;
+      (0 ≤ i ∧ (∀ ℤ j; 0 ≤ j ∧ j < i ⇒ *(s+j) ≢ '\000')) ∧
+      *(s+i) ≡ '\000' ⇒ strlen{L}(s) ≡ i;
   
   axiom strlen_neg{L}:
-    ∀ char *s; (∀ ℤ i; 0 ≤ i ⇒ *(s+i) ≢ '\000') ⇒ strlen(s) < 0;
+    ∀ char *s;
+      (∀ ℤ i; 0 ≤ i ⇒ *(s+i) ≢ '\000') ⇒ strlen{L}(s) < 0;
   
   axiom strlen_before_null{L}:
     ∀ char *s;
-    ∀ ℤ i; 0 ≤ i < strlen(s) ⇒ *(s+i) ≢ '\000';
+    ∀ ℤ i; 0 ≤ i ∧ i < strlen{L}(s) ⇒ *(s+i) ≢ '\000';
   
   axiom strlen_at_null{L}:
-    ∀ char *s; 0 ≤ strlen(s) ⇒ *(s+strlen(s)) ≡ '\000';
+    ∀ char *s; 0 ≤ strlen{L}(s) ⇒ *(s+strlen{L}(s)) ≡ '\000';
   
   axiom strlen_not_zero{L}:
     ∀ char *s;
-    ∀ ℤ i; 0 ≤ i ≤ strlen(s) ∧ *(s+i) ≢ '\000' ⇒ i < strlen(s);
+    ∀ ℤ i;
+      (0 ≤ i ∧ i ≤ strlen{L}(s)) ∧ *(s+i) ≢ '\000' ⇒
+      i < strlen{L}(s);
   
   axiom strlen_zero{L}:
     ∀ char *s;
     ∀ ℤ i;
-      0 ≤ i ≤ strlen(s) ∧ *(s+i) ≡ '\000' ⇒ i ≡ strlen(s);
+      (0 ≤ i ∧ i ≤ strlen{L}(s)) ∧ *(s+i) ≡ '\000' ⇒
+      i ≡ strlen{L}(s);
   
   axiom strlen_sup{L}:
     ∀ char *s;
-    ∀ ℤ i; 0 ≤ i ∧ *(s+i) ≡ '\000' ⇒ 0 ≤ strlen(s) ≤ i;
+    ∀ ℤ i;
+      0 ≤ i ∧ *(s+i) ≡ '\000' ⇒
+      0 ≤ strlen{L}(s) ∧ strlen{L}(s) ≤ i;
   
   axiom strlen_shift{L}:
     ∀ char *s;
-    ∀ ℤ i; 0 ≤ i ≤ strlen(s) ⇒ strlen(s+i) ≡ strlen(s)-i;
+    ∀ ℤ i;
+      0 ≤ i ∧ i ≤ strlen{L}(s) ⇒ strlen{L}(s+i) ≡ strlen{L}(s)-i;
   
   axiom strlen_create{L}:
     ∀ char *s;
-    ∀ ℤ i; 0 ≤ i ∧ *(s+i) ≡ '\000' ⇒ 0 ≤ strlen(s) ≤ i;
+    ∀ ℤ i;
+      0 ≤ i ∧ *(s+i) ≡ '\000' ⇒
+      0 ≤ strlen{L}(s) ∧ strlen{L}(s) ≤ i;
   
   axiom strlen_create_shift{L}:
     ∀ char *s;
     ∀ ℤ i;
     ∀ ℤ k;
-      0 ≤ k ≤ i ∧ *(s+i) ≡ '\000' ⇒ 0 ≤ strlen(s+k) ≤ i-k;
+      (0 ≤ k ∧ k ≤ i) ∧ *(s+i) ≡ '\000' ⇒
+      0 ≤ strlen{L}(s+k) ∧ strlen{L}(s+k) ≤ i-k;
   
   axiom memcmp_strlen_left{L}:
     ∀ char *s1, char *s2;
     ∀ ℤ n;
-      memcmp{L, L}(s1, s2, n) ≡ 0 ∧ strlen(s1) < n ⇒
-      strlen(s1) ≡ strlen(s2);
+      memcmp{L, L}(s1, s2, n) ≡ 0 ∧ strlen{L}(s1) < n ⇒
+      strlen{L}(s1) ≡ strlen{L}(s2);
   
   axiom memcmp_strlen_right{L}:
     ∀ char *s1, char *s2;
     ∀ ℤ n;
-      memcmp{L, L}(s1, s2, n) ≡ 0 ∧ strlen(s2) < n ⇒
-      strlen(s1) ≡ strlen(s2);
+      memcmp{L, L}(s1, s2, n) ≡ 0 ∧ strlen{L}(s2) < n ⇒
+      strlen{L}(s1) ≡ strlen{L}(s2);
   
   axiom memcmp_strlen_shift_left{L}:
     ∀ char *s1, char *s2;
     ∀ ℤ k, ℤ n;
-      memcmp{L, L}(s1, s2+k, n) ≡ 0 ≤ k ∧ strlen(s1) < n ⇒
-      0 ≤ strlen(s2) ≤ k+strlen(s1);
+      (memcmp{L, L}(s1, s2+k, n) ≡ 0 ∧ 0 ≤ k) ∧ strlen{L}(s1) < n ⇒
+      0 ≤ strlen{L}(s2) ∧ strlen{L}(s2) ≤ k+strlen{L}(s1);
   
   axiom memcmp_strlen_shift_right{L}:
     ∀ char *s1, char *s2;
     ∀ ℤ k, ℤ n;
-      memcmp{L, L}(s1+k, s2, n) ≡ 0 ≤ k ∧ strlen(s2) < n ⇒
-      0 ≤ strlen(s1) ≤ k+strlen(s2);
+      (memcmp{L, L}(s1+k, s2, n) ≡ 0 ∧ 0 ≤ k) ∧ strlen{L}(s2) < n ⇒
+      0 ≤ strlen{L}(s1) ∧ strlen{L}(s1) ≤ k+strlen{L}(s2);
   
   }
  */
 /*@
 axiomatic StrCmp {
   logic ℤ strcmp{L}(char *s1, char *s2) 
-    reads *(s1+(0 .. strlen(s1))), *(s2+(0 .. strlen(s2)));
+    reads *(s1+(0 .. strlen{L}(s1))), *(s2+(0 .. strlen{L}(s2)));
   
   axiom strcmp_zero{L}:
     ∀ char *s1, char *s2;
-      strcmp(s1, s2) ≡ 0 ⇔
-      strlen(s1) ≡ strlen(s2) ∧
-      (∀ ℤ i; 0 ≤ i ≤ strlen(s1) ⇒ *(s1+i) ≡ *(s2+i));
+      strcmp{L}(s1, s2) ≡ 0 ⇔
+      strlen{L}(s1) ≡ strlen{L}(s2) ∧
+      (∀ ℤ i; 0 ≤ i ∧ i ≤ strlen{L}(s1) ⇒ *(s1+i) ≡ *(s2+i));
   
   }
  */
@@ -211,22 +223,22 @@ axiomatic StrNCmp {
   axiom strncmp_zero{L}:
     ∀ char *s1, char *s2;
     ∀ ℤ n;
-      strncmp(s1, s2, n) ≡ 0 ⇔
-      (strlen(s1) < n ∧ strcmp(s1, s2) ≡ 0) ∨
-      (∀ ℤ i; 0 ≤ i < n ⇒ *(s1+i) ≡ *(s2+i));
+      strncmp{L}(s1, s2, n) ≡ 0 ⇔
+      (strlen{L}(s1) < n ∧ strcmp{L}(s1, s2) ≡ 0) ∨
+      (∀ ℤ i; 0 ≤ i ∧ i < n ⇒ *(s1+i) ≡ *(s2+i));
   
   }
  */
 /*@
 axiomatic StrChr {
   logic 𝔹 strchr{L}(char *s, ℤ c) 
-    reads *(s+(0 .. strlen(s)));
+    reads *(s+(0 .. strlen{L}(s)));
   
   axiom strchr_def{L}:
     ∀ char *s;
     ∀ ℤ c;
-      strchr(s, c) ≡ \true ⇔
-      (∃ ℤ i; 0 ≤ i ≤ strlen(s) ∧ *(s+i) ≡ c);
+      strchr{L}(s, c) ≡ \true ⇔
+      (∃ ℤ i; (0 ≤ i ∧ i ≤ strlen{L}(s)) ∧ *(s+i) ≡ c);
   
   }
  */
@@ -238,56 +250,65 @@ axiomatic WcsLen {
   axiom wcslen_pos_or_null{L}:
     ∀ wchar_t *s;
     ∀ ℤ i;
-      0 ≤ i ∧ (∀ ℤ j; 0 ≤ j < i ⇒ *(s+j) ≢ 0) ∧ *(s+i) ≡ 0 ⇒
-      wcslen(s) ≡ i;
+      (0 ≤ i ∧ (∀ ℤ j; 0 ≤ j ∧ j < i ⇒ *(s+j) ≢ 0)) ∧
+      *(s+i) ≡ 0 ⇒ wcslen{L}(s) ≡ i;
   
   axiom wcslen_neg{L}:
-    ∀ wchar_t *s; (∀ ℤ i; 0 ≤ i ⇒ *(s+i) ≢ 0) ⇒ wcslen(s) < 0;
+    ∀ wchar_t *s;
+      (∀ ℤ i; 0 ≤ i ⇒ *(s+i) ≢ 0) ⇒ wcslen{L}(s) < 0;
   
   axiom wcslen_before_null{L}:
     ∀ wchar_t *s;
-    ∀ int i; 0 ≤ i < wcslen(s) ⇒ *(s+i) ≢ 0;
+    ∀ int i; 0 ≤ i ∧ i < wcslen{L}(s) ⇒ *(s+i) ≢ 0;
   
   axiom wcslen_at_null{L}:
-    ∀ wchar_t *s; 0 ≤ wcslen(s) ⇒ *(s+wcslen(s)) ≡ 0;
+    ∀ wchar_t *s; 0 ≤ wcslen{L}(s) ⇒ *(s+wcslen{L}(s)) ≡ 0;
   
   axiom wcslen_not_zero{L}:
     ∀ wchar_t *s;
-    ∀ int i; 0 ≤ i ≤ wcslen(s) ∧ *(s+i) ≢ 0 ⇒ i < wcslen(s);
+    ∀ int i;
+      (0 ≤ i ∧ i ≤ wcslen{L}(s)) ∧ *(s+i) ≢ 0 ⇒ i < wcslen{L}(s);
   
   axiom wcslen_zero{L}:
     ∀ wchar_t *s;
-    ∀ int i; 0 ≤ i ≤ wcslen(s) ∧ *(s+i) ≡ 0 ⇒ i ≡ wcslen(s);
+    ∀ int i;
+      (0 ≤ i ∧ i ≤ wcslen{L}(s)) ∧ *(s+i) ≡ 0 ⇒
+      i ≡ wcslen{L}(s);
   
   axiom wcslen_sup{L}:
     ∀ wchar_t *s;
-    ∀ int i; 0 ≤ i ∧ *(s+i) ≡ 0 ⇒ 0 ≤ wcslen(s) ≤ i;
+    ∀ int i;
+      0 ≤ i ∧ *(s+i) ≡ 0 ⇒ 0 ≤ wcslen{L}(s) ∧ wcslen{L}(s) ≤ i;
   
   axiom wcslen_shift{L}:
     ∀ wchar_t *s;
-    ∀ int i; 0 ≤ i ≤ wcslen(s) ⇒ wcslen(s+i) ≡ wcslen(s)-i;
+    ∀ int i;
+      0 ≤ i ∧ i ≤ wcslen{L}(s) ⇒ wcslen{L}(s+i) ≡ wcslen{L}(s)-i;
   
   axiom wcslen_create{L}:
     ∀ wchar_t *s;
-    ∀ int i; 0 ≤ i ∧ *(s+i) ≡ 0 ⇒ 0 ≤ wcslen(s) ≤ i;
+    ∀ int i;
+      0 ≤ i ∧ *(s+i) ≡ 0 ⇒ 0 ≤ wcslen{L}(s) ∧ wcslen{L}(s) ≤ i;
   
   axiom wcslen_create_shift{L}:
     ∀ wchar_t *s;
     ∀ int i;
-    ∀ int k; 0 ≤ k ≤ i ∧ *(s+i) ≡ 0 ⇒ 0 ≤ wcslen(s+k) ≤ i-k;
+    ∀ int k;
+      (0 ≤ k ∧ k ≤ i) ∧ *(s+i) ≡ 0 ⇒
+      0 ≤ wcslen{L}(s+k) ∧ wcslen{L}(s+k) ≤ i-k;
   
   }
  */
 /*@
 axiomatic WcsCmp {
   logic ℤ wcscmp{L}(wchar_t *s1, wchar_t *s2) 
-    reads *(s1+(0 .. wcslen(s1))), *(s2+(0 .. wcslen(s2)));
+    reads *(s1+(0 .. wcslen{L}(s1))), *(s2+(0 .. wcslen{L}(s2)));
   
   axiom wcscmp_zero{L}:
     ∀ wchar_t *s1, wchar_t *s2;
-      wcscmp(s1, s2) ≡ 0 ⇔
-      wcslen(s1) ≡ wcslen(s2) ∧
-      (∀ ℤ i; 0 ≤ i ≤ wcslen(s1) ⇒ *(s1+i) ≡ *(s2+i));
+      wcscmp{L}(s1, s2) ≡ 0 ⇔
+      wcslen{L}(s1) ≡ wcslen{L}(s2) ∧
+      (∀ ℤ i; 0 ≤ i ∧ i ≤ wcslen{L}(s1) ⇒ *(s1+i) ≡ *(s2+i));
   
   }
  */
@@ -299,9 +320,9 @@ axiomatic WcsNCmp {
   axiom wcsncmp_zero{L}:
     ∀ wchar_t *s1, wchar_t *s2;
     ∀ ℤ n;
-      wcsncmp(s1, s2, n) ≡ 0 ⇔
-      (wcslen(s1) < n ∧ wcscmp(s1, s2) ≡ 0) ∨
-      (∀ ℤ i; 0 ≤ i < n ⇒ *(s1+i) ≡ *(s2+i));
+      wcsncmp{L}(s1, s2, n) ≡ 0 ⇔
+      (wcslen{L}(s1) < n ∧ wcscmp{L}(s1, s2) ≡ 0) ∨
+      (∀ ℤ i; 0 ≤ i ∧ i < n ⇒ *(s1+i) ≡ *(s2+i));
   
   }
  */
@@ -311,22 +332,23 @@ axiomatic WcsNCmp {
  */
 /*@
 predicate valid_string{L}(char *s) =
-  0 ≤ strlen(s) ∧ \valid(s+(0 .. strlen(s)));
+  0 ≤ strlen{L}(s) ∧ \valid{L}(s+(0 .. strlen{L}(s)));
  */
 /*@
 predicate valid_read_string{L}(char *s) =
-  0 ≤ strlen(s) ∧ \valid_read(s+(0 .. strlen(s)));
+  0 ≤ strlen{L}(s) ∧ \valid_read{L}(s+(0 .. strlen{L}(s)));
  */
 /*@
-predicate valid_string_or_null{L}(char *s) = s ≡ \null ∨ valid_string(s);
+predicate valid_string_or_null{L}(char *s) =
+  s ≡ \null ∨ valid_string{L}(s);
  */
 /*@
 predicate valid_wstring{L}(wchar_t *s) =
-  0 ≤ wcslen(s) ∧ \valid(s+(0 .. wcslen(s)));
+  0 ≤ wcslen{L}(s) ∧ \valid{L}(s+(0 .. wcslen{L}(s)));
  */
 /*@
 predicate valid_wstring_or_null{L}(wchar_t *s) =
-  s ≡ \null ∨ valid_wstring(s);
+  s ≡ \null ∨ valid_wstring{L}(s);
  */
 /*@ assigns *fdset;
     assigns *fdset \from *fdset, fd; */
@@ -364,14 +386,14 @@ extern time_t mktime(struct tm *timeptr);
     assigns \result \from __fc_time;
     
     behavior null:
-      assumes timer ≡ \null;
+      assumes /* ip:6 */timer ≡ \null;
       assigns \result;
       assigns \result \from __fc_time;
     
     behavior not_null:
-      assumes timer ≢ \null;
-      requires \valid(timer);
-      ensures \initialized(\old(timer));
+      assumes /* ip:8 */timer ≢ \null;
+      requires /* ip:9 */\valid{Here}(timer);
+      ensures /* ip:7 */\initialized{Here}(\old(timer));
       assigns *timer, \result;
       assigns *timer \from __fc_time;
       assigns \result \from __fc_time;
@@ -383,14 +405,14 @@ extern time_t time(time_t *timer);
 
 struct tm __fc_time_tm;
 struct tm * const __p_fc_time_tm = & __fc_time_tm;
-/*@ ensures \result ≡ &__fc_time_tm ∨ \result ≡ \null;
+/*@ ensures /* ip:10 */\result ≡ &__fc_time_tm ∨ \result ≡ \null;
     assigns \result, __fc_time_tm;
     assigns \result \from __p_fc_time_tm;
     assigns __fc_time_tm \from *timer;
  */
 extern struct tm *gmtime(time_t const *timer);
 
-/*@ ensures \result ≡ &__fc_time_tm ∨ \result ≡ \null;
+/*@ ensures /* ip:11 */\result ≡ &__fc_time_tm ∨ \result ≡ \null;
     assigns \result, __fc_time_tm;
     assigns \result \from __p_fc_time_tm;
     assigns __fc_time_tm \from *timer;
@@ -464,57 +486,57 @@ extern int getopt_long_only(int argc, char * const *argv,
                             struct option const *longopts, int *longind);
 
 /*@ ghost int __fc_fds[1024]; */
-/*@ requires 0 ≤ fd < 1024;
-    ensures \result ≡ 0 ∨ \result ≡ -1;
+/*@ requires /* ip:13 */0 ≤ fd ∧ fd < 1024;
+    ensures /* ip:12 */\result ≡ 0 ∨ \result ≡ -1;
     assigns \result, __fc_fds[fd];
     assigns \result \from fd, __fc_fds[fd];
     assigns __fc_fds[fd] \from fd, __fc_fds[fd];
  */
 extern int close(int fd);
 
-/*@ requires arg ≢ \null;
-    requires valid_read_string(path);
-    requires valid_read_string(arg);
+/*@ requires /* ip:14 */arg ≢ \null;
+    requires /* ip:15 */valid_read_string{Here}(path);
+    requires /* ip:16 */valid_read_string{Here}(arg);
     assigns \result;
     assigns \result \from *(path+(0 ..)), *(arg+(0 ..));
  */
 extern int execl(char const *path, char const *arg , ...);
 
-/*@ requires arg ≢ \null;
-    requires valid_read_string(path);
-    requires valid_read_string(arg);
+/*@ requires /* ip:17 */arg ≢ \null;
+    requires /* ip:18 */valid_read_string{Here}(path);
+    requires /* ip:19 */valid_read_string{Here}(arg);
     assigns \result;
     assigns \result \from *(path+(0 ..)), *(arg+(0 ..));
  */
 extern int execle(char const *path, char const *arg , ...);
 
-/*@ requires arg ≢ \null;
-    requires valid_read_string(path);
-    requires valid_read_string(arg);
+/*@ requires /* ip:20 */arg ≢ \null;
+    requires /* ip:21 */valid_read_string{Here}(path);
+    requires /* ip:22 */valid_read_string{Here}(arg);
     assigns \result;
     assigns \result \from *(path+(0 ..)), *(arg+(0 ..));
  */
 extern int execlp(char const *path, char const *arg , ...);
 
-/*@ requires *(argv+0) ≢ \null;
-    requires valid_read_string(path);
-    requires valid_read_string(*(argv+0));
+/*@ requires /* ip:23 */*(argv+0) ≢ \null;
+    requires /* ip:24 */valid_read_string{Here}(path);
+    requires /* ip:25 */valid_read_string{Here}(*(argv+0));
     assigns \result;
     assigns \result \from *(path+(0 ..)), *(argv+(0 ..));
  */
 extern int execv(char const *path, char * const *argv);
 
-/*@ requires *(argv+0) ≢ \null;
-    requires valid_read_string(path);
-    requires valid_read_string(*(argv+0));
+/*@ requires /* ip:26 */*(argv+0) ≢ \null;
+    requires /* ip:27 */valid_read_string{Here}(path);
+    requires /* ip:28 */valid_read_string{Here}(*(argv+0));
     assigns \result;
     assigns \result \from *(path+(0 ..)), *(argv+(0 ..));
  */
 extern int execve(char const *path, char * const *argv, char * const *env);
 
-/*@ requires *(argv+0) ≢ \null;
-    requires valid_read_string(path);
-    requires valid_read_string(*(argv+0));
+/*@ requires /* ip:29 */*(argv+0) ≢ \null;
+    requires /* ip:30 */valid_read_string{Here}(path);
+    requires /* ip:31 */valid_read_string{Here}(*(argv+0));
     assigns \result;
     assigns \result \from *(path+(0 ..)), *(argv+(0 ..));
  */
@@ -524,10 +546,13 @@ extern int execvp(char const *path, char * const *argv);
     assigns \result \from \nothing; */
 extern uid_t getuid(void);
 
-/*@ requires 0 ≤ fd < 1024;
-    requires \valid((char *)buf+(0 .. count-1));
-    ensures (0 ≤ \result ≤ \old(count)) ∨ \result ≡ -1;
-    ensures \initialized((char *)\old(buf)+(0 .. \result-1));
+/*@ requires /* ip:34 */0 ≤ fd ∧ fd < 1024;
+    requires /* ip:35 */\valid{Here}((char *)buf+(0 .. count-1));
+    ensures
+      /* ip:32 */(0 ≤ \result ∧ \result ≤ \old(count)) ∨
+                 \result ≡ -1;
+    ensures
+      /* ip:33 */\initialized{Here}((char *)\old(buf)+(0 .. \result-1));
     assigns \result, *((char *)buf+(0 .. count-1)), __fc_fds[fd];
     assigns \result \from __fc_fds[fd], count;
     assigns *((char *)buf+(0 .. count-1)) \from __fc_fds[fd], count;
@@ -537,9 +562,9 @@ extern ssize_t read(int fd, void *buf, size_t count);
 
 extern void *sbrk(intptr_t);
 
-/*@ requires 0 ≤ fd < 1024;
-    requires \valid_read((char *)buf+(0 .. count-1));
-    ensures -1 ≤ \result ≤ \old(count);
+/*@ requires /* ip:37 */0 ≤ fd ∧ fd < 1024;
+    requires /* ip:38 */\valid_read{Here}((char *)buf+(0 .. count-1));
+    ensures /* ip:36 */-1 ≤ \result ∧ \result ≤ \old(count);
     assigns \result, __fc_fds[fd];
     assigns \result \from fd, count, __fc_fds[fd];
     assigns __fc_fds[fd] \from fd, count, __fc_fds[fd];
@@ -559,8 +584,9 @@ extern int remove(char const *filename);
 extern int rename(char const *old_name, char const *new_name);
 
 /*@ ensures
-      \result ≡ \null ∨
-      (\valid(\result) ∧ \fresh{Old, Here}(\result,sizeof(FILE)));
+      /* ip:39 */\result ≡ \null ∨
+                 (\valid{Here}(\result) ∧
+                  \fresh{Old, Here}(\result,sizeof(FILE)));
     assigns \nothing;
  */
 extern FILE *tmpfile(void);
@@ -571,37 +597,40 @@ extern FILE *tmpfile(void);
  */
 extern char *tmpnam(char *s);
 
-/*@ requires \valid(stream);
-    ensures \result ≡ 0 ∨ \result ≡ -1;
+/*@ requires /* ip:41 */\valid{Here}(stream);
+    ensures /* ip:40 */\result ≡ 0 ∨ \result ≡ -1;
     assigns \result;
     assigns \result \from stream, stream->__fc_stdio_id;
  */
 extern int fclose(FILE *stream);
 
-/*@ requires stream ≡ \null ∨ \valid_read(stream);
-    ensures \result ≡ 0 ∨ \result ≡ -1;
+/*@ requires /* ip:43 */stream ≡ \null ∨ \valid_read{Here}(stream);
+    ensures /* ip:42 */\result ≡ 0 ∨ \result ≡ -1;
     assigns \result;
     assigns \result \from stream, stream->__fc_stdio_id;
  */
 extern int fflush(FILE *stream);
 
 FILE __fc_fopen[512];
-FILE * const __p_fc_fopen = __fc_fopen;
-/*@ ensures \result ≡ \null ∨ \subset(\result, &__fc_fopen[0 .. 512-1]);
+FILE * const __p_fc_fopen = &(__fc_fopen[0]);
+/*@ ensures
+      /* ip:44 */\result ≡ \null ∨
+                 \subset(\result, &__fc_fopen[0 .. 512-1]);
     assigns \result;
     assigns \result \from *(filename+(..)), *(mode+(..)), __p_fc_fopen;
  */
 extern FILE *fopen(char const *filename, char const *mode);
 
 /*@ ensures
-      \result ≡ \null ∨
-      (\valid(\result) ∧ \fresh{Old, Here}(\result,sizeof(FILE)));
+      /* ip:45 */\result ≡ \null ∨
+                 (\valid{Here}(\result) ∧
+                  \fresh{Old, Here}(\result,sizeof(FILE)));
     assigns \result;
     assigns \result \from fildes, *(mode+(..));
  */
 extern FILE *fdopen(int fildes, char const *mode);
 
-/*@ ensures \result ≡ \null ∨ \result ≡ \old(stream);
+/*@ ensures /* ip:46 */\result ≡ \null ∨ \result ≡ \old(stream);
     assigns *stream;
  */
 extern FILE *freopen(char const *filename, char const *mode, FILE *stream);
@@ -663,7 +692,7 @@ extern int vsprintf(char *s, char const *format, va_list arg);
 /*@ assigns *stream; */
 extern int fgetc(FILE *stream);
 
-/*@ ensures \result ≡ \null ∨ \result ≡ \old(s);
+/*@ ensures /* ip:47 */\result ≡ \null ∨ \result ≡ \old(s);
     assigns *(s+(0 .. n-1)), *stream, \result;
     assigns *(s+(0 .. n-1)) \from *stream;
     assigns *stream \from *stream;
@@ -688,7 +717,7 @@ extern int getc(FILE *stream);
     assigns \result \from *__fc_stdin; */
 extern int getchar(void);
 
-/*@ ensures \result ≡ \old(s) ∨ \result ≡ \null;
+/*@ ensures /* ip:48 */\result ≡ \old(s) ∨ \result ≡ \null;
     assigns *(s+(..)), \result;
     assigns *(s+(..)) \from *__fc_stdin;
     assigns \result \from s, __fc_stdin;
@@ -711,19 +740,21 @@ extern int puts(char const *s);
     assigns *stream \from c; */
 extern int ungetc(int c, FILE *stream);
 
-/*@ requires \valid((char *)ptr+(0 .. nmemb*size-1));
-    requires \valid(stream);
-    ensures \result ≤ \old(nmemb);
-    ensures \initialized((char *)\old(ptr)+(0 .. \result*\old(size)-1));
+/*@ requires /* ip:51 */\valid{Here}((char *)ptr+(0 .. nmemb*size-1));
+    requires /* ip:52 */\valid{Here}(stream);
+    ensures /* ip:49 */\result ≤ \old(nmemb);
+    ensures
+      /* ip:50 */\initialized{Here}((char *)\old(ptr)+(0 ..
+                                                           \result*\old(size)-1));
     assigns *((char *)ptr+(0 .. nmemb*size-1)), \result;
     assigns *((char *)ptr+(0 .. nmemb*size-1)) \from size, nmemb, *stream;
     assigns \result \from size, *stream;
  */
 extern size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream);
 
-/*@ requires \valid_read((char *)ptr+(0 .. nmemb*size-1));
-    requires \valid(stream);
-    ensures \result ≤ \old(nmemb);
+/*@ requires /* ip:54 */\valid_read{Here}((char *)ptr+(0 .. nmemb*size-1));
+    requires /* ip:55 */\valid{Here}(stream);
+    ensures /* ip:53 */\result ≤ \old(nmemb);
     assigns *stream, \result;
     assigns *stream \from *((char *)ptr+(0 .. nmemb*size-1));
     assigns \result \from *((char *)ptr+(0 .. nmemb*size-1));
@@ -824,7 +855,9 @@ HEADER _heapstart = {.ptr = (struct hdr *)0, .size = (unsigned int)0};
 HEADER _heapend = {.ptr = (struct hdr *)0, .size = (unsigned int)0};
 void warm_boot(char *str)
 {
+  /* sid:1 */
   printf("%s\n",str);
+  /* sid:96 */
   return;
 }
 
@@ -832,89 +865,199 @@ HEADER *frhd;
 static short memleft;
 void laFree(void *ap)
 {
+  /* Locals: nxt, prev, f */
   HEADER *nxt;
   HEADER *prev;
   HEADER *f;
+  /* sid:4 */
   f = (HEADER *)ap - 1;
+  /* sid:5 */
   memleft = (short)((unsigned int)memleft + f->size);
+  /* sid:7 */
   if (frhd > f) {
+    /* sid:8 */
     nxt = frhd;
+    /* sid:9 */
     frhd = f;
+    /* sid:10 */
     prev = f + f->size;
+    /* sid:12 */
     if (prev == nxt) {
+      /* sid:13 */
       f->size += nxt->size;
+      /* sid:14 */
       f->ptr = nxt->ptr;
     }
-    else f->ptr = nxt;
+    else {
+      /* sid:15 */
+      f->ptr = nxt;
+    }
+    /* sid:98 */
     goto return_label;
   }
+  else {
+    
+  }
+  /* sid:18 */
   prev = (HEADER *)0;
+  /* sid:19 */
   nxt = frhd;
+  /* sid:20 */
   while (1) {
+    /* sid:22 */
     if (nxt) {
-      if (! (nxt < f)) break;
-    }
-    else break;
-    if (nxt + nxt->size == f) {
-      nxt->size += f->size;
-      f = nxt + nxt->size;
-      if (f == nxt->ptr) {
-        nxt->size += f->size;
-        nxt->ptr = f->ptr;
+      /* sid:24 */
+      if (nxt < f) {
+        
       }
-      goto return_label;
+      else {
+        /* sid:25 */
+        break;
+      }
     }
+    else {
+      /* sid:26 */
+      break;
+    }
+    /* sid:27 */
+    /*block:begin*/
+      {
+      /* sid:29 */
+      if (nxt + nxt->size == f) {
+        /* sid:30 */
+        nxt->size += f->size;
+        /* sid:31 */
+        f = nxt + nxt->size;
+        /* sid:33 */
+        if (f == nxt->ptr) {
+          /* sid:34 */
+          nxt->size += f->size;
+          /* sid:35 */
+          nxt->ptr = f->ptr;
+        }
+        else {
+          
+        }
+        /* sid:99 */
+        goto return_label;
+      }
+      else {
+        
+      }
+    }
+    /*block:end*/
+    /* sid:39 */
     prev = nxt;
+    /* sid:40 */
     nxt = nxt->ptr;
   }
+  /* sid:41 */
   prev->ptr = f;
+  /* sid:42 */
   prev = f + f->size;
+  /* sid:44 */
   if (prev == nxt) {
+    /* sid:45 */
     f->size += nxt->size;
+    /* sid:46 */
     f->ptr = nxt->ptr;
   }
-  else f->ptr = nxt;
-  return_label: return;
+  else {
+    /* sid:47 */
+    f->ptr = nxt;
+  }
+  return_label: /* internal */ /* sid:100 */
+                               return;
 }
 
 void *laAlloc(int nbytes)
 {
+  /* Locals: __retres, nxt, prev, nunits */
   void *__retres;
   HEADER *nxt;
   HEADER *prev;
   int nunits;
+  /* sid:50 */
   nunits = (int)((((unsigned int)nbytes + sizeof(HEADER)) - (unsigned int)1) / sizeof(HEADER) + (unsigned int)1);
+  /* sid:51 */
   prev = (HEADER *)0;
+  /* sid:52 */
   nxt = frhd;
-  while (nxt) {
-    if (nxt->size >= (unsigned int)nunits) {
-      if (nxt->size > (unsigned int)nunits) {
-        nxt->size -= (unsigned int)nunits;
-        nxt += nxt->size;
-        nxt->size = (unsigned int)nunits;
-      }
-      else 
-        if (prev == (HEADER *)0) frhd = nxt->ptr; else prev->ptr = nxt->ptr;
-      memleft = (short)((int)memleft - nunits);
-      __retres = (void *)(nxt + 1);
-      goto return_label;
+  /* sid:53 */
+  while (1) {
+    /* sid:55 */
+    if (nxt) {
+      
     }
+    else {
+      /* sid:56 */
+      break;
+    }
+    /* sid:57 */
+    /*block:begin*/
+      {
+      /* sid:59 */
+      if (nxt->size >= (unsigned int)nunits) {
+        /* sid:61 */
+        if (nxt->size > (unsigned int)nunits) {
+          /* sid:62 */
+          nxt->size -= (unsigned int)nunits;
+          /* sid:63 */
+          nxt += nxt->size;
+          /* sid:64 */
+          nxt->size = (unsigned int)nunits;
+        }
+        else {
+          /* sid:66 */
+          if (prev == (HEADER *)0) {
+            /* sid:67 */
+            frhd = nxt->ptr;
+          }
+          else {
+            /* sid:68 */
+            prev->ptr = nxt->ptr;
+          }
+        }
+        /* sid:69 */
+        memleft = (short)((int)memleft - nunits);
+        /* sid:71 */
+        __retres = (void *)(nxt + 1);
+        /* sid:102 */
+        goto return_label;
+      }
+      else {
+        
+      }
+    }
+    /*block:end*/
+    /* sid:73 */
     prev = nxt;
+    /* sid:74 */
     nxt = nxt->ptr;
   }
+  /* sid:75 */
   warm_boot((char *)"Allocation Failed!");
+  /* sid:76 */
   __retres = (void *)0;
-  return_label: return __retres;
+  return_label: /* internal */ /* sid:103 */
+                               return __retres;
 }
 
 void laInit(void)
 {
-  _heapstart.ptr = (struct hdr *)sbrk(0xFF50);
+  /* sid:78 */
+  _heapstart.ptr = (struct hdr *)sbrk(65360);
+  /* sid:79 */
   _heapend.ptr = (struct hdr *)sbrk(0);
+  /* sid:80 */
   frhd = _heapstart.ptr;
+  /* sid:81 */
   frhd->ptr = (struct hdr *)0;
+  /* sid:82 */
   frhd->size = (unsigned int)((char *)_heapend.ptr - (char *)_heapstart.ptr) / sizeof(HEADER);
+  /* sid:83 */
   memleft = (short)frhd->size;
+  /* sid:105 */
   return;
 }
 
@@ -941,19 +1084,30 @@ void laInit(void)
 */
 int main(void)
 {
+  /* Locals: __retres, man, p1, p2 */
   int __retres;
   void *man;
   void *p1;
   void *p2;
+  /* sid:86 */
   laInit();
+  /* sid:87 */
   man = (void *)0;
+  /* sid:88 */
   p1 = laAlloc(20);
+  /* sid:89 */
   laAlloc(20);
+  /* sid:90 */
   p2 = laAlloc(20);
+  /* sid:91 */
   laAlloc(20);
+  /* sid:92 */
   laFree(p1);
+  /* sid:93 */
   laFree(p2);
+  /* sid:94 */
   __retres = 0;
+  /* sid:107 */
   return __retres;
 }
 

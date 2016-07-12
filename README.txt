@@ -8,6 +8,7 @@ Do
 > make
 in the current directory.
 
+> make install 
 To execute:
 ===========
 Do
@@ -23,3 +24,13 @@ or with debug information from frama-c
 
 
 frama-c -mman
+
+
+run.sh 
+
+#if the mman plugin is registered in frama-c list 
+frama-c -mman -debug 2 ../mem\ copy/bench/la/lamain.c
+
+
+
+frama-c -load-module top/Mman -debug 2 ../mem\ copy/bench/la/lamain.c

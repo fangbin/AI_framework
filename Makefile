@@ -24,6 +24,8 @@ PLUGIN_CMO=mman_options \
 
 # mman_emls \
 # mman_emfls \ 
+#    mman_valap \
+ #   mman_dflap \
 # mman_valap mman_dflap \
 # mman_value mman_dflow \
 # PLUGIN_CMI=

@@ -696,6 +696,7 @@ let get_mfun (mk:Mman_dabs.method_kind) : Cil_types.kernel_function =
  * Start analysis from 'main' to collect shape infos: TODO
 *)
 let rec compute_from_entry_point () =
+  let _ = Mman_options.Self.debug ~level:2 "fangbin" in  
   let kf, _ = Globals.entry_point () in
   begin
     (* compute initial state *)
@@ -703,6 +704,7 @@ let rec compute_from_entry_point () =
     in
     compute kf init_state
     ;
+    Mman_options.Self.feedback "2016";
     print_results false  
   end 
   
