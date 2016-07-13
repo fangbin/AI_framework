@@ -851,8 +851,8 @@ extern int ferror_unlocked(FILE *stream);
     assigns \result \from *stream; */
 extern int fileno_unlocked(FILE *stream);
 
-HEADER _heapstart = {.ptr = (struct hdr *)0, .size = (unsigned int)0};
-HEADER _heapend = {.ptr = (struct hdr *)0, .size = (unsigned int)0};
+static HEADER _heapstart = {.ptr = (struct hdr *)0, .size = (unsigned int)0};
+static HEADER _heapend = {.ptr = (struct hdr *)0, .size = (unsigned int)0};
 void warm_boot(char *str)
 {
   /* sid:1 */

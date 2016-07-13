@@ -44,16 +44,16 @@ let run_compute () =
     Mman_env.penvs_init (); 
 
     (* Step 1: compute from the generic entry point *)
-    Mman_options.Self.feedback "Analysing the application starting at 'MAIN'@.";
+    (*Mman_options.Self.feedback "Analysing the application starting at 'MAIN'@.";*)
     
-    Mman_dflap.compute_from_entry_point ();
+    (*Mman_dflap.compute_from_entry_point ();*)
 
     (*Mman_dflow.compute_from_entry_point ();*)
  
     (* Step 2: compute specs using previous results for each function *)
     (* 2a: for minit *)
-    (*Mman_options.Self.feedback "Analysing 'minit'";*)
-    (*Mman_dflap.compute_for_minit ();*)
+    Mman_options.Self.feedback "Analysing 'minit'";
+    Mman_dflap.compute_for_minit ();
     (*Mman_dflow.compute_for_minit ();*)
 
     (* 2b: for malloc *)

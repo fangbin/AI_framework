@@ -18,16 +18,19 @@ PLUGIN_REQUIRES:=apron.polkaMPQ apron.apron gmp
 
 # Plugin object files
 PLUGIN_CMO=mman_options \
-	mman_dabs mman_svar mman_env \
-    mman_asyn \
-    mman_valap \
-    mman_dflap \
-	mman_core mman_register
+	mman_dabs \
+	mman_svar \
+	mman_env \
+	mman_asyn \
+	mman_valap \
+	mman_dflap \
+    mman_core mman_register
 
 # mman_emls \
+# mman_asyn
 # mman_emfls \ 
 #    mman_valap \
- #   mman_dflap \
+#   mman_dflap \
 # mman_valap mman_dflap \
 # mman_value mman_dflow \
 # PLUGIN_CMI=

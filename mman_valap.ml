@@ -298,7 +298,7 @@ module Model = struct
   (** 
    * Interface with Apron modules 
   *)
-  
+
   let man_apron =
     (* Select manager for linear constraints *)
     Polka.manager_of_polka_strict (Polka.manager_alloc_strict ()) 
@@ -583,8 +583,11 @@ module Model = struct
       (to_apron d.vap) arr
       
   
-  let do_assign (d: t)
-      (llv: Mman_asyn.alval list) (lexp: Mman_asyn.aexp list) =
+  let do_assign (d: t) (llv: Mman_asyn.alval list) (lexp: Mman_asyn.aexp list) 
+    =
+    let _ = Mman_options.Self.feedback "doing assign@." in
+
+    (*TODO bug Failure("hd") => llv is empty *)
     let _ = (Mman_options.Self.debug ~level:1 "do_assign: %a:=%a,...@."
                Mman_asyn.pp_alval (List.hd llv) Mman_asyn.pp_aexp (List.hd lexp);
              Mman_options.Self.debug ~level:1 "on %a@."
@@ -709,13 +712,16 @@ let init_globals (eid: Mman_env.t)
     (c1_cn: Mman_asyn.aconstr list)
     : Model.t
     =
+      let _ = Mman_options.Self.feedback "init_globals@." in
       if (eid = (Model.env !global_state))
       then !global_state
       else
       (* Do assign *)
+      let _ = Mman_options.Self.feedback "do assign@." in
       let vinit = Model.do_assign (Model.top_of eid) (v1_vn) (e1_en) in
       let v = Model.meet_exp eid vinit c1_cn in
       begin
+        let _ = Mman_options.Self.feedback "init_globals finished @." in
         global_state := v;
         v
       end
