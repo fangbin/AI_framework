@@ -46,7 +46,7 @@ let run_compute () =
     (* Step 1: compute from the generic entry point *)
     Mman_options.Self.feedback "Analysing the application starting at 'MAIN'@.";
     
-    (*Mman_dflap.compute_from_entry_point (); *)    
+    Mman_dflap.compute_from_entry_point ();
 
     (*Mman_dflow.compute_from_entry_point ();*)
  

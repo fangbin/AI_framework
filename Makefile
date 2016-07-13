@@ -20,6 +20,8 @@ PLUGIN_REQUIRES:=apron.polkaMPQ apron.apron gmp
 PLUGIN_CMO=mman_options \
 	mman_dabs mman_svar mman_env \
     mman_asyn \
+    mman_valap \
+    mman_dflap \
 	mman_core mman_register
 
 # mman_emls \

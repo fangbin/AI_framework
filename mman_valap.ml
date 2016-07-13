@@ -32,6 +32,12 @@
 (**
  * Set the function to be used for environments
 *)
+
+(* numerical analysis *)
+
+(* 
+ * find a variable in the given environment 
+*)
 let env_getvar (eid: Mman_env.t) (svi: Mman_svar.svarinfo)
   : Mman_svar.svarinfo
   =
@@ -40,6 +46,10 @@ let env_getvar (eid: Mman_env.t) (svi: Mman_svar.svarinfo)
   else
     Mman_env.senv_getvar eid svi
 
+
+(**                                                                              
+ * Get list of variables in ei                                                   
+*)
 let env_vars (eid: Mman_env.t)
   : (int * Mman_svar.svarinfo) list
   =
@@ -48,6 +58,7 @@ let env_vars (eid: Mman_env.t)
   else
     Mman_env.senv_vars eid
 
+
 let env_getvinfo (eid: Mman_env.t) (sid: Mman_svar.svid)
   : Mman_svar.svarinfo
   =
@@ -55,6 +66,7 @@ let env_getvinfo (eid: Mman_env.t) (sid: Mman_svar.svid)
     Mman_env.penv_getvinfo eid sid
   else
     Mman_env.senv_getvinfo eid sid
+
 
 let env_size (eid: Mman_env.t)
   : int
@@ -77,8 +89,10 @@ let env_unify (eid1: Mman_env.t) (eid2: Mman_env.t)
 (**
  * Memoize results of env2apron translations.
 *)
+
 (* Vector of created Apron environments *)
 let apronenvs : Apron.Environment.t Vector.t = Vector.create()
+
 (* Map of Mman_env.t to indexes in vector above *)
 module EnvAPMap = FCMap.Make(Datatype.Int)
 let env_map = ref EnvAPMap.empty
@@ -88,27 +102,29 @@ let env_map = ref EnvAPMap.empty
  *
  * The set of variables pushed includes the features and a hole variable.
 *)
-let env2apron (eid: Mman_env.t) : Apron.Environment.t =
-  try
-    let apei = EnvAPMap.find eid !env_map in
-    Vector.get apronenvs apei
-  with Not_found ->
-    let svl = if eid != -1 then (env_vars eid) else [] in
-    let avl = List.map
-        (fun (_i,sv) -> Apron.Var.of_string (Mman_svar.sv_tostring sv))
-        svl
-    in
-    let ap_env = Apron.Environment.make
-        (Array.of_list avl) (Array.of_list [])
-    in
-    let apei = Vector.addi apronenvs ap_env in
-    let _ = (env_map := EnvAPMap.add eid apei !env_map) in
-    let _ = Mman_options.Self.debug ~level:2
-        "env2apron: eid%d -> [%d]%a@."
-        eid apei
-        (Apron.Environment.print ~first:"[" ~sep:" " ~last:"]") ap_env
-    in
-    ap_env
+let env2apron (eid: Mman_env.t) 
+  : Apron.Environment.t 
+  =
+    try
+      let apei = EnvAPMap.find eid !env_map in
+      Vector.get apronenvs apei
+    with Not_found ->
+      let svl = if eid != -1 then (env_vars eid) else [] in
+      let avl = List.map
+          (fun (_i,sv) -> Apron.Var.of_string (Mman_svar.sv_tostring sv))
+          svl
+      in
+      let ap_env = Apron.Environment.make
+          (Array.of_list avl) (Array.of_list [])
+      in
+      let apei = Vector.addi apronenvs ap_env in
+      let _ = (env_map := EnvAPMap.add eid apei !env_map) in
+      let _ = Mman_options.Self.debug ~level:2
+          "env2apron: eid%d -> [%d]%a@."
+          eid apei
+          (Apron.Environment.print ~first:"[" ~sep:" " ~last:"]") ap_env
+      in
+      ap_env
 
   
 (* ********************************************************************** *)
@@ -141,7 +157,8 @@ let to_var (sei: Mman_env.t) (lv: Mman_asyn.alval)
   : Apron.Var.t
   =
   let _ = (Mman_options.Self.debug ~level:1 "to_var: %a in eid_%d@."
-             Mman_asyn.pp_alval lv sei) in
+           Mman_asyn.pp_alval lv sei) 
+  in
   match lv with
   | Mman_asyn.AVar(vi) ->
       let svi = env_getvar sei (Mman_svar.sv_mk_var vi) in
@@ -167,6 +184,7 @@ let to_var (sei: Mman_env.t) (lv: Mman_asyn.alval)
 
   | _ -> raise (Not_dealt "Field dereference left value")
            
+
 (**
  * From abstract to tree expressions
 *)
@@ -255,8 +273,10 @@ let to_tcons (sei: Mman_env.t) (ac: Mman_asyn.aconstr)
   match ac with
   | Mman_asyn.ATrue ->
       Apron.Tcons1.make (ap_exp_zero sei) Apron.Tcons1.EQ
+  
   | Mman_asyn.AFalse ->
       Apron.Tcons1.make (ap_exp_zero sei) Apron.Tcons1.DISEQ
+  
   | Mman_asyn.ACmp(op, aeL, aeR) ->
       let apeL = to_texpr sei aeL in
       let apeR = to_texpr sei aeR in
@@ -264,6 +284,7 @@ let to_tcons (sei: Mman_env.t) (ac: Mman_asyn.aconstr)
           ap_optyp ap_round in
       let apop = to_tcons_typ op in
       Apron.Tcons1.make apesub apop
+
         
 (* ********************************************************************** *)
 (* {3 Abstract value} *)
@@ -277,9 +298,11 @@ module Model = struct
   (** 
    * Interface with Apron modules 
   *)
+  
   let man_apron =
     (* Select manager for linear constraints *)
     Polka.manager_of_polka_strict (Polka.manager_alloc_strict ()) 
+  
   (* PolkaGrid.manager_of_polkagrid
       (PolkaGrid.manager_alloc
          (Polka.manager_alloc_strict ()) 
@@ -686,14 +709,14 @@ let init_globals (eid: Mman_env.t)
     (c1_cn: Mman_asyn.aconstr list)
     : Model.t
     =
-    if (eid = (Model.env !global_state))
-    then !global_state
-    else
-    (* Do assign *)
-    let vinit = Model.do_assign (Model.top_of eid) (v1_vn) (e1_en) in
-    let v = Model.meet_exp eid vinit c1_cn in
-    begin
-      global_state := v;
-      v
-    end
+      if (eid = (Model.env !global_state))
+      then !global_state
+      else
+      (* Do assign *)
+      let vinit = Model.do_assign (Model.top_of eid) (v1_vn) (e1_en) in
+      let v = Model.meet_exp eid vinit c1_cn in
+      begin
+        global_state := v;
+        v
+      end
     
