@@ -114,12 +114,15 @@ let rec init_globals ()
   if not(!init_done) then
     begin
       init_gcnd := (Mman_asyn.coerce_var vinfo_hli Cil.voidPtrType);
+      
       (* Iterate over globals *)
       Globals.Vars.iter_in_file_order init_global;
+      (* = iter_globals init_global (Ast.get()).globals *)
       let _ = Mman_options.Self.feedback "initialization done:FB @." in 
       init_done := true
     end
-    
+  
+  (*  
 and init_global vi ii =
   match vi.vstorage, ii.init with
   | Cil_types.Static, Some(Cil_types.SingleInit(ei)) ->
@@ -142,7 +145,35 @@ and init_global vi ii =
 
   | _ -> let _ = Mman_options.Self.feedback "init global:FB4@." in  
         ()
+  *)
   
+
+and init_global vi ii =
+  let _ = Mman_options.Self.feedback "varinfo:%a@." 
+                Cil_datatype.Varinfo.pretty vi in 
+  match vi.vstorage, ii.init with
+  | _ , Some(Cil_types.SingleInit(ei)) ->
+      (* assert: the initialisation expression cannot use contexts *)
+      let _ = Mman_options.Self.feedback "init global:FB1@." in 
+      let aei = Mman_asyn.transform_exp ei in
+      let avi = Mman_asyn.AVar(vi) in
+      begin
+        init_glv := !init_glv @ [avi];
+        init_gexp := !init_gexp @ [aei]
+      end
+  | _ , Some(_) -> 
+         let _ = Mman_options.Self.feedback "init global:FB2@." in 
+        () (* TODO:deal with struct init *)
+  
+  | _ , None ->
+      (* depend on the type *)
+      let _ = Mman_options.Self.feedback "init global:FB2@." in 
+      init_gcnd := !init_gcnd @ (Mman_asyn.coerce_var vi vi.vtype)
+
+  | _ -> let _ = Mman_options.Self.feedback "init global:FB4@." in  
+        ()
+
+
 (**
  * State of the computation for first stmt for functions
 *)
@@ -719,8 +750,9 @@ let rec compute_from_entry_point () =
 and get_init_state kf = 
   let init_stmt = Kernel_function.find_first_stmt kf in
   let eid_stmt = Mman_env.penv_of_stmt init_stmt in
-  let _ = Mman_options.Self.feedback "Computing initial state:FB@." in
-
+  let _ = Mman_options.Self.feedback "Computing initial state:FB----%a."  
+        Cil_datatype.Stmt.pretty_sid init_stmt 
+  in
   let _ = init_globals () in
   let init_state = try
       Call_state.find init_stmt
@@ -751,7 +783,7 @@ and compute_for_minit () =
     begin
       Mman_options.Self.feedback "Analysing method minit='%a'" 
         Kernel_function.pretty kf;
-        
+
       (* TODO: do something with the initial state *)
       compute kf (get_init_state kf);
       print_results_fun false kf
@@ -769,6 +801,7 @@ and compute_for_malloc () =
     begin
       Mman_options.Self.feedback "Analysing method malloc='%a'" 
         Kernel_function.pretty kf;
+      
       (* TODO: do domething with the initial state *)
       compute kf (get_init_state kf);
       print_results_fun false kf
@@ -786,6 +819,7 @@ and compute_for_mfree () =
     begin
       Mman_options.Self.feedback "Analysing method mfree='%a'" 
         Kernel_function.pretty kf;
+     
       (* TODO: do domething with the initial state *)
       compute kf (get_init_state kf);
       print_results_fun false kf

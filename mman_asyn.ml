@@ -809,7 +809,10 @@ let rec transform_exp_aux
     Mman_options.Self.debug ~level:2 "transform expression: %a@."
       Printer.pp_exp exp;
     let _, ae = Cil_datatype.Exp.Map.find exp (!exp2aexp) in
-    ae
+    ae;
+    Mman_options.Self.debug ~level:2 "transform expression: %a@."
+      Printer.pp_exp ae;
+
   with Not_found ->
     let ae =
       match exp.enode with
