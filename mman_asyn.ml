@@ -772,7 +772,8 @@ let transform_lval2var_syn (lv:Cil_types.lval)
  * Transform Cil left value into
  * an abstract expression using feature variables.
 *)
-let transform_lval2exp (vi:Cil_types.varinfo) (off:Cil_types.offset) =
+let transform_lval2exp (vi:Cil_types.varinfo) (off:Cil_types.offset) 
+=
   match off with
   | Cil_types.NoOffset ->
       (* simple variable *)
@@ -803,16 +804,16 @@ let transform_lval2exp (vi:Cil_types.varinfo) (off:Cil_types.offset) =
  * Transform Cil expressions into contexts SYNTACTICALLY
  * Memoize results in exp2aexp
 *)
-let rec transform_exp_aux
-    (exp: Cil_types.exp) =
+let rec transform_exp_aux (exp: Cil_types.exp) 
+  : aexp
+  =
   try
     Mman_options.Self.debug ~level:2 "transform expression: %a@."
       Printer.pp_exp exp;
+    Mman_options.Self.feedback "Exp:%a@." 
+      Cil_datatype.Exp.pretty exp;
     let _, ae = Cil_datatype.Exp.Map.find exp (!exp2aexp) in
-    ae;
-    Mman_options.Self.debug ~level:2 "transform expression: %a@."
-      Printer.pp_exp ae;
-
+    ae; 
   with Not_found ->
     let ae =
       match exp.enode with
@@ -984,6 +985,7 @@ let rec transform_exp_aux
                      LAnd, LOr *)
                raise (Not_dealt "Binary expression")
           )
+     
       | CastE(ty,e1) ->
           let ae1 = transform_exp_aux e1 in
           let algty = Cil.bytesAlignOf ty in
@@ -992,10 +994,28 @@ let rec transform_exp_aux
                        else algty) in
           transform_castE ae1 algty alge1
 
-      | _ -> (* SizeOfE _, SizeOfString _, AlignOfE _,
-                AddrOf _, StartOf _, Info _ 
-             *)
-          raise (Not_dealt "Expression")
+      | AddrOf(lv) ->
+          let al, ae = transform_lval2var_syn lv in 
+          AAddrOf(al) 
+      
+      | StartOf(lv) -> (* TODO:to check *)
+          let al, ae = transform_lval2var_syn lv in 
+          AAddrOf(al)    
+
+      | SizeOfE _ -> 
+          raise (Not_dealt "Expression: SizeOfE") 
+
+      | Info _ ->
+          raise (Not_dealt "Expression: Info") 
+
+      | AlignOfE _ ->
+          raise (Not_dealt "Expression: AlignOfE")
+
+      | SizeOfStr _ ->
+          raise (Not_dealt "Expression: SizeOfStr")
+
+
+
     in
     begin
       exp2aexp := Cil_datatype.Exp.Map.add exp (None,ae) !exp2aexp;
