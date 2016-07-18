@@ -748,6 +748,9 @@ let transform_lval2var_syn (lv:Cil_types.lval)
       in
       AVar(vi),
       ALval(AVar(hvi))
+  | Var(vi), Cil_types.Field(fi,Cil_types.NoOffset) ->
+        (* vi.fi *)
+        transform_fdef2exp vi fi
 
   | Mem(e'), Cil_types.Field(fi,Cil_types.NoOffset) ->
       (match e'.enode with
