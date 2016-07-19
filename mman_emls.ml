@@ -366,7 +366,7 @@ and embed_mem (sei0: MEV.t) (g0: meminfo) (sei1: MEV.t) (g1: meminfo)
    raise Not_found.
 *) 
 and embed_atom (a0: atominfo) (a1: atominfo)
-    (vmap: MEV.envmap)
+  (vmap: MEV.envmap)
   : MEV.envmap
   =
   (* if same kind of atom
@@ -410,8 +410,8 @@ and embed_var (vm: MEV.envmap) (l0: svid) (l1: svid)
     locations with mapped by the same feature in lf1
 *)
 and embed_flist (vm: MEV.envmap)
-    (lf0: (feature_kind * svid) list)
-    (lf1: (feature_kind * svid) list)
+  (lf0: (feature_kind * svid) list)
+  (lf1: (feature_kind * svid) list)
   : MEV.envmap
   = List.fold_left
     (fun m0 (fk, l0) ->
@@ -651,8 +651,10 @@ and evalL_atom
   =
   match at with
   | Emp | Blk (_,_) -> None, [] (* error *)
+  
   | Chd(a, fl) | Chk (a, fl) ->
-      (if a != svid then
+      (
+        if a != svid then
          let _ = Mman_options.Self.failure "Bad mapping of atoms@." in
          None, []
        else
@@ -988,7 +990,7 @@ and guard_one (d: t) (ci: Mman_asyn.aconstr)
       )
 
 and guard_eq (d: t) (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
-    (oc: Mman_asyn.aconstr)
+  (oc: Mman_asyn.aconstr)
   : (t * Mman_asyn.aconstr) option
   =
   match d.mem with
@@ -1137,8 +1139,8 @@ and guard_neq (d: t) (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
              Some (d, oc) (* nothing can be done here, go to data part *)
         )
          
+
 (** Compute a memory layout from the constraints.
-    
     Return also the constraints to be applied to the data part.
 *)
 and of_constraints (d: t) (c1_cn: Mman_asyn.aconstr list)
