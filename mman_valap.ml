@@ -387,7 +387,8 @@ module Model = struct
     
   
   (** Module Datatype.S *)
-  include Datatype.Make(struct
+  include Datatype.Make
+    (struct
       type t = value 
       let name = "mman_valap.model.t"
       let rehash = Datatype.identity
@@ -449,7 +450,13 @@ module Model = struct
   let widen _hint (d0: t) (d1: t) =
     (* Assert: d1 includes d0, [_hint] not used *)
     let djoin, isin = join_and_is_included d0 d1 in
-    let d01 = if isin then d1 else djoin in
+    let d01 = 
+    if isin 
+    then 
+      d1 
+    else 
+      djoin 
+    in
     { eid=d0.eid;
       vap=of_apron (Apron.Abstract1.widening man_apron
                       (to_apron d0.vap) (to_apron d01.vap));
@@ -584,10 +591,10 @@ module Model = struct
       
   
   let do_assign (d: t) (llv: Mman_asyn.alval list) (lexp: Mman_asyn.aexp list) 
-    =
-    let _ = Mman_options.Self.feedback "doing assign@." in
-
+    = 
     (*TODO bug Failure("hd") => llv is empty *)
+    if (List.length llv == 0) then d 
+    else  
     let _ = (Mman_options.Self.debug ~level:1 "do_assign: %a:=%a,...@."
                Mman_asyn.pp_alval (List.hd llv) Mman_asyn.pp_aexp (List.hd lexp);
              Mman_options.Self.debug ~level:1 "on %a@."
@@ -692,9 +699,32 @@ module Model = struct
     : value 
     = dw (* TODO *)
 
-  let assign (_lv:Mman_asyn.alval) (_e:Mman_asyn.aexp) (dw:value)
-    : value 
-    = dw (* TODO *)
+  (* do one assign *)
+  let assign (lv:Mman_asyn.alval) (exp:Mman_asyn.aexp) (d:t)
+    : t 
+    = 
+    let _ = (Mman_options.Self.debug ~level:1 "do_one_assign: %a:=%a,...@."
+               Mman_asyn.pp_alval (lv) Mman_asyn.pp_aexp (exp);
+             Mman_options.Self.debug ~level:1 "on %a@."
+               (pretty_code_intern Type.Basic) d)
+    in
+    let eid = env d in
+    let llv = [lv] in 
+    let lexp =[exp] in 
+    let apv1_apvn = List.map (fun lvi -> to_var eid lvi) llv in
+    let ape1_apen = List.map (fun ei -> to_texpr eid ei) lexp in
+    let res = of_apron (Apron.Abstract1.assign_texpr_array man_apron
+                          (to_apron d.vap)
+                          (Array.of_list apv1_apvn)
+                          (Array.of_list ape1_apen)
+                          None)
+    in
+    begin
+      (Mman_options.Self.debug ~level:1 "to %a@." Apron.Abstract1.print res);
+      {eid = d.eid; vap = res}
+    end
+
+
 
 end
 

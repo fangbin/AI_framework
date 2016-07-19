@@ -44,10 +44,10 @@ let run_compute () =
     Mman_env.penvs_init (); 
 
     (* Step 1: compute from the generic entry point *)
-    (*Mman_options.Self.feedback "Analysing the application starting at 'MAIN'@.";*)
-    
+    Mman_options.Self.feedback "Analysing the application starting at 'MAIN'@.";
     (*Mman_dflap.compute_from_entry_point ();*)
-
+    
+    Mman_options.Self.feedback "Dataflow: Analysing the application starting at 'MAIN'@.";
     (*Mman_dflow.compute_from_entry_point ();*)
  
     (* Step 2: compute specs using previous results for each function *)
@@ -57,16 +57,16 @@ let run_compute () =
     (*Mman_dflow.compute_for_minit ();*)
 
     (* 2b: for malloc *)
-    (*Mman_options.Self.feedback "Analysing 'malloc'";*)
-    (*Mman_dflap.compute_for_malloc ();*)
+    Mman_options.Self.feedback "Analysing 'malloc'";
+   (*Mman_dflap.compute_for_malloc ();*)
     (*Mman_dflow.compute_for_malloc ();*)
 
     (* 2c: for mfree *)
-    (*Mman_options.Self.feedback "Analysing 'mfree'";*)
+    Mman_options.Self.feedback "Analysing 'mfree'";
     (*Mman_dflap.compute_for_mfree ();*)
     (*Mman_dflow.compute_for_mfree ();*)
 
-    (*Mman_dflap.print_results true*)
+    (*Mman_dflap.print_results true;*)
     (*Mman_dflow.print_results true*)
 
   end
@@ -75,8 +75,7 @@ let run_compute () =
 let print_fun kf fmt = 
    begin
      Mman_options.channel_res := fmt; (* Format.std_formatter; *)
-    (* Mman_dflap.print_results_fun true kf*)
-
+     (*Mman_dflap.print_results_fun true kf;*)
      (*Mman_dflow.print_results_fun true kf*)
    end
 

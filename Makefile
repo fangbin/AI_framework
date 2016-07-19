@@ -22,17 +22,29 @@ PLUGIN_CMO=mman_options \
 	mman_svar \
 	mman_env \
 	mman_asyn \
+	mman_emls \
 	mman_valap \
 	mman_dflap \
+	mman_value \
+	mman_dflow \
     mman_core mman_register
 
-# mman_emls \
-# mman_asyn
-# mman_emfls \ 
-#    mman_valap \
-#   mman_dflap \
-# mman_valap mman_dflap \
-# mman_value mman_dflow \
+#	mman_options \
+#	mman_dabs \
+#	mman_svar \
+#	mman_env \
+#	mman_asyn \
+#	mman_emls
+#	mman_emfls \
+#	mman_valap \
+#	mman_dflap \
+#	mman_value \
+#	mman_dflow \
+#   mman_core \
+#	mman_register
+
+
+
 # PLUGIN_CMI=
 
 PLUGIN_GUI_CMO=mman_gui

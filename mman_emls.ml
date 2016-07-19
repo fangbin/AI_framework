@@ -54,6 +54,10 @@ module MEV = Mman_env
            | cls(a,b)[Wa] a chunk list defined by chk(a)[Ha]*cls(d,b)[Wd]
                             with d=a+csz(a) /\ Wa=[a].Wd /\ cff(a)=cpf(d)
 
+           | fck(a,b)[Ha] a free chunk at address a defined by
+                            chk(a)[Ha] * blk(b,c) with b=a+sizeof(cty) /\ c-a=csz(a) /\ cff(a) = 1
+           | fls(a,b)[Wa] a free chunk list
+
     A formula in SL is represented by the list of its atoms.
 *)
 
@@ -63,6 +67,8 @@ type atominfo =
   | Chd of svid * (feature_kind * svid) list
   | Chk of svid * (feature_kind * svid) list
   | Cls of svid * svid * svid
+ (* | Fck of svid * (feature_kind * svid) list
+  | Fls of svid * svid * svid*)
            
 type meminfo =
   {
@@ -294,8 +300,8 @@ let is_leq (d0: valinfo) (d1: valinfo)
   @return 1  if d0 > d1
           -1 if d0 < d1
           0  if graphs are homeomorphic by the computed mapping
-    The resulting mapping contains only mappings of svars representing
-    locations in heap to other locations in heap.
+             The resulting mapping contains only mappings of svars 
+             representing locations in heap to other locations in heap.
 *)
 let rec compare_intern (d0: valinfo) (d1: valinfo)
   : int * MEV.envmap
@@ -509,7 +515,7 @@ let senv_add_saddr_1 (seid: MEV.t)
   nseid, nvi
 
 let rec mls_insert_after (mls: Mman_svar.svid list) (id: Mman_svar.svid)
-    (nid: Mman_svar.svid)
+  (nid: Mman_svar.svid)
   : Mman_svar.svid list
   =
   match mls with
@@ -565,7 +571,8 @@ let rec evalL (lv: Mman_asyn.alval) (d: t)
            (* may be a data location or a feature location *)
            (* if it is a feature, it shall be available in the graph *)
            let svif = Mman_env.senv_getvinfo seid svid in
-           (match svif.Mman_svar.kind with
+           (
+            match svif.Mman_svar.kind with
             | Mman_svar.Feature(Some(svid),fk) ->
                 (* check that the feature may be assign in the graph *)
                 evalL_feat seid svid fk g
@@ -602,7 +609,7 @@ let rec evalL (lv: Mman_asyn.alval) (d: t)
 
 (** Evaluate the left value fk(svid) *)
 and evalL_feat (seid: MEV.t)
-    (svid: Mman_svar.svid) (fk: Mman_dabs.feature_kind) g
+  (svid: Mman_svar.svid) (fk: Mman_dabs.feature_kind) g
   : (Mman_asyn.alval option) * (Mman_asyn.alval list)
   =
   (* if it is a location in stack, get the location in heap *)
@@ -639,7 +646,7 @@ and evalL_feat (seid: MEV.t)
     evalL_atom svid fk at
 
 and evalL_atom 
-    (svid: Mman_svar.svid) (fk: Mman_dabs.feature_kind) (at: atominfo)
+  (svid: Mman_svar.svid) (fk: Mman_dabs.feature_kind) (at: atominfo)
   : (Mman_asyn.alval option) * (Mman_asyn.alval list)
   =
   match at with
@@ -1373,7 +1380,8 @@ and mutate_hli_offset (seid: MEV.t) (g: meminfo)
 (** {2 Unfold} *)
 (**************************************************************************)
     
-(**
+(** unfold 
+ * 
 *)
 let unfold (_lv: Mman_asyn.alval) (_g:valinfo)
       : (valinfo * Mman_svar.svid list * Mman_asyn.aconstr list) list
@@ -1401,12 +1409,6 @@ let normalize (_sh:valinfo)
 (**************************************************************************)
   
 let stack_of (_sh:valinfo) (_svid: Mman_svar.svid)
-= 0 
-
-
-
-
-
-
+  = 0 
 
 

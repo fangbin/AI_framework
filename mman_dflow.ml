@@ -701,6 +701,9 @@ let rec compute_from_entry_point () =
     (* compute initial state *)
     let init_state = get_init_state kf
     in
+    let _ = Mman_options.Self.feedback "Initial_state %a@." 
+                MV.Model.pretty init_state
+    in 
     compute kf init_state
     ;
     print_results false  
@@ -710,6 +713,9 @@ and get_init_state kf =
   let init_stmt = Kernel_function.find_first_stmt kf in
   let eid_stmt = Mman_env.penv_of_stmt init_stmt in
   let _ = Mman_options.Self.feedback "Computing initial state@." in
+  let _ = Mman_options.Self.feedback "Initial_state_stmt (sid:%a)@."
+                Cil_datatype.Stmt.pretty_sid init_stmt 
+  in 
   let _ = init_globals () in
   let init_state = try
       Call_state.find init_stmt

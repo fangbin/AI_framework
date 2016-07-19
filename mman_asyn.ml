@@ -58,7 +58,6 @@ and abinop =
   | ADiv
   | AMod
     
-
 (** Abstract boolean expressions = constraints *)
 type aconstr =
   | ATrue | AFalse
@@ -71,7 +70,6 @@ and acmpop =
   | ADISEQ
   | AEQMOD of int
       
-
 (************************************************************************ *)
 (** {1 Basic operations } *)
 (************************************************************************ *)
@@ -214,7 +212,7 @@ module CtxAexp = struct
         let internal_pretty_code _ fmt ce = pretty fmt ce
         let mem_project = Datatype.never_any_project
       end)
-end
+  end
 
 (**
  * Module and global var for memoization of transformations from
@@ -776,7 +774,7 @@ let transform_lval2var_syn (lv:Cil_types.lval)
  * an abstract expression using feature variables.
 *)
 let transform_lval2exp (vi:Cil_types.varinfo) (off:Cil_types.offset) 
-=
+  =
   match off with
   | Cil_types.NoOffset ->
       (* simple variable *)
@@ -1171,7 +1169,7 @@ and bounds_of_typ ikind =
  * - a pre-condition 
 *)
 let transform_sbrk
-    (lv: Cil_types.lval option) (argl:Cil_types.exp list)
+  (lv: Cil_types.lval option) (argl:Cil_types.exp list)
   : alval list * aexp list * aconstr list
   =
   let ae_sz = match argl with

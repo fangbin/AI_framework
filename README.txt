@@ -23,14 +23,19 @@ or with debug information from frama-c
 > frama-c -kernel-msg-key dynlink -kernel-debug 2 -val -load-module ./Mman -mman -debug 1 DMAmain.c
 
 
-frama-c -mman
 
+
+
+
+============================
+Registered as a plugin of frama-c :
+frama-c -mman
 
 run.sh 
 
 #if the mman plugin is registered in frama-c list 
-frama-c -mman -debug 2 ../mem\ copy/bench/la/lamain.c
+> make
+> make install
+> frama-c -mman -debug 2 ../mem\ copy/bench/la/lamain.c
 
 
-
-frama-c -load-module top/Mman -debug 2 ../mem\ copy/bench/la/lamain.c

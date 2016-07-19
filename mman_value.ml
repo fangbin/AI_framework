@@ -22,9 +22,9 @@
 
 (** {1 Abstract domain for shape and numerical constraints} *)
 
-(** An abstract value of this domain is a cofibered product 
- *  from 
- *    an extended (with symbolic environment) shape (Mman_eshape) 
+(** An abstract value of this domain is a cofibered product
+ *  from
+ *    an extended (with symbolic environment) shape (Mman_eshape)
  *  to
  *    a numerical (Mman_dword).
  * A value is a set of pairs (shape, numerical) such that no homeomorphic
@@ -32,7 +32,7 @@
 *)
 
 module MDW = Mman_valap.Model
-module MEV = Mman_env 
+module MEV = Mman_env
 module MSH = Mman_emls
 
 (*module MSH = Mman_eshape*)
@@ -53,8 +53,8 @@ type sh2dw = MDW.t ModelMap.t
 
 let pretty_eshdw fmt (esh: MSH.t) (dw: MDW.t)
   : unit
-  =
-  Format.fprintf fmt "\\/ %a @.\t/\\ %a@."
+  = 
+  Format.fprintf fmt "\\/ %a @.\t/ \\ %a@."
     MSH.pretty esh MDW.pretty dw
 
 let compare_eshdw (esh0: MSH.t) (dw0: MDW.t) (esh1: MSH.t) (dw1: MDW.t)
@@ -76,18 +76,18 @@ let hash_eshdw (esh: MSH.t) (dw: MDW.t)
 let join_and_is_included_eshdw
     (esh0: MSH.t) (dw0: MDW.t)
     (esh1: MSH.t) (dw1: MDW.t)
-  : MSH.t * MDW.t * bool
-  =
-  let cmpsh, map0to1 = MSH.compare_intern esh0 esh1 in
-  if (cmpsh == 0) && (not (MEV.EnvMap.is_empty map0to1))
-  then
-    let dw0r = MDW.rename dw0 map0to1 in
-    let dw01, isin01 = MDW.join_and_is_included dw0r dw1 in
-    esh1, dw01, isin01
-  else
-    esh1, dw1, false
+    : MSH.t * MDW.t * bool
+    =
+    let cmpsh, map0to1 = MSH.compare_intern esh0 esh1 in
+    if (cmpsh == 0) && (not (MEV.EnvMap.is_empty map0to1))
+    then
+      let dw0r = MDW.rename dw0 map0to1 in
+      let dw01, isin01 = MDW.join_and_is_included dw0r dw1 in
+      esh1, dw01, isin01
+    else
+      esh1, dw1, false
 
-(** Computes the join and 
+(** Computes the join and
  * updates isin to false if m0 is not included in m1 *)
 let join_map_isin (isin: bool ref) (m0: sh2dw) (m1: sh2dw) =
   if (ModelMap.is_empty m0) then (isin := true; m1)
@@ -100,14 +100,14 @@ let join_map_isin (isin: bool ref) (m0: sh2dw) (m1: sh2dw) =
            begin
              ModelMap.iter (* exists *)
                (fun exsh1 dw1 ->
-                  if not(!found) then                      
+                  if not(!found) then
                     let exshr, dwr, isin01 =
                       join_and_is_included_eshdw exsh0 dw0 exsh1 dw1
                     in
                     begin
                       mres := ModelMap.add exshr dwr !mres;
                       found := (!found) || isin01
-                    end                      
+                    end
                   else
                     ()
                )
@@ -124,32 +124,33 @@ let join_map_isin (isin: bool ref) (m0: sh2dw) (m1: sh2dw) =
 let widen_eshdw hint
     (esh0: MSH.t) (dw0: MDW.t)
     (esh1: MSH.t) (dw1: MDW.t)
-  : MSH.t * MDW.t 
-  =
-  let cmpsh, map0to1 = MSH.compare_intern esh0 esh1 in
-  if (cmpsh == 0) && (not (MEV.EnvMap.is_empty map0to1))
-  then
-    let dw0r = MDW.rename dw0 map0to1 in
-    let dw01 = MDW.widen hint dw0r dw1 in
-    esh1, dw01
-  else
-    esh1, dw1
+    : MSH.t * MDW.t
+    =
+    let cmpsh, map0to1 = MSH.compare_intern esh0 esh1 in
+    if (cmpsh == 0) && (not (MEV.EnvMap.is_empty map0to1))
+    then
+      let dw0r = MDW.rename dw0 map0to1 in
+      let dw01 = MDW.widen hint dw0r dw1 in
+      esh1, dw01
+    else
+      esh1, dw1
 
 let unfold_one (esh: MSH.t) (dw: MDW.t) (lv1_lvN: Mman_asyn.alval list)
   : sh2dw
   =
+  let _ = Mman_options.Self.feedback "unfold_one@." in 
   let m = ref (ModelMap.singleton esh dw) in
   begin
     List.iter
       (
-        fun lvi -> 
+        fun lvi ->
         let nm = ref ModelMap.empty in
         begin
-          ModelMap.iter 
+          ModelMap.iter
             (
               fun eshi dwi ->
-                let t1_tn = MSH.unfold lvi eshi in 
-                List.iter 
+                let t1_tn = MSH.unfold lvi eshi in
+                List.iter
                 (
                   fun (neshi,vl,cl) ->
                     let ndwi = MDW.addV dwi vl cl in
@@ -167,12 +168,12 @@ let unfold_one (esh: MSH.t) (dw: MDW.t) (lv1_lvN: Mman_asyn.alval list)
     ;
     !m
   end
-  
-  
+
+
 (* ********************************************************************** *)
 (** {2 Abstract domain } *)
 (* ********************************************************************** *)
-    
+
 module Model = struct
 
   type value = {
@@ -189,7 +190,7 @@ module Model = struct
       | Some(m) ->
           if ModelMap.is_empty m then
             Format.fprintf fmt "Top"
-          else 
+          else
             ModelMap.iter (fun k v -> pretty_eshdw fmt k v) m
     end
     in
@@ -215,7 +216,7 @@ module Model = struct
       (fun m0 m1 ->
         (ModelMap.cardinal m0) - (ModelMap.cardinal m1))
       d0.set d1.set
-      
+
   let is_leq_map (m0: sh2dw) (m1: sh2dw) =
     let cmpcard = (ModelMap.cardinal m0) - (ModelMap.cardinal m1) in
     if cmpcard != 0
@@ -235,7 +236,7 @@ module Model = struct
                       if not(!found) then
                         let isin01 = compare_eshdw esh0 dw0 esh1 dw1 in
                         begin
-                          found := (!found) || isin01 
+                          found := (!found) || isin01
                         end
                       else
                         ()
@@ -248,17 +249,17 @@ module Model = struct
         ;
         !isleq
       end
-      
+
   let is_leq (d0: value) (d1: value) =
     let _ = assert (d1.eid == d0.eid) in
     if (is_top d1) || (is_bottom d0)
     then true
     else
-      Extlib.opt_equal is_leq_map d0.set d1.set 
-      
+      Extlib.opt_equal is_leq_map d0.set d1.set
+
   let is_eq_cardinal (d0: value) (d1: value) =
     (compare_cardinal d0 d1) == 0
-    
+
   let is_eq (d0: value) (d1: value) =
     if (d0.eid != d1.eid) || (not (is_eq_cardinal d0 d1))
     then false
@@ -305,7 +306,7 @@ module Model = struct
     { eid = (-1);
       set = None
     }
-    
+
   (** Module Datatype.S *)
   include Datatype.Make(struct
       type t = value
@@ -329,13 +330,15 @@ module Model = struct
 
   let top_of eid =
     { eid = eid; set = Some(ModelMap.empty) }
-    
+
   (** Lattice operations *)
   (* from Bounded_Join_Semi_Lattice *)
-      
+
   let join (d0: value) (d1: value) =
-    if (is_bottom d0) then copy_intern d1
-    else if (is_bottom d1) then copy_intern d0
+    if (is_bottom d0) then 
+      copy_intern d1
+    else if (is_bottom d1) then 
+      copy_intern d0
     else if (is_top d0) || (is_top d1) then
       (top_of (max d0.eid d1.eid))
     else if (d0.eid != d1.eid) then
@@ -382,7 +385,9 @@ module Model = struct
   (* from With_Widening *)
   type widen_hint = int
 
-  let widen hint (d0: t) (d1: t) =
+  let widen hint (d0: t) (d1: t) 
+    : value
+    =
     (* Assert: d1 includes d0, [hint] not used *)
     let djoin, isin = join_and_is_included d0 d1 in
     let d01 = if isin then d1 else djoin in
@@ -409,7 +414,7 @@ module Model = struct
     { eid = d0.eid;
       set = m0w1
     }
-    
+
   (* from With_Intersects *)
   let intersects (_d0: t) (d1: t) = (* TODO *)
     d1
@@ -417,9 +422,9 @@ module Model = struct
   (* from environment *)
   let size (d: value) =
     MEV.penv_size d.eid
-      
+
   (** Access the environment *)
-  let env (d: value) = 
+  let env (d: value) =
     d.eid
 
   (** Return true if [vi] is not constrained in [d] *)
@@ -428,12 +433,12 @@ module Model = struct
     let svinfo = MEV.penv_getvar d.eid (Mman_svar.sv_mk_var vi) in
     let svid = Mman_svar.Svar.id svinfo in
     let isun = ref true in
-    let seid = d.eid in 
-    begin 
-      Extlib.may 
+    let seid = d.eid in
+    begin
+      Extlib.may
       (
         fun m ->
-            ModelMap.iter 
+            ModelMap.iter
             (
               fun exsh dw ->
                 (* query on the stack, stored in the shape *)
@@ -443,7 +448,7 @@ module Model = struct
                 else if refsvid < 0
                 then ()
                 else
-                  let refsvi = 
+                  let refsvi =
                     MEV.senv_getvinfo seid refsvid
                   in
                   isun := !isun && (MDW.is_var_unconstrained dw refsvi)
@@ -457,11 +462,12 @@ module Model = struct
 
   (** Return the interval to which [vi] belongs in [d] *)
   let bound_variable (d: t) (vi: Cil_types.varinfo)
-    : Ival.t =
+    : Ival.t 
+    =
     (* bounds are given by the numerical part *)
     let svinfo = MEV.penv_getvar d.eid (Mman_svar.sv_mk_var vi) in
     let svid = Mman_svar.Svar.id svinfo in
-    let seid = d.eid in 
+    let seid = d.eid in
 
     if svid == 0 (* Null *)
     then
@@ -491,7 +497,7 @@ module Model = struct
 
   (** Return  true if [v1] is an alias of [v2] in [d] *)
   let alias_variable (d: t)
-      (v1: Cil_types.varinfo) (v2: Cil_types.varinfo)
+    (v1: Cil_types.varinfo) (v2: Cil_types.varinfo)
     : bool
     =
     let isalias = ref true in
@@ -499,7 +505,7 @@ module Model = struct
       Extlib.may (fun m ->
           ModelMap.iter (fun exsh _dw ->
               let r1,_ = MSH.evalE (Mman_asyn.ALval(Mman_asyn.AVar(v1))) exsh in
-              let r2,_ = MSH.evalE (Mman_asyn.ALval(Mman_asyn.AVar(v2))) exsh in 
+              let r2,_ = MSH.evalE (Mman_asyn.ALval(Mman_asyn.AVar(v2))) exsh in
               match r1, r2 with
               | Some(Mman_asyn.ALval(Mman_asyn.ASVar svid1)),
                 Some(Mman_asyn.ALval(Mman_asyn.ASVar svid2)) ->
@@ -515,7 +521,7 @@ module Model = struct
     end
 
   (** Return true is [vi] is alias to null in [d] *)
-  let null_variable (d: t) (vi: Cil_types.varinfo) = 
+  let null_variable (d: t) (vi: Cil_types.varinfo) =
     (* get svar from environment *)
     let svinfo = MEV.penv_getvar d.eid (Mman_svar.sv_mk_var vi) in
     let svid = Mman_svar.Svar.id svinfo in
@@ -569,18 +575,18 @@ module Model = struct
                nm := join_map_isin isin !nm rm;
                changed := !changed || (isnew && not(!isin))
              end
-          ) 
+          )
           !cm;
         cm := !nm
       done
       ;
       (* final value*)
-      !cm  
+      !cm
     end
 
-   and normalize_one (eid:MEV.t) (esh:MSH.t) (dw:MDW.t) 
-     : sh2dw * bool
-   = 
+   and normalize_one (eid:MEV.t) (esh:MSH.t) (dw:MDW.t)
+  : sh2dw * bool
+   =
    let nsh = ref (MSH.copy esh) in
    let ndw = ref (MDW.copy dw) in
    let changed = ref false in
@@ -588,7 +594,7 @@ module Model = struct
    begin
      List.iter
       (
-        fun (p, vl) -> 
+        fun (p, vl) ->
           let c1_cn = pred_constraints p vl in (* required to fold p *)
           let mdw = MDW.meet_exp eid !ndw c1_cn in
           if (MDW.is_bottom mdw) then
@@ -608,13 +614,13 @@ module Model = struct
      pvl;
      ModelMap.singleton !nsh !ndw, !changed
    end
-  
-  (* TODO *)
-  and pred_constraints (_p:Mman_asyn.aconstr) (_vl:Mman_svar.svarinfo) 
-  : Mman_asyn.aconstr list 
-  = [] 
 
-      
+  (* TODO *)
+  and pred_constraints (_p:Mman_asyn.aconstr) (_vl:Mman_svar.svarinfo)
+    : Mman_asyn.aconstr list
+    = []
+
+
   (** Apply a guard c1_cn *)
   let rec meet_exp (d: t) (c1_cn: Mman_asyn.aconstr list)
     : t
@@ -649,7 +655,7 @@ module Model = struct
     end
 
   and meet_exp_one (eid: MEV.t) (esh: MSH.t) (dw: MDW.t)
-      (c1_cn: Mman_asyn.aconstr list)
+    (c1_cn: Mman_asyn.aconstr list)
     : (sh2dw option)
     =
     let r, vf1_vfn = MSH.guard esh c1_cn in
@@ -670,19 +676,24 @@ module Model = struct
                  else Some(ModelMap.singleton nesh ndw)
                 )
              )
-             
+
            else (* shall unfold for each left value in vf1_vfn *)
              let nm = unfold_one esh dw vf1_vfn in
              (* apply again the guard on each value of the set nm, shall succeed *)
-             meet_exp_set eid c1_cn nm 
+             meet_exp_set eid c1_cn nm
           )
-       
+
   (** Apply the list of assignments *)
-  (** The list should be applied in parallel on the abstract value *) 
+  (** The list should be applied in parallel on the abstract value *)
   let rec do_assign (d: t)
-      (llv: Mman_asyn.alval list) (lexp: Mman_asyn.aexp list)
+    (llv: Mman_asyn.alval list) (lexp: Mman_asyn.aexp list)
     : t
     =
+    let _ = Mman_options.Self.feedback "doing assign@." in
+    
+    (*TODO bug Failure("hd") => llv is empty *)
+    if (List.length llv == 0 ) then d 
+    else 
     let _ = (Mman_options.Self.debug ~level:1 "do_assign: %a:=%a,...@."
                Mman_asyn.pp_alval (List.hd llv) Mman_asyn.pp_aexp (List.hd lexp);
              Mman_options.Self.debug ~level:1 "on %a@."
@@ -705,8 +716,8 @@ module Model = struct
     }
 
   and do_assign_set (eid: MEV.t)
-      (llv: Mman_asyn.alval list) (lexp: Mman_asyn.aexp list)
-      (m: sh2dw)
+    (llv: Mman_asyn.alval list) (lexp: Mman_asyn.aexp list)
+    (m: sh2dw)
     : sh2dw option
     =
     let nmap = ref (Some(ModelMap.empty)) in (* list of pairs (exsh, dw) *)
@@ -729,7 +740,7 @@ module Model = struct
     end
 
   and do_assign_one (eid: MEV.t) (esh: MSH.t) (dw: MDW.t)
-      (llv: Mman_asyn.alval list) (lexp: Mman_asyn.aexp list)
+    (llv: Mman_asyn.alval list) (lexp: Mman_asyn.aexp list)
     : (sh2dw option)
     =
     (* build from (esh, dw) the set of pairs where all assignments may be done *)
@@ -737,7 +748,7 @@ module Model = struct
     let nlexp = ref [] in
     let vf = ref [] in
     let r = ref false in
-    let isin = ref false in 
+    let isin = ref false in
     begin
       List.iter (fun lv -> if !r then
                     (let rlv, rvf = MSH.evalL lv esh in
@@ -804,11 +815,11 @@ module Model = struct
           else
             (* assignment needs some unfolding *)
             let m = unfold_one esh dw (!vf) in
-            do_assign_set eid llv lexp m 
+            do_assign_set eid llv lexp m
         end
     end
-    
-  
+
+
   (** Project out the list of variables.
    *  Mainly used in the inter-procedural analysis *)
   let forget_list (d: t) (llv: Mman_asyn.alval list) =
@@ -827,7 +838,7 @@ module Model = struct
 
   (** Collect all the constraints in [d0] and [d1] *)
   let unify (s0: t) (_s1: t) = (* TODO *)
-    s0 
+    s0
   let unify_with (_s0: t) (_s1: t) = (* TODO *)
     ()
 
@@ -846,15 +857,17 @@ let init_globals (eid:MEV.t)
     (v1_vn: Mman_asyn.alval list) (e1_en: Mman_asyn.aexp list)
     (c1_cn: Mman_asyn.aconstr list)
     : Model.t
-  =
-  if (eid = (Model.env !global_state))
-  then !global_state
-  else
-  (* Do assign *)
-  let vinit = Model.do_assign (Model.top_of eid) (v1_vn) (e1_en) in
-  let v = Model.meet_exp vinit c1_cn in
-  begin
-    global_state := v;
-    v
-  end
-
+    =
+    let _ = Mman_options.Self.feedback "Dflow:init_globals@." in
+    if (eid = (Model.env !global_state))
+    then !global_state
+    else
+    (* Do assign *)
+    let _ = Mman_options.Self.feedback "Dflow:do_assign@." in
+    let vinit = Model.do_assign (Model.top_of eid) (v1_vn) (e1_en) in
+    let _ = Mman_options.Self.feedback "Dflow:assign_done@." in
+    let v = Model.meet_exp vinit c1_cn in
+    begin
+      global_state := v;
+      v
+    end

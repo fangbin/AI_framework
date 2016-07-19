@@ -857,7 +857,7 @@ void warm_boot(char *str)
 {
   /* sid:1 */
   printf("%s\n",str);
-  /* sid:96 */
+  /* sid:95 */
   return;
 }
 
@@ -892,7 +892,7 @@ void laFree(void *ap)
       /* sid:15 */
       f->ptr = nxt;
     }
-    /* sid:98 */
+    /* sid:97 */
     goto return_label;
   }
   else {
@@ -938,7 +938,7 @@ void laFree(void *ap)
         else {
           
         }
-        /* sid:99 */
+        /* sid:98 */
         goto return_label;
       }
       else {
@@ -966,7 +966,7 @@ void laFree(void *ap)
     /* sid:47 */
     f->ptr = nxt;
   }
-  return_label: /* internal */ /* sid:100 */
+  return_label: /* internal */ /* sid:99 */
                                return;
 }
 
@@ -1022,7 +1022,7 @@ void *laAlloc(int nbytes)
         memleft = (short)((int)memleft - nunits);
         /* sid:71 */
         __retres = (void *)(nxt + 1);
-        /* sid:102 */
+        /* sid:101 */
         goto return_label;
       }
       else {
@@ -1036,28 +1036,26 @@ void *laAlloc(int nbytes)
     nxt = nxt->ptr;
   }
   /* sid:75 */
-  warm_boot((char *)"Allocation Failed!");
-  /* sid:76 */
   __retres = (void *)0;
-  return_label: /* internal */ /* sid:103 */
+  return_label: /* internal */ /* sid:102 */
                                return __retres;
 }
 
 void laInit(void)
 {
-  /* sid:78 */
+  /* sid:77 */
   _heapstart.ptr = (struct hdr *)sbrk(65360);
-  /* sid:79 */
+  /* sid:78 */
   _heapend.ptr = (struct hdr *)sbrk(0);
-  /* sid:80 */
+  /* sid:79 */
   frhd = _heapstart.ptr;
-  /* sid:81 */
+  /* sid:80 */
   frhd->ptr = (struct hdr *)0;
-  /* sid:82 */
+  /* sid:81 */
   frhd->size = (unsigned int)((char *)_heapend.ptr - (char *)_heapstart.ptr) / sizeof(HEADER);
-  /* sid:83 */
+  /* sid:82 */
   memleft = (short)frhd->size;
-  /* sid:105 */
+  /* sid:104 */
   return;
 }
 
@@ -1089,25 +1087,25 @@ int main(void)
   void *man;
   void *p1;
   void *p2;
-  /* sid:86 */
+  /* sid:85 */
   laInit();
-  /* sid:87 */
+  /* sid:86 */
   man = (void *)0;
-  /* sid:88 */
+  /* sid:87 */
   p1 = laAlloc(20);
+  /* sid:88 */
+  laAlloc(20);
   /* sid:89 */
-  laAlloc(20);
-  /* sid:90 */
   p2 = laAlloc(20);
-  /* sid:91 */
+  /* sid:90 */
   laAlloc(20);
-  /* sid:92 */
+  /* sid:91 */
   laFree(p1);
-  /* sid:93 */
+  /* sid:92 */
   laFree(p2);
-  /* sid:94 */
+  /* sid:93 */
   __retres = 0;
-  /* sid:107 */
+  /* sid:106 */
   return __retres;
 }
 

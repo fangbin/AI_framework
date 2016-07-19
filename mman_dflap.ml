@@ -41,13 +41,13 @@ module MV = Mman_valap
  * Simplified lattice of values 
 *)
 module ValapJoinSemiLattice = struct
-  type t = MV.Model.t
-  let join = MV.Model.join
-  let bottom = MV.Model.bottom
-  let is_included = MV.Model.is_included
-  let join_and_is_included = MV.Model.join_and_is_included
-  let pretty = MV.Model.pretty
-end
+    type t = MV.Model.t
+    let join = MV.Model.join
+    let bottom = MV.Model.bottom
+    let is_included = MV.Model.is_included
+    let join_and_is_included = MV.Model.join_and_is_included
+    let pretty = MV.Model.pretty
+  end
 
 (** 
  * Analysis arguments:
@@ -122,7 +122,7 @@ let rec init_globals ()
       init_done := true
     end
   
-  (*  
+   
 and init_global vi ii =
   match vi.vstorage, ii.init with
   | Cil_types.Static, Some(Cil_types.SingleInit(ei)) ->
@@ -140,21 +140,20 @@ and init_global vi ii =
   
   | Cil_types.Static, None ->
       (* depend on the type *)
-      let _ = Mman_options.Self.feedback "init global:FB2@." in 
+      let _ = Mman_options.Self.feedback "init global:FB3@." in 
       init_gcnd := !init_gcnd @ (Mman_asyn.coerce_var vi vi.vtype)
 
   | _ -> let _ = Mman_options.Self.feedback "init global:FB4@." in  
         ()
-  *)
   
-
-and init_global vi ii =
+  
+(*and init_global vi ii =
   let _ = Mman_options.Self.feedback "varinfo:%a@." 
                 Cil_datatype.Varinfo.pretty vi in 
   match vi.vstorage, ii.init with
   | _ , Some(Cil_types.SingleInit(ei)) ->
       (* assert: the initialisation expression cannot use contexts *)
-      let _ = Mman_options.Self.feedback "init global:FB1@." in 
+      (*let _ = Mman_options.Self.feedback "init global:FB1@." in *)
       let aei = Mman_asyn.transform_exp ei in
       let avi = Mman_asyn.AVar(vi) in
       begin
@@ -162,16 +161,17 @@ and init_global vi ii =
         init_gexp := !init_gexp @ [aei]
       end
   | _ , Some(_) -> 
-         let _ = Mman_options.Self.feedback "init global:FB2@." in 
+         (*let _ = Mman_options.Self.feedback "init global:FB2@." in*)
         () (* TODO:deal with struct init *)
   
   | _ , None ->
       (* depend on the type *)
-      let _ = Mman_options.Self.feedback "init global:FB2@." in 
+      (*let _ = Mman_options.Self.feedback "init global:FB2@." in *)
       init_gcnd := !init_gcnd @ (Mman_asyn.coerce_var vi vi.vtype)
 
-  | _ -> let _ = Mman_options.Self.feedback "init global:FB4@." in  
-        ()
+  | _ -> 
+      (*let _ = Mman_options.Self.feedback "init global:FB4@." in*)
+        ()*)
 
 
 (**
@@ -734,25 +734,19 @@ let get_mfun (mk:Mman_dabs.method_kind) : Cil_types.kernel_function =
 (**
  * Start analysis from 'main' to collect shape infos: TODO
 *)
-let rec compute_from_entry_point () =
-  let _ = Mman_options.Self.debug ~level:1 "fangbin" in  
+let rec compute_from_entry_point () =  
   let kf, _ = Globals.entry_point () in
   begin
     (* compute initial state *)
     let init_state = get_init_state kf
-    in
-    compute kf init_state
-    ;
-    Mman_options.Self.feedback "2016";
+    in 
+    compute kf init_state; 
     print_results false  
   end 
   
 and get_init_state kf = 
   let init_stmt = Kernel_function.find_first_stmt kf in
   let eid_stmt = Mman_env.penv_of_stmt init_stmt in
-  let _ = Mman_options.Self.feedback "Computing initial state:FB----%a."  
-        Cil_datatype.Stmt.pretty_sid init_stmt 
-  in
   let _ = init_globals () in
   let init_state = try
       Call_state.find init_stmt
@@ -762,6 +756,9 @@ and get_init_state kf =
         let glb_state = MV.init_globals eid_stmt
             !init_glv !init_gexp !init_gcnd in
         let _ = Mman_options.Self.feedback "Computing global values finished @." in
+        let _ = Mman_options.Self.feedback "Initial_state_stmt (sid:%a)@."
+                Cil_datatype.Stmt.pretty_sid init_stmt 
+        in 
         let glb_loc_state = set_fun_locals kf eid_stmt glb_state in
         glb_loc_state
       )
@@ -831,6 +828,8 @@ and compute_for_mfree () =
  * Start general analysis
 *)
 and compute kf init =
+  let _ = Mman_options.Self.feedback "Start general analysis" in 
+
   let fenv = Dataflows.function_env kf in
   let module Fenv = (val fenv: Dataflows.FUNCTION_ENV) in
   let module Arg = struct
@@ -844,5 +843,8 @@ and compute kf init =
     (fun stmt v ->
        Cil_datatype.Stmt.Hashtbl.replace res_states stmt v
     )
+  ;
+  Mman_options.Self.feedback "End general analysis"
+
     
 
