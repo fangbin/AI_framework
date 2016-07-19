@@ -1409,8 +1409,17 @@ let normalize (_sh:valinfo)
 (**************************************************************************)
 (** {2 Add/remove variables} *)
 (**************************************************************************)
-  
-let stack_of (_sh:valinfo) (_svid: Mman_svar.svid)
-  = 0 
+
+(* get the index of svid in sh.stack *)  
+let stack_of (sh:valinfo) (svid: Mman_svar.svid)
+  : int 
+  = 
+  match sh with
+  | Bot | Top  -> 0 
+  | S(g) -> 
+    begin 
+      let sk = g.stack in 
+
+    end 
 
 
