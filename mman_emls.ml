@@ -1201,7 +1201,7 @@ let rec mutate (lv: Mman_asyn.alval) (e: Mman_asyn.aexp) (d: t)
     )
     
 and mutate_meminfo (seid: MEV.t) (g: meminfo)
-    (sviL: Mman_svar.svid) (e: Mman_asyn.aexp) 
+  (sviL: Mman_svar.svid) (e: Mman_asyn.aexp) 
   : (t * (Mman_svar.svid list) * (Mman_asyn.aconstr list)) list
   =
   match e with
@@ -1279,7 +1279,7 @@ and mutate_meminfo (seid: MEV.t) (g: meminfo)
       in []
 
 and mutate_stack (_seid: MEV.t) (g: meminfo)
-    (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
+  (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
   : meminfo 
   =
   { stack = MEV.EnvMap.add sviL sviR g.stack;
@@ -1313,7 +1313,7 @@ and mutate_hli (seid: MEV.t) (g: meminfo)
 
 (** Mutate sviL to a location hli + aexp. *)
 and mutate_hli_offset (seid: MEV.t) (g: meminfo)
-    (sviL: Mman_svar.svid) (eoff: Mman_asyn.aexp)
+  (sviL: Mman_svar.svid) (eoff: Mman_asyn.aexp)
   : (t * (Mman_svar.svid list) * (Mman_asyn.aconstr list)) list
   =
   let _ = Mman_options.Self.warning "Access outside data segment limit@." in
@@ -1397,11 +1397,10 @@ let fold (_p:Mman_asyn.aconstr) (_vl:Mman_svar.svarinfo) (_g:valinfo)
 (** {2 Normalize abstract values} *)
 (**************************************************************************)
 
+(* list of predicate and existential vars *)
 let normalize (_sh:valinfo) 
-:( Mman_asyn.aconstr * Mman_svar.svarinfo ) list 
-= []
-
-
+  :( Mman_asyn.aconstr * Mman_svar.svarinfo ) list 
+  = []
 
 
 (* includes folding and normalize *)
