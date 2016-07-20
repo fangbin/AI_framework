@@ -824,7 +824,7 @@ and evalE_svid (svid: Mman_svar.svid) (seid: MEV.t) (g: meminfo)
     )
 
 and evalE_feat (seid: MEV.t)
-    (svid: Mman_svar.svid) (fk: Mman_dabs.feature_kind) g
+  (svid: Mman_svar.svid) (fk: Mman_dabs.feature_kind) g
   : (Mman_asyn.aexp option) * (Mman_asyn.alval list)
   =
   (* if it is a location in stack, get the location in heap *)
@@ -861,7 +861,7 @@ and evalE_feat (seid: MEV.t)
     evalE_atom svid fk at
 
 and evalE_atom
-    (svid: Mman_svar.svid) (fk: Mman_dabs.feature_kind) (at: atominfo)
+  (svid: Mman_svar.svid) (fk: Mman_dabs.feature_kind) (at: atominfo)
   : (Mman_asyn.aexp option) * (Mman_asyn.alval list)
   =
   match at with
