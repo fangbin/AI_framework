@@ -1398,7 +1398,7 @@ let fold (_p:Mman_asyn.aconstr) (_vl:Mman_svar.svarinfo) (_g:valinfo)
 (**************************************************************************)
 
 let normalize (_sh:valinfo) 
-:( Mman_asyn.aconstr   * Mman_svar.svarinfo   ) list 
+:( Mman_asyn.aconstr * Mman_svar.svarinfo ) list 
 = []
 
 
@@ -1414,12 +1414,24 @@ let normalize (_sh:valinfo)
 let stack_of (sh:valinfo) (svid: Mman_svar.svid)
   : int 
   = 
-  match sh with
-  | Bot | Top  -> 0 
+  let res = ref (-1) in 
+  let s = ref false in 
+  match sh.mem with
+  | Bot | Top  -> !res 
   | S(g) -> 
     begin 
       let sk = g.stack in 
-
+      MEV.VidMap.iter 
+      (
+        fun vi _ai -> 
+            if (vi == svid) && (!s == false) then 
+                (s := true;  
+                )
+            else if (!s == false) then 
+                res := !res + 1;
+      )
+      sk;
+      !res 
     end 
 
 
