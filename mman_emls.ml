@@ -1385,9 +1385,87 @@ and mutate_hli_offset (seid: MEV.t) (g: meminfo)
 (** unfold 
  * 
 *)
-let unfold (_lv: Mman_asyn.alval) (_g:valinfo)
-      : (valinfo * Mman_svar.svid list * Mman_asyn.aconstr list) list
-      = [] 
+let unfold (lv: Mman_asyn.alval) (sh:valinfo)
+    : (valinfo * Mman_svar.svid list * Mman_asyn.aconstr list) list
+    = 
+    match sh.mem, lv with
+    | S(g), AFeat(fk, ASVar(svi)) ->
+          let ndif = SHA.shape_get_if svi g in (** Node info *)
+          unfold_feat svi fk sh 
+    | _ -> []
+
+and unfold_feat (svi:int) (fk: Mman_dabs.feature_kind) (sh: eshtyp)
+      : (eshtyp * Mman_svar.svarinfo list * Mman_asyn.aconstr list) list
+      =
+      match sh.mem with
+      | S(g) ->
+          match fk with
+          | DA_CSZ | DA_CNXT | DA_CDAT | DA_CPRV  ->
+              (
+                match ndif.SHA.ed_F, ndif.SHA.ed_H with
+                | None, Some(SHA.Chd _) | Some(SHA.Fck _), Some(SHA.Chd _) |
+                  None, Some(SHA.Chk _) | Some(SHA.Fck _), Some(SHA.Chk _)
+                      ->
+                      []
+                | None, Some(SHA.Blk _)
+                      ->
+                      unfold_BLK2CHD svi esh
+
+                | Some(Fls _), Some(SHA.Blk _)
+                      ->
+                      raise (Error "No such graph")
+
+                | None, Some(SHA.Chk _) | Some(SHA.Fck _) , Some(SHA.Chk _)
+                      ->
+                      []
+
+                | Some(Fls _),Some(SHA.Chk _)
+                      ->
+                      raise (Error "No such graph")
+
+                | None, Some(Cls _) | Some(Fck _ ), Some(Cls _)
+                      ->
+                      unfold_CLS svi esh
+
+                | Some(Fck _ ), None
+                      ->
+                      let cbe = 0 in (* TODO, get cbe *)
+                      split_CLS cbe svi esh;
+
+                | Some(Fls _), None
+                      ->
+                      (* TO check *)
+                    begin
+                      let res = ref [] in
+                      let cbe = 0 in (* TODO *)
+                      let fls = unfold_FLS svi esh in
+                      List.iter
+                      (
+                        fun (ess, svrs, cons) ->
+                        let r = split_CLS cbe svi ess in
+                        res := !res @ r;
+                      )
+                      fls
+                      ;
+                      !res
+                    end
+                  )
+      | DA_FNXT | DA_FPRV ->
+            (
+                match ndif.SHA.ed_F, ndif.SHA.ed_H with
+                | Some(Fls _), _
+                    ->
+                    unfold_FLS svi esh
+
+                | Some(Fck _),_
+                    ->
+                    []
+            )
+
+      | _ -> [] (* TODO *)
+
+
+
 
 let fold (_p:Mman_asyn.aconstr) (_vl:Mman_svar.svarinfo) (_g:valinfo)
   : valinfo
