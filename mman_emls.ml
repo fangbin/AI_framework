@@ -1385,84 +1385,39 @@ and mutate_hli_offset (seid: MEV.t) (g: meminfo)
 (** unfold 
  * 
 *)
-let unfold (lv: Mman_asyn.alval) (sh:valinfo)
-    : (valinfo * Mman_svar.svid list * Mman_asyn.aconstr list) list
-    = 
-    match sh.mem, lv with
-    | S(g), AFeat(fk, ASVar(svi)) ->
-          let ndif = SHA.shape_get_if svi g in (** Node info *)
-          unfold_feat svi fk sh 
-    | _ -> []
+(* unfold 
+ * cls(a,b)[w] => 
+ *   1.chk(a,c) * cls(c,b)[w2] /\ [a].[w2] = w
+ *   2.cls(a,c)[w1] * chk(c,d) * cls(d,b)[w2] /\ [w1].[c].[w2] = w 
+ *   3.cls(a,c)[w1] * chk(c,d) /\ [w1].[c] = w 
+*)
+let unfold_cls (_sv1:int) (_sv2:int) (_sh:valinfo)
+  : (valinfo * Mman_svar.svid list * Mman_asyn.aconstr list) list
+  = [] 
 
-and unfold_feat (svi:int) (fk: Mman_dabs.feature_kind) (sh: eshtyp)
-      : (eshtyp * Mman_svar.svarinfo list * Mman_asyn.aconstr list) list
+let unfold_feat (svi:int) (fk: Mman_dabs.feature_kind) (sh: valinfo)
+      : (valinfo * Mman_svar.svid list * Mman_asyn.aconstr list) list
       =
       match sh.mem with
-      | S(g) ->
-          match fk with
+      | Bot | Top -> []
+      | S(g) -> 
+          let at = MEV.EnvMap.find svi g.atoms in
+          match fk with 
           | DA_CSZ | DA_CNXT | DA_CDAT | DA_CPRV  ->
-              (
-                match ndif.SHA.ed_F, ndif.SHA.ed_H with
-                | None, Some(SHA.Chd _) | Some(SHA.Fck _), Some(SHA.Chd _) |
-                  None, Some(SHA.Chk _) | Some(SHA.Fck _), Some(SHA.Chk _)
-                      ->
-                      []
-                | None, Some(SHA.Blk _)
-                      ->
-                      unfold_BLK2CHD svi esh
-
-                | Some(Fls _), Some(SHA.Blk _)
-                      ->
-                      raise (Error "No such graph")
-
-                | None, Some(SHA.Chk _) | Some(SHA.Fck _) , Some(SHA.Chk _)
-                      ->
-                      []
-
-                | Some(Fls _),Some(SHA.Chk _)
-                      ->
-                      raise (Error "No such graph")
-
-                | None, Some(Cls _) | Some(Fck _ ), Some(Cls _)
-                      ->
-                      unfold_CLS svi esh
-
-                | Some(Fck _ ), None
-                      ->
-                      let cbe = 0 in (* TODO, get cbe *)
-                      split_CLS cbe svi esh;
-
-                | Some(Fls _), None
-                      ->
-                      (* TO check *)
-                    begin
-                      let res = ref [] in
-                      let cbe = 0 in (* TODO *)
-                      let fls = unfold_FLS svi esh in
-                      List.iter
-                      (
-                        fun (ess, svrs, cons) ->
-                        let r = split_CLS cbe svi ess in
-                        res := !res @ r;
-                      )
-                      fls
-                      ;
-                      !res
-                    end
-                  )
-      | DA_FNXT | DA_FPRV ->
-            (
-                match ndif.SHA.ed_F, ndif.SHA.ed_H with
-                | Some(Fls _), _
-                    ->
-                    unfold_FLS svi esh
-
-                | Some(Fck _),_
-                    ->
-                    []
-            )
-
-      | _ -> [] (* TODO *)
+              begin 
+                match at with
+                | Emp | Blk _  | Chd _ | Chk _ -> [] (* do not need to unfold *) 
+                | Cls (svi1,svi2,_sviw) ->  unfold_cls svi1 svi2 sh  (* unfold cls *)
+             (* | Fck | Fls ->[] (error case) *)
+              end 
+          | DA_FNXT | DA_FPRV -> 
+              begin 
+                match at with
+                | Emp | Blk _  | Chd _ | Chk _ | Cls _  -> [] (* error case  *) 
+              (*| Fls (svi1,svi2,sviw) ->  unfold_fls svi1 svi2 sviw sh  (* unfold fls *)*)
+              end 
+          | _ -> [] 
+          (* FLS(_,_,_) -> unfold_fls *)
 
 
 
@@ -1470,6 +1425,17 @@ and unfold_feat (svi:int) (fk: Mman_dabs.feature_kind) (sh: eshtyp)
 let fold (_p:Mman_asyn.aconstr) (_vl:Mman_svar.svarinfo) (_g:valinfo)
   : valinfo
   = _g 
+
+
+let unfold (lv: Mman_asyn.alval) (sh:valinfo)
+    : (valinfo * Mman_svar.svid list * Mman_asyn.aconstr list) list
+    = 
+    match sh.mem, lv with
+    | S(_g), AFeat(fk, ASVar(svi)) ->
+          unfold_feat svi fk sh
+    | _ -> []
+
+
 
 (**************************************************************************)
 (** {2 Normalize abstract values} *)

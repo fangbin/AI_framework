@@ -54,7 +54,7 @@ let run_compute () =
     (* 2a: for minit *)
     Mman_options.Self.feedback "Analysing 'minit'";
     Mman_dflap.compute_for_minit ();
-    (*Mman_dflow.compute_for_minit ();*)
+    Mman_dflow.compute_for_minit ();
 
     (* 2b: for malloc *)
     Mman_options.Self.feedback "Analysing 'malloc'";
@@ -75,7 +75,7 @@ let run_compute () =
 let print_fun kf fmt = 
    begin
      Mman_options.channel_res := fmt; (* Format.std_formatter; *)
-     (*Mman_dflap.print_results_fun true kf;*)
+     Mman_dflap.print_results_fun true kf;
      (*Mman_dflow.print_results_fun true kf*)
    end
 

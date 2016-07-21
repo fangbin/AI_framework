@@ -996,11 +996,11 @@ let rec transform_exp_aux (exp: Cil_types.exp)
           transform_castE ae1 algty alge1
 
       | AddrOf(lv) ->
-          let al, ae = transform_lval2var_syn lv in 
+          let al, _ae = transform_lval2var_syn lv in 
           AAddrOf(al) 
       
       | StartOf(lv) -> (* TODO:to check *)
-          let al, ae = transform_lval2var_syn lv in 
+          let al, _ae = transform_lval2var_syn lv in 
           AAddrOf(al)    
 
       | SizeOfE _ -> 
