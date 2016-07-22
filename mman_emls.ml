@@ -1420,13 +1420,6 @@ let unfold_feat (svi:int) (fk: Mman_dabs.feature_kind) (sh: valinfo)
           (* FLS(_,_,_) -> unfold_fls *)
 
 
-
-
-let fold (_p:Mman_asyn.aconstr) (_vl:Mman_svar.svarinfo) (_g:valinfo)
-  : valinfo
-  = _g 
-
-
 let unfold (lv: Mman_asyn.alval) (sh:valinfo)
     : (valinfo * Mman_svar.svid list * Mman_asyn.aconstr list) list
     = 
@@ -1434,6 +1427,16 @@ let unfold (lv: Mman_asyn.alval) (sh:valinfo)
     | S(_g), AFeat(fk, ASVar(svi)) ->
           unfold_feat svi fk sh
     | _ -> []
+
+
+
+(* blk *)
+let fold (_p:Mman_asyn.aconstr) (_vl:Mman_svar.svarinfo) (_g:valinfo)
+  : valinfo
+  = _g 
+
+
+
 
 
 
