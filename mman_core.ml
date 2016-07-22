@@ -48,7 +48,7 @@ let run_compute () =
     (*Mman_dflap.compute_from_entry_point ();*)
     
     Mman_options.Self.feedback "Dataflow: Analysing the application starting at 'MAIN'@.";
-    (*Mman_dflow.compute_from_entry_point ();*)
+    Mman_dflow.compute_from_entry_point ();
  
     (* Step 2: compute specs using previous results for each function *)
     (* 2a: for minit *)

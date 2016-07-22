@@ -1385,13 +1385,19 @@ and mutate_hli_offset (seid: MEV.t) (g: meminfo)
 (** unfold 
  * 
 *)
-(* unfold 
+(* TODO
+ * unfold 
  * cls(a,b)[w] => 
  *   1.chk(a,c) * cls(c,b)[w2] /\ [a].[w2] = w
  *   2.cls(a,c)[w1] * chk(c,d) * cls(d,b)[w2] /\ [w1].[c].[w2] = w 
  *   3.cls(a,c)[w1] * chk(c,d) /\ [w1].[c] = w 
 *)
 let unfold_cls (_sv1:int) (_sv2:int) (_sh:valinfo)
+  : (valinfo * Mman_svar.svid list * Mman_asyn.aconstr list) list
+  = [] 
+
+(* TODO *)
+let unfold_fls (_sv1:int) (_sv2:int) (_sh:valinfo)
   : (valinfo * Mman_svar.svid list * Mman_asyn.aconstr list) list
   = [] 
 
@@ -1419,7 +1425,6 @@ let unfold_feat (svi:int) (fk: Mman_dabs.feature_kind) (sh: valinfo)
           | _ -> [] 
           (* FLS(_,_,_) -> unfold_fls *)
 
-
 let unfold (lv: Mman_asyn.alval) (sh:valinfo)
     : (valinfo * Mman_svar.svid list * Mman_asyn.aconstr list) list
     = 
@@ -1430,12 +1435,15 @@ let unfold (lv: Mman_asyn.alval) (sh:valinfo)
 
 
 
-(* blk *)
+(* TODO:
+ * fold 
+ * blk(a,b) * blk(b,c) => blk(a,c)  
+ * chk()
+ * 
+*)
 let fold (_p:Mman_asyn.aconstr) (_vl:Mman_svar.svarinfo) (_g:valinfo)
   : valinfo
   = _g 
-
-
 
 
 
@@ -1444,14 +1452,13 @@ let fold (_p:Mman_asyn.aconstr) (_vl:Mman_svar.svarinfo) (_g:valinfo)
 (** {2 Normalize abstract values} *)
 (**************************************************************************)
 
+ 
 (* list of predicate and existential vars *)
 let normalize (_sh:valinfo) 
   :( Mman_asyn.aconstr * Mman_svar.svarinfo ) list 
   = []
 
-
-(* includes folding and normalize *)
-
+ 
 (**************************************************************************)
 (** {2 Add/remove variables} *)
 (**************************************************************************)
