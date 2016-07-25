@@ -23,6 +23,7 @@
 [mman] method 'malloc': ok
 [mman] method 'minit': ok
 [mman] method 'mrealoc': undefined
+[mman] --------------------------------------------
 [mman] Analysed code in full.c
 [mman] Initialize global environment
 [mman] Add '_heapstart' of type HEADER (aka struct hdr)
@@ -136,32 +137,64 @@
        })
        (1) pe_4 -> penv_4 = (2,
        [8]{ 0> (0)__null; 1> (1)__hole; 2> (2)__hli; 3> (3)__hst; 4> (4)_heapstart; 5> (5)_heapend; 6> (6)memleft; 7> (7)f1665_str;})
+[mman] --------------------------------------------
 [mman] Analysing the application starting at 'MAIN'
-[mman] running init globals:FB
-[mman] init global:FB4
-[mman] init global:FB4
-[mman] init global:FB4
-[mman] init global:FB4
-[mman] init global:FB4
-[mman] init global:FB4
-[mman] init global:FB4
-[mman] init global:FB4
-[mman] init global:FB4
-[mman] init global:FB4
-[mman] init global:FB4
-[mman] init global:FB4
-[mman] init global:FB4
-[mman] init global:FB2
-[mman] init global:FB2
-[mman] init global:FB4
-[mman] init global:FB3
-[mman] initialization done:FB
-[mman] Computing global values
-[mman] init_globals
-[mman] do assign
+[mman] running init globals
+[mman] init global:other cases
+[mman] vinfo:'__fc_time' type: unsigned int volatile
+[mman] init global:other cases
+[mman] vinfo:'__fc_time_tm' type: struct tm
+[mman] init global:other cases
+[mman] vinfo:'__p_fc_time_tm' type: struct tm *
+[mman] init global:other cases
+[mman] vinfo:'optarg' type: char *
+[mman] init global:other cases
+[mman] vinfo:'optind' type: int
+[mman] init global:other cases
+[mman] vinfo:'opterr' type: int
+[mman] init global:other cases
+[mman] vinfo:'optopt' type: int
+[mman] init global:other cases
+[mman] vinfo:'__fc_fds' type: int [1024]
+[mman] init global:other cases
+[mman] vinfo:'__FC_errno' type: int
+[mman] init global:other cases
+[mman] vinfo:'__fc_stdin' type: FILE *
+[mman] init global:other cases
+[mman] vinfo:'__fc_stdout' type: FILE *
+[mman] init global:other cases
+[mman] vinfo:'__fc_fopen' type: FILE [512]
+[mman] init global:other cases
+[mman] vinfo:'__p_fc_fopen' type: FILE *
+[mman] init global: Static, some value
+[mman] vinfo:'_heapstart' type: HEADER
+[mman] init global: Static, some value
+[mman] vinfo:'_heapend' type: HEADER
+[mman] init global:other cases
+[mman] vinfo:'frhd' type: HEADER *
+[mman] init global:Static, int
+[mman] vinfo:'memleft' type: short
+[mman] transform expression: (short)0
+[mman] Exp:(short)0
+[mman] transform expression: 0
+[mman] Exp:0
+[mman] build cast(2) of (2)
+[mman] initialization done
+[mman] #########################
+        MV-init_globals
+[mman] MV-do assign
 [mman] env2apron: eid3 -> [1][0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> _heapend:int 5> _heapstart:int 6> man:int 7> memleft:int 8> p1:int 9> p2:int]
+[mman] do_assign: memleft:=0,...
+[mman] on ({eid_3}top)
+[mman] to_var: memleft in eid_3
+[mman] to [|memleft=0|]
+[mman] MV-do assign done
+[mman] MV-do meet exp
+[mman] MV-constraint: __hli>=0
 [mman] to_var: __hli in eid_3
-[mman] init_globals finished
+[mman] MV-after meep: ({eid_3}[|memleft=0; __hole>=0|])
+[mman] MV-init_globals finished 
+        #########################
 [mman] Computing global values finished
 [mman] Initial_state_stmt (sid:85)
 [mman] to_var: man in eid_3
@@ -169,7 +202,7 @@
 [mman] to_var: p2 in eid_3
 [mman] Start general analysis
 [mman] do_call: laInit(...)
-[mman] forget __retres,... in {eid_3}[|p2>=0; p1>=0; man>=0; __hole>=0|]
+[mman] forget __retres,... in {eid_3}[|memleft=0; p2>=0; p1>=0; man>=0; __hole>=0|]
 [mman] to_var: __retres in eid_3
 [mman] Unify penvs 3, 0
 [mman] unified penv_3 = (3,
@@ -185,7 +218,7 @@
 [mman] to: fn(_heapstart):=__hli
 [mman] to: __hli:=(__hli + 65360)
 [mman] do_assign: fn(_heapstart):=__hli,...
-[mman] on ({eid_0}top)
+[mman] on ({eid_0}[|memleft=0|])
 [mman] to_var: fn(_heapstart) in eid_0
 [mman] to_var: __hli in eid_0
 [mman] to_var: __hli in eid_0
@@ -281,7 +314,7 @@
 [mman] unified penv_3 = (4,
        [10]{ 0> (0)__null; 1> (1)__hole; 2> (2)__hli; 3> (3)__hst; 4> (4)_heapstart; 5> (5)_heapend; 6> (6)memleft; 7> (7)man; 8> (8)p1; 9> (9)p2;
        })
-[mman] forget _heapstart,... in {eid_3}[|p2>=0; p1>=0; man>=0; __hole>=0|]
+[mman] forget _heapstart,... in {eid_3}[|memleft=0; p2>=0; p1>=0; man>=0; __hole>=0|]
 [mman] to_var: _heapstart in eid_3
 [mman] to_var: _heapend in eid_3
 [mman] to_var: memleft in eid_3
@@ -602,7 +635,7 @@
 [mman] (sid:80): {eid_0}bottom
 [mman] (sid:81): {eid_0}bottom
 [mman] (sid:82): {eid_0}bottom
-[mman] (sid:85): {eid_3}[|p2>=0; p1>=0; man>=0; __hole>=0|]
+[mman] (sid:85): {eid_3}[|memleft=0; p2>=0; p1>=0; man>=0; __hole>=0|]
 [mman] (sid:86): {eid_3}bottom
 [mman] (sid:87): {eid_3}bottom
 [mman] (sid:88): {eid_3}bottom
@@ -613,11 +646,15 @@
 [mman] (sid:91): {eid_3}bottom
 [mman] (sid:92): {eid_3}bottom
 [mman] (sid:93): {eid_3}bottom
-[mman] (sid:77): {eid_0}top
+[mman] (sid:77): {eid_0}[|memleft=0|]
 [mman] (sid:78): {eid_0}bottom
 [mman] (sid:79): {eid_0}bottom
-[mman] Dataflow: Analysing the application starting at 'MAIN'
+[mman] --------------------------------------------
+[mman] Analysing the application starting at 'MAIN'
+[mman] --------------------------------------------
 [mman] Analysing 'minit'
+[mman] --------------------------------------------
 [mman] Analysing 'malloc'
+[mman] --------------------------------------------
 [mman] Analysing 'mfree'
 [wp] Logging keys: .

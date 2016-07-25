@@ -110,7 +110,7 @@ let init_gcnd : Mman_asyn.aconstr list ref = ref []
 let rec init_globals () 
   : unit
   =
-  let _ = Mman_options.Self.feedback "running init globals:FB @." in 
+  let _ = Mman_options.Self.feedback "running init globals@." in 
   if not(!init_done) then
     begin
       init_gcnd := (Mman_asyn.coerce_var vinfo_hli Cil.voidPtrType);
@@ -118,7 +118,7 @@ let rec init_globals ()
       (* Iterate over globals *)
       Globals.Vars.iter_in_file_order init_global;
       (* = iter_globals init_global (Ast.get()).globals *)
-      let _ = Mman_options.Self.feedback "initialization done:FB @." in 
+      let _ = Mman_options.Self.feedback "initialization done@." in 
       init_done := true
     end
   
@@ -127,7 +127,12 @@ and init_global vi ii =
   match vi.vstorage, ii.init with
   | Cil_types.Static, Some(Cil_types.SingleInit(ei)) ->
       (* assert: the initialisation expression cannot use contexts *)
-      let _ = Mman_options.Self.feedback "init global:FB1@." in 
+      let _ = Mman_options.Self.feedback "init global:Static, int @." in 
+      let _ = Mman_options.Self.debug ~level:2
+         "vinfo:'%a' type: %a @."
+         Printer.pp_varinfo vi
+         Printer.pp_typ vi.vtype 
+      in 
       let aei = Mman_asyn.transform_exp ei in
       let avi = Mman_asyn.AVar(vi) in
       begin
@@ -135,44 +140,30 @@ and init_global vi ii =
         init_gexp := !init_gexp @ [aei]
       end
   | Cil_types.Static, Some(_) -> 
-         let _ = Mman_options.Self.feedback "init global:FB2@." in 
-        () (* TODO:deal with struct init *)
-  
+         let _ = Mman_options.Self.feedback "init global: Static, some value@." in 
+         let _ = Mman_options.Self.debug ~level:2
+         "vinfo:'%a' type: %a @."
+         Printer.pp_varinfo vi
+         Printer.pp_typ vi.vtype 
+         in 
+         () (* TODO:deal with struct init *)
   | Cil_types.Static, None ->
       (* depend on the type *)
-      let _ = Mman_options.Self.feedback "init global:FB3@." in 
+      let _ = Mman_options.Self.feedback "nit global: Static None @." in 
+      let _ = Mman_options.Self.debug ~level:2
+         "vinfo:'%a' type: %a @."
+         Printer.pp_varinfo vi
+         Printer.pp_typ vi.vtype 
+      in 
       init_gcnd := !init_gcnd @ (Mman_asyn.coerce_var vi vi.vtype)
-
-  | _ -> let _ = Mman_options.Self.feedback "init global:FB4@." in  
-        ()
+  | _ -> let _ = Mman_options.Self.feedback " init global:other cases @." in 
+         let _ = Mman_options.Self.debug ~level:2
+         "vinfo:'%a' type: %a @."
+         Printer.pp_varinfo vi
+         Printer.pp_typ vi.vtype 
+         in  
+         ()
   
-  
-(*and init_global vi ii =
-  let _ = Mman_options.Self.feedback "varinfo:%a@." 
-                Cil_datatype.Varinfo.pretty vi in 
-  match vi.vstorage, ii.init with
-  | _ , Some(Cil_types.SingleInit(ei)) ->
-      (* assert: the initialisation expression cannot use contexts *)
-      (*let _ = Mman_options.Self.feedback "init global:FB1@." in *)
-      let aei = Mman_asyn.transform_exp ei in
-      let avi = Mman_asyn.AVar(vi) in
-      begin
-        init_glv := !init_glv @ [avi];
-        init_gexp := !init_gexp @ [aei]
-      end
-  | _ , Some(_) -> 
-         (*let _ = Mman_options.Self.feedback "init global:FB2@." in*)
-        () (* TODO:deal with struct init *)
-  
-  | _ , None ->
-      (* depend on the type *)
-      (*let _ = Mman_options.Self.feedback "init global:FB2@." in *)
-      init_gcnd := !init_gcnd @ (Mman_asyn.coerce_var vi vi.vtype)
-
-  | _ -> 
-      (*let _ = Mman_options.Self.feedback "init global:FB4@." in*)
-        ()*)
-
 
 (**
  * State of the computation for first stmt for functions
@@ -494,7 +485,7 @@ module Compute(AnPar: ComputeArg) = struct
                Printer.pp_stmt s
                MV.Model.pretty aval)
     in
-    (* transform in assignment *)
+    (*  in assignment *)
     let llv, lexp, _ = Mman_asyn.transform_sbrk lv argl in
     MV.Model.do_assign aval llv lexp
     
@@ -752,10 +743,9 @@ and get_init_state kf =
       Call_state.find init_stmt
     with Not_found -> (
         (* compute initials from inital globals and restricted locals *)
-        let _ = Mman_options.Self.feedback "Computing global values@." in
+
         let glb_state = MV.init_globals eid_stmt
-            !init_glv !init_gexp !init_gcnd in
-        let _ = Mman_options.Self.feedback "Computing global values finished @." in
+            !init_glv !init_gexp !init_gcnd in 
         let _ = Mman_options.Self.feedback "Initial_state_stmt (sid:%a)@."
                 Cil_datatype.Stmt.pretty_sid init_stmt 
         in 

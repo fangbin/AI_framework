@@ -861,8 +861,8 @@ void warm_boot(char *str)
   return;
 }
 
-HEADER *frhd;
-static short memleft;
+HEADER *frhd = (HEADER *)0;
+static short memleft = (short)0;
 void laFree(void *ap)
 {
   /* Locals: nxt, prev, f */

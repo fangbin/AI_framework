@@ -591,19 +591,21 @@ module Model = struct
       
   
   let do_assign (d: t) (llv: Mman_asyn.alval list) (lexp: Mman_asyn.aexp list) 
+    :t 
     = 
     (*TODO bug Failure("hd") => llv is empty *)
-    if (List.length llv == 0) then d 
-    else  
+    (*if (List.length llv == 0) then d 
+    else *) 
     let _ = (Mman_options.Self.debug ~level:1 "do_assign: %a:=%a,...@."
                Mman_asyn.pp_alval (List.hd llv) Mman_asyn.pp_aexp (List.hd lexp);
              Mman_options.Self.debug ~level:1 "on %a@."
                (pretty_code_intern Type.Basic) d)
-    in
+    in 
     let eid = env d in
     let apv1_apvn = List.map (fun lvi -> to_var eid lvi) llv
     in
-    let ape1_apen = List.map (fun ei -> to_texpr eid ei) lexp in
+    let ape1_apen = List.map (fun ei -> to_texpr eid ei) lexp 
+    in
     let res = of_apron (Apron.Abstract1.assign_texpr_array man_apron
                           (to_apron d.vap)
                           (Array.of_list apv1_apvn)
@@ -684,7 +686,6 @@ module Model = struct
     Apron.Abstract1.unify man_apron (to_apron d0.vap) (to_apron d1.vap)
       
 
-
   let addV (dw:value) (_lv: Mman_svar.svid list ) (_cl:Mman_asyn.aconstr list) 
     : value 
     = dw (* TODO *)
@@ -742,16 +743,28 @@ let init_globals (eid: Mman_env.t)
     (c1_cn: Mman_asyn.aconstr list)
     : Model.t
     =
-      let _ = Mman_options.Self.feedback "init_globals@." in
+      let _ = Mman_options.Self.feedback "#########################\n MV-init_globals@." in
       if (eid = (Model.env !global_state))
       then !global_state
       else
       (* Do assign *)
-      let _ = Mman_options.Self.feedback "do assign@." in
+      let _ = Mman_options.Self.feedback "MV-do assign@." in
       let vinit = Model.do_assign (Model.top_of eid) (v1_vn) (e1_en) in
+      let _ = Mman_options.Self.feedback "MV-do assign done @." in
+      let _ = Mman_options.Self.feedback "MV-do meet exp@." in
+      let _ = 
+          List.iter 
+          (
+            fun c -> Mman_options.Self.debug ~level:1 "MV-constraint: %a@."
+              Mman_asyn.pp_aconstr (List.hd c1_cn)
+          ) c1_cn 
+          in  
       let v = Model.meet_exp eid vinit c1_cn in
       begin
-        let _ = Mman_options.Self.feedback "init_globals finished @." in
+        let _ = ( Mman_options.Self.debug ~level:1 "MV-after meep: %a@."
+                  (Model.pretty_code_intern Type.Basic) v)
+        in 
+        let _ = Mman_options.Self.feedback "MV-init_globals finished \n #########################@." in
         global_state := v;
         v
       end
