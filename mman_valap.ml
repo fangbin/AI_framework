@@ -748,23 +748,23 @@ let init_globals (eid: Mman_env.t)
       then !global_state
       else
       (* Do assign *)
-      let _ = Mman_options.Self.feedback "MV-do assign@." in
+      let _ = Mman_options.Self.feedback "mman_valap: do assign@." in
       let vinit = Model.do_assign (Model.top_of eid) (v1_vn) (e1_en) in
-      let _ = Mman_options.Self.feedback "MV-do assign done @." in
-      let _ = Mman_options.Self.feedback "MV-do meet exp@." in
+      let _ = Mman_options.Self.feedback "mman_valap: do assign done @." in
+      let _ = Mman_options.Self.feedback "mman_valap: do meet exp@." in
       let _ = 
           List.iter 
           (
-            fun c -> Mman_options.Self.debug ~level:1 "MV-constraint: %a@."
+            fun c -> Mman_options.Self.debug ~level:1 "mman_valap: constraint: %a@."
               Mman_asyn.pp_aconstr (List.hd c1_cn)
           ) c1_cn 
           in  
       let v = Model.meet_exp eid vinit c1_cn in
       begin
-        let _ = ( Mman_options.Self.debug ~level:1 "MV-after meep: %a@."
+        let _ = ( Mman_options.Self.debug ~level:1 "mman_valap: after meep %a@."
                   (Model.pretty_code_intern Type.Basic) v)
         in 
-        let _ = Mman_options.Self.feedback "MV-init_globals finished \n #########################@." in
+        let _ = Mman_options.Self.feedback "mman_valap: init_globals finished \n #########################@." in
         global_state := v;
         v
       end

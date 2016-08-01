@@ -118,6 +118,7 @@ let rec init_globals ()
       (* Iterate over globals *)
       Globals.Vars.iter_in_file_order init_global;
       (* = iter_globals init_global (Ast.get()).globals *)
+
       let _ = Mman_options.Self.feedback "initialization done@." in 
       init_done := true
     end
@@ -127,42 +128,22 @@ and init_global vi ii =
   match vi.vstorage, ii.init with
   | Cil_types.Static, Some(Cil_types.SingleInit(ei)) ->
       (* assert: the initialisation expression cannot use contexts *)
-      let _ = Mman_options.Self.feedback "init global:Static, int @." in 
-      let _ = Mman_options.Self.debug ~level:2
-         "vinfo:'%a' type: %a @."
-         Printer.pp_varinfo vi
-         Printer.pp_typ vi.vtype 
-      in 
-      let aei = Mman_asyn.transform_exp ei in
+      
       let avi = Mman_asyn.AVar(vi) in
+      let aei = Mman_asyn.transform_exp ei in
       begin
         init_glv := !init_glv @ [avi];
         init_gexp := !init_gexp @ [aei]
       end
+  
   | Cil_types.Static, Some(_) -> 
-         let _ = Mman_options.Self.feedback "init global: Static, some value@." in 
-         let _ = Mman_options.Self.debug ~level:2
-         "vinfo:'%a' type: %a @."
-         Printer.pp_varinfo vi
-         Printer.pp_typ vi.vtype 
-         in 
          () (* TODO:deal with struct init *)
+  
   | Cil_types.Static, None ->
       (* depend on the type *)
-      let _ = Mman_options.Self.feedback "nit global: Static None @." in 
-      let _ = Mman_options.Self.debug ~level:2
-         "vinfo:'%a' type: %a @."
-         Printer.pp_varinfo vi
-         Printer.pp_typ vi.vtype 
-      in 
       init_gcnd := !init_gcnd @ (Mman_asyn.coerce_var vi vi.vtype)
-  | _ -> let _ = Mman_options.Self.feedback " init global:other cases @." in 
-         let _ = Mman_options.Self.debug ~level:2
-         "vinfo:'%a' type: %a @."
-         Printer.pp_varinfo vi
-         Printer.pp_typ vi.vtype 
-         in  
-         ()
+  
+  | _ -> ()
   
 
 (**
@@ -729,6 +710,10 @@ let rec compute_from_entry_point () =
   let kf, _ = Globals.entry_point () in
   begin
     (* compute initial state *)
+
+    let _ = Mman_options.Self.feedback "Entry_point: %a@." 
+          Cil_datatype.Kf.pretty kf 
+    in 
     let init_state = get_init_state kf
     in 
     compute kf init_state; 
@@ -739,6 +724,17 @@ and get_init_state kf =
   let init_stmt = Kernel_function.find_first_stmt kf in
   let eid_stmt = Mman_env.penv_of_stmt init_stmt in
   let _ = init_globals () in
+
+  let _ = 
+      List.iter 
+      ( fun lv ->
+        Mman_options.Self.feedback "init_global_avals: %a, @."
+        Mman_asyn.pp_alval lv 
+      ) 
+      !init_glv
+      in 
+
+
   let init_state = try
       Call_state.find init_stmt
     with Not_found -> (
