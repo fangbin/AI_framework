@@ -128,7 +128,6 @@ and init_global vi ii =
   match vi.vstorage, ii.init with
   | Cil_types.Static, Some(Cil_types.SingleInit(ei)) ->
       (* assert: the initialisation expression cannot use contexts *)
-      
       let avi = Mman_asyn.AVar(vi) in
       let aei = Mman_asyn.transform_exp ei in
       begin
@@ -136,8 +135,25 @@ and init_global vi ii =
         init_gexp := !init_gexp @ [aei]
       end
   
-  | Cil_types.Static, Some(_) -> 
-         () (* TODO:deal with struct init *)
+  | Cil_types.Static, Some(Cil_types.CompoundInit(ty,ls)) -> 
+      (* TODO:deal with struct init *)
+      List.iter 
+      ( fun (ofs,ci) -> 
+        match ci with
+        | Cil_types.SingleInit(ei) ->            
+              begin
+                match ofs with
+                | Field(fi,_) -> 
+                  let al, ex = Mman_asyn.transform_field2exp vi fi in 
+                    init_glv := !init_glv @ [al];
+                    init_gexp := !init_gexp @ [ex];
+                | _ -> ()
+              end
+        | _ -> ()
+      )
+      ls
+      (*Cil_types.CompoundInit (typ * (offset * init)) list*)
+
   
   | Cil_types.Static, None ->
       (* depend on the type *)
