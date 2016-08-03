@@ -412,8 +412,8 @@ module Model = struct
 
   let top_of eid =
     let ap_eid = env2apron eid in
-    {eid = eid;
-     vap = Apron.Abstract1.top man_apron ap_eid}
+      { eid = eid;
+        vap = Apron.Abstract1.top man_apron ap_eid }
     
   (** Lattice operations *)
   (* from Bounded_Join_Semi_Lattice *)
@@ -536,7 +536,7 @@ module Model = struct
                     
       
   let alias_variable (d: t)
-      (v1: Cil_types.varinfo) (v2: Cil_types.varinfo) =
+    (v1: Cil_types.varinfo) (v2: Cil_types.varinfo) =
     let apenv = Apron.Abstract1.env (to_apron d.vap) in
     (* get svar from environment *)
     let sv1 = env_getvar d.eid (Mman_svar.sv_mk_var v1) in
@@ -619,7 +619,7 @@ module Model = struct
     
   
   let do_assign_with (d: t)
-      (llv: Mman_asyn.alval list) (lexp: Mman_asyn.aexp list) =
+    (llv: Mman_asyn.alval list) (lexp: Mman_asyn.aexp list) =
     let eid = env d in
     let apv1_apvn = List.map (fun lvi -> to_var eid lvi) llv in
     let ape1_apen = List.map (fun ei -> to_texpr eid ei) lexp in

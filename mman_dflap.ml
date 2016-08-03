@@ -119,7 +119,7 @@ let rec init_globals ()
       Globals.Vars.iter_in_file_order init_global;
       (* = iter_globals init_global (Ast.get()).globals *)
 
-      let _ = Mman_options.Self.feedback "initialization done@." in 
+      let _ = Mman_options.Self.feedback "initialization done\n--------------@." in 
       init_done := true
     end
   
@@ -131,12 +131,13 @@ and init_global vi ii =
       let avi = Mman_asyn.AVar(vi) in
       let aei = Mman_asyn.transform_exp ei in
       begin
-        init_glv := !init_glv @ [avi];
+        init_glv  := !init_glv  @ [avi];
         init_gexp := !init_gexp @ [aei]
       end
   
   | Cil_types.Static, Some(Cil_types.CompoundInit(ty,ls)) -> 
       (* TODO:deal with struct init *)
+      let _ = Mman_options.Self.feedback "init_global: struct init@." in 
       List.iter 
       ( fun (ofs,ci) -> 
         match ci with
@@ -145,7 +146,7 @@ and init_global vi ii =
                 match ofs with
                 | Field(fi,_) -> 
                   let al, ex = Mman_asyn.transform_field2exp vi fi in 
-                    init_glv := !init_glv @ [al];
+                    init_glv  := !init_glv  @ [al];
                     init_gexp := !init_gexp @ [ex];
                 | _ -> ()
               end
@@ -749,7 +750,14 @@ and get_init_state kf =
       ) 
       !init_glv
       in 
-
+  let _ = 
+      List.iter 
+      ( fun ex ->
+        Mman_options.Self.feedback "init_global_aexps: %a, @."
+        Mman_asyn.pp_aexp ex
+      ) 
+      !init_gexp
+      in 
 
   let init_state = try
       Call_state.find init_stmt

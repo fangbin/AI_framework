@@ -141,6 +141,8 @@
 [mman] Analysing the application starting at 'MAIN'
 [mman] Entry_point: main
 [mman] running init globals
+[mman] init_global: struct init
+[mman] init_global: struct init
 [mman] replace_vinfo _heapend/_heapstart in fn(_heapstart)
 [mman] replace_vinfo _heapend/_heapstart in (csz(_heapstart) / 8)
 [mman] replace_vinfo _heapend/_heapstart in 8
@@ -151,11 +153,17 @@
 [mman] Exp:0
 [mman] build cast(2) of (2)
 [mman] initialization done
+       --------------
 [mman] init_global_avals: fn(_heapstart),
 [mman] init_global_avals: csz(_heapstart),
 [mman] init_global_avals: fn(_heapend),
 [mman] init_global_avals: csz(_heapend),
 [mman] init_global_avals: memleft,
+[mman] init_global_aexps: fn(_heapstart),
+[mman] init_global_aexps: (csz(_heapstart) / 8),
+[mman] init_global_aexps: fn(_heapend),
+[mman] init_global_aexps: (csz(_heapend) / 8),
+[mman] init_global_aexps: 0,
 [mman] #########################
         MV-init_globals
 [mman] mman_valap: do assign

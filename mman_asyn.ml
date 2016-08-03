@@ -398,7 +398,7 @@ let transform_castE ae alg_cast alg_exp =
  * The returned variable is the variable used for the feature.
 *)
 let transform_feature2exp
-    (vi:Cil_types.varinfo) (fi:Cil_types.fieldinfo) (feat:int)
+  (vi:Cil_types.varinfo) (fi:Cil_types.fieldinfo) (feat:int)
   : alval * aexp =
   let fk = (Mman_dabs.int2featurekind feat) in
   let lvar, fterm = Mman_dabs.get_feature_term
@@ -579,13 +579,14 @@ let rec replace_hole ae aer =
  * Memorize results in finfo2apron.
 *)
 let transform_field2exp
-    (vi:Cil_types.varinfo)
-    (fi:Cil_types.fieldinfo)
+  (vi:Cil_types.varinfo)
+  (fi:Cil_types.fieldinfo)
   : alval * aexp
   =
   try
     let lvo,e = Cil_datatype.Fieldinfo.Map.find fi (!finfo2aexp) in
-    (match lvo with
+    (
+     match lvo with
      | None -> raise (Error "Feature variable not memorized")
      | Some(lv) ->
          (* replace in e all occurrences of the base of lv by vi *)
