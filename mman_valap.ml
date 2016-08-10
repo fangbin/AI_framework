@@ -596,11 +596,18 @@ module Model = struct
     (*TODO bug Failure("hd") => llv is empty *)
     (*if (List.length llv == 0) then d 
     else *) 
-    let _ = (Mman_options.Self.debug ~level:1 "do_assign: %a:=%a,...@."
-               Mman_asyn.pp_alval (List.hd llv) Mman_asyn.pp_aexp (List.hd lexp);
-             Mman_options.Self.debug ~level:1 "on %a@."
-               (pretty_code_intern Type.Basic) d)
-    in 
+     
+     let _ = 
+        List.iter2 
+        ( fun lv le ->
+             (Mman_options.Self.debug ~level:1 "do_assigns: %a:=%a@."
+                   Mman_asyn.pp_alval (lv) Mman_asyn.pp_aexp (le);
+                 Mman_options.Self.debug ~level:1 "on %a@."
+                   (pretty_code_intern Type.Basic) d)
+        )
+        llv 
+        lexp 
+    in
     let eid = env d in
     let apv1_apvn = List.map (fun lvi -> to_var eid lvi) llv
     in

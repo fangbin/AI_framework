@@ -142,11 +142,31 @@
 [mman] Entry_point: main
 [mman] running init globals
 [mman] init_global: struct init
+[mman] transform expression: (struct hdr *)0
+[mman] Exp:(struct hdr *)0
+[mman] transform expression: 0
+[mman] Exp:0
+[mman] build cast(4) of (4)
+[mman] transform expression: (unsigned int)0
+[mman] Exp:(unsigned int)0
+[mman] transform expression: 0
+[mman] Exp:0
+[mman] build cast(4) of (4)
 [mman] init_global: struct init
 [mman] replace_vinfo _heapend/_heapstart in fn(_heapstart)
+[mman] transform expression: (struct hdr *)0
+[mman] Exp:(struct hdr *)0
+[mman] transform expression: 0
+[mman] Exp:0
+[mman] build cast(4) of (4)
 [mman] replace_vinfo _heapend/_heapstart in (csz(_heapstart) / 8)
 [mman] replace_vinfo _heapend/_heapstart in 8
 [mman] replace_vinfo _heapend/_heapstart in csz(_heapstart)
+[mman] transform expression: (unsigned int)0
+[mman] Exp:(unsigned int)0
+[mman] transform expression: 0
+[mman] Exp:0
+[mman] build cast(4) of (4)
 [mman] transform expression: (short)0
 [mman] Exp:(short)0
 [mman] transform expression: 0
@@ -159,32 +179,36 @@
 [mman] init_global_avals: fn(_heapend),
 [mman] init_global_avals: csz(_heapend),
 [mman] init_global_avals: memleft,
-[mman] init_global_aexps: fn(_heapstart),
-[mman] init_global_aexps: (csz(_heapstart) / 8),
-[mman] init_global_aexps: fn(_heapend),
-[mman] init_global_aexps: (csz(_heapend) / 8),
+[mman] init_global_aexps: 0,
+[mman] init_global_aexps: 0,
+[mman] init_global_aexps: 0,
+[mman] init_global_aexps: 0,
 [mman] init_global_aexps: 0,
 [mman] #########################
         MV-init_globals
 [mman] mman_valap: do assign
 [mman] env2apron: eid3 -> [1][0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> _heapend:int 5> _heapstart:int 6> man:int 7> memleft:int 8> p1:int 9> p2:int]
-[mman] do_assign: fn(_heapstart):=fn(_heapstart),...
+[mman] do_assigns: fn(_heapstart):=0
+[mman] on ({eid_3}top)
+[mman] do_assigns: csz(_heapstart):=0
+[mman] on ({eid_3}top)
+[mman] do_assigns: fn(_heapend):=0
+[mman] on ({eid_3}top)
+[mman] do_assigns: csz(_heapend):=0
+[mman] on ({eid_3}top)
+[mman] do_assigns: memleft:=0
 [mman] on ({eid_3}top)
 [mman] to_var: fn(_heapstart) in eid_3
 [mman] to_var: csz(_heapstart) in eid_3
 [mman] to_var: fn(_heapend) in eid_3
 [mman] to_var: csz(_heapend) in eid_3
 [mman] to_var: memleft in eid_3
-[mman] to_var: fn(_heapstart) in eid_3
-[mman] to_var: csz(_heapstart) in eid_3
-[mman] to_var: fn(_heapend) in eid_3
-[mman] to_var: csz(_heapend) in eid_3
-[mman] to [|memleft=0; -7__hole+8>=0; 7__hole+8>=0|]
+[mman] to [|__hole=0|]
 [mman] mman_valap: do assign done
 [mman] mman_valap: do meet exp
 [mman] mman_valap: constraint: __hli>=0
 [mman] to_var: __hli in eid_3
-[mman] mman_valap: after meep ({eid_3}[|memleft=0; -7__hole+8>=0; __hole>=0|])
+[mman] mman_valap: after meep ({eid_3}[|__hole=0|])
 [mman] mman_valap: init_globals finished 
         #########################
 [mman] Initial_state_stmt (sid:85)
@@ -193,7 +217,7 @@
 [mman] to_var: p2 in eid_3
 [mman] Start general analysis
 [mman] do_call: laInit(...)
-[mman] forget __retres,... in {eid_3}[|memleft=0; -7__hole+8>=0; p2>=0; p1>=0; man>=0; __hole>=0|]
+[mman] forget __retres,... in {eid_3}[|__hole=0; p2>=0; p1>=0; man>=0|]
 [mman] to_var: __retres in eid_3
 [mman] Unify penvs 3, 0
 [mman] unified penv_3 = (3,
@@ -208,8 +232,10 @@
 [mman] transform_sbrk: fn(_heapstart):=__hole[sbrk(65360)]
 [mman] to: fn(_heapstart):=__hli
 [mman] to: __hli:=(__hli + 65360)
-[mman] do_assign: fn(_heapstart):=__hli,...
-[mman] on ({eid_0}[|memleft=0|])
+[mman] do_assigns: fn(_heapstart):=__hli
+[mman] on ({eid_0}top)
+[mman] do_assigns: __hli:=(__hli + 65360)
+[mman] on ({eid_0}top)
 [mman] to_var: fn(_heapstart) in eid_0
 [mman] to_var: __hli in eid_0
 [mman] to_var: __hli in eid_0
@@ -222,7 +248,9 @@
 [mman] transform_sbrk: fn(_heapend):=__hole[sbrk(0)]
 [mman] to: fn(_heapend):=__hli
 [mman] to: __hli:=(__hli + 0)
-[mman] do_assign: fn(_heapend):=__hli,...
+[mman] do_assigns: fn(_heapend):=__hli
+[mman] on ({eid_0}bottom)
+[mman] do_assigns: __hli:=(__hli + 0)
 [mman] on ({eid_0}bottom)
 [mman] to_var: fn(_heapend) in eid_0
 [mman] to_var: __hli in eid_0
@@ -236,7 +264,7 @@
 [mman] Exp:_heapstart.ptr
 [mman] replace_vinfo _heapstart/_heapstart in fn(_heapstart)
 [mman] to: frhd:=fn(_heapstart)
-[mman] do_assign: frhd:=fn(_heapstart),...
+[mman] do_assigns: frhd:=fn(_heapstart)
 [mman] on ({eid_0}bottom)
 [mman] to_var: frhd in eid_0
 [mman] to_var: fn(_heapstart) in eid_0
@@ -251,7 +279,7 @@
 [mman] Exp:0
 [mman] build cast(4) of (4)
 [mman] to: fn(frhd):=0
-[mman] do_assign: fn(frhd):=0,...
+[mman] do_assigns: fn(frhd):=0
 [mman] on ({eid_0}bottom)
 [mman] to_var: fn(frhd) in eid_0
 [mman] to bottom
@@ -281,7 +309,7 @@
 [mman] transform expression: sizeof(HEADER)
 [mman] Exp:sizeof(HEADER)
 [mman] to: csz(frhd):=(((fn(_heapend) - fn(_heapstart)) / 8) * 8)
-[mman] do_assign: csz(frhd):=(((fn(_heapend) - fn(_heapstart)) / 8) * 8),...
+[mman] do_assigns: csz(frhd):=(((fn(_heapend) - fn(_heapstart)) / 8) * 8)
 [mman] on ({eid_0}bottom)
 [mman] to_var: csz(frhd) in eid_0
 [mman] to_var: fn(_heapend) in eid_0
@@ -299,7 +327,7 @@
 [mman] replace_vinfo frhd/_heapstart in csz(_heapstart)
 [mman] build cast(2) of (2)
 [mman] to: memleft:=(csz(frhd) / 8)
-[mman] do_assign: memleft:=(csz(frhd) / 8),...
+[mman] do_assigns: memleft:=(csz(frhd) / 8)
 [mman] on ({eid_0}bottom)
 [mman] to_var: memleft in eid_0
 [mman] to_var: csz(frhd) in eid_0
@@ -309,7 +337,7 @@
 [mman] unified penv_3 = (4,
        [10]{ 0> (0)__null; 1> (1)__hole; 2> (2)__hli; 3> (3)__hst; 4> (4)_heapstart; 5> (5)_heapend; 6> (6)memleft; 7> (7)man; 8> (8)p1; 9> (9)p2;
        })
-[mman] forget _heapstart,... in {eid_3}[|memleft=0; -7__hole+8>=0; p2>=0; p1>=0; man>=0; __hole>=0|]
+[mman] forget _heapstart,... in {eid_3}[|__hole=0; p2>=0; p1>=0; man>=0|]
 [mman] to_var: _heapstart in eid_3
 [mman] to_var: _heapend in eid_3
 [mman] to_var: memleft in eid_3
@@ -324,7 +352,7 @@
 [mman] Exp:0
 [mman] build cast(4) of (4)
 [mman] to: man:=0
-[mman] do_assign: man:=0,...
+[mman] do_assigns: man:=0
 [mman] on ({eid_3}bottom)
 [mman] to_var: man in eid_3
 [mman] to bottom
@@ -343,7 +371,7 @@
 [mman] env2apron: eid5 -> [3][0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> _heapend:int 5> _heapstart:int 6> f1676_nbytes:int 7> man:int 8> memleft:int 9> nunits:int 10> nxt:int 11> p1:int 12> p2:int 13> prev:int]
 [mman] transform expression: 20
 [mman] Exp:20
-[mman] do_assign: nbytes:=20,...
+[mman] do_assigns: nbytes:=20
 [mman] on ({eid_5}bottom)
 [mman] to_var: nbytes in eid_5
 [mman] to bottom
@@ -366,7 +394,7 @@
 [mman] to_var: _heapend in eid_3
 [mman] to_var: memleft in eid_3
 [mman] Assertion value eid 3 = old eid 3
-[mman] do_assign: __hole:=__retres,...
+[mman] do_assigns: __hole:=__retres
 [mman] on ({eid_1}bottom)
 [mman] to_var: __hole in eid_1
 [mman] to_var: __retres in eid_1
@@ -383,7 +411,7 @@
 [mman] Exp:__hole
 [mman] lval2exp: found __hole
 [mman] to: p1:=__hole
-[mman] do_assign: p1:=__hole,...
+[mman] do_assigns: p1:=__hole
 [mman] on ({eid_3}bottom)
 [mman] to_var: p1 in eid_3
 [mman] to_var: __hole in eid_3
@@ -404,7 +432,7 @@
 [mman] Assertion value eid 3 = old eid 3
 [mman] transform expression: 20
 [mman] Exp:20
-[mman] do_assign: nbytes:=20,...
+[mman] do_assigns: nbytes:=20
 [mman] on ({eid_5}bottom)
 [mman] to_var: nbytes in eid_5
 [mman] to bottom
@@ -445,7 +473,7 @@
 [mman] Assertion value eid 3 = old eid 3
 [mman] transform expression: 20
 [mman] Exp:20
-[mman] do_assign: nbytes:=20,...
+[mman] do_assigns: nbytes:=20
 [mman] on ({eid_5}bottom)
 [mman] to_var: nbytes in eid_5
 [mman] to bottom
@@ -467,7 +495,7 @@
 [mman] to_var: _heapend in eid_3
 [mman] to_var: memleft in eid_3
 [mman] Assertion value eid 3 = old eid 3
-[mman] do_assign: __hole:=__retres,...
+[mman] do_assigns: __hole:=__retres
 [mman] on ({eid_1}bottom)
 [mman] to_var: __hole in eid_1
 [mman] to_var: __retres in eid_1
@@ -484,7 +512,7 @@
 [mman] Exp:__hole
 [mman] lval2exp: found __hole
 [mman] to: p2:=__hole
-[mman] do_assign: p2:=__hole,...
+[mman] do_assigns: p2:=__hole
 [mman] on ({eid_3}bottom)
 [mman] to_var: p2 in eid_3
 [mman] to_var: __hole in eid_3
@@ -505,7 +533,7 @@
 [mman] Assertion value eid 3 = old eid 3
 [mman] transform expression: 20
 [mman] Exp:20
-[mman] do_assign: nbytes:=20,...
+[mman] do_assigns: nbytes:=20
 [mman] on ({eid_5}bottom)
 [mman] to_var: nbytes in eid_5
 [mman] to bottom
@@ -548,7 +576,7 @@
 [mman] transform expression: p1
 [mman] Exp:p1
 [mman] lval2exp: found p1
-[mman] do_assign: ap:=p1,...
+[mman] do_assigns: ap:=p1
 [mman] on ({eid_6}bottom)
 [mman] to_var: ap in eid_6
 [mman] to_var: p1 in eid_6
@@ -590,7 +618,7 @@
 [mman] transform expression: p2
 [mman] Exp:p2
 [mman] lval2exp: found p2
-[mman] do_assign: ap:=p2,...
+[mman] do_assigns: ap:=p2
 [mman] on ({eid_6}bottom)
 [mman] to_var: ap in eid_6
 [mman] to_var: p2 in eid_6
@@ -622,7 +650,7 @@
 [mman] transform expression: 0
 [mman] Exp:0
 [mman] to: __retres:=0
-[mman] do_assign: __retres:=0,...
+[mman] do_assigns: __retres:=0
 [mman] on ({eid_3}bottom)
 [mman] to_var: __retres in eid_3
 [mman] to bottom
@@ -630,7 +658,7 @@
 [mman] (sid:80): {eid_0}bottom
 [mman] (sid:81): {eid_0}bottom
 [mman] (sid:82): {eid_0}bottom
-[mman] (sid:85): {eid_3}[|memleft=0; -7__hole+8>=0; p2>=0; p1>=0; man>=0; __hole>=0|]
+[mman] (sid:85): {eid_3}[|__hole=0; p2>=0; p1>=0; man>=0|]
 [mman] (sid:86): {eid_3}bottom
 [mman] (sid:87): {eid_3}bottom
 [mman] (sid:88): {eid_3}bottom
@@ -641,7 +669,7 @@
 [mman] (sid:91): {eid_3}bottom
 [mman] (sid:92): {eid_3}bottom
 [mman] (sid:93): {eid_3}bottom
-[mman] (sid:77): {eid_0}[|memleft=0|]
+[mman] (sid:77): {eid_0}top
 [mman] (sid:78): {eid_0}bottom
 [mman] (sid:79): {eid_0}bottom
 [mman] --------------------------------------------

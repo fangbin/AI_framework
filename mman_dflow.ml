@@ -128,7 +128,26 @@ and init_global vi ii =
         init_glv := !init_glv @ [avi];
         init_gexp := !init_gexp @ [aei]
       end
-  | Cil_types.Static, Some(_) -> () (* TODO:deal with struct init *)
+  | Cil_types.Static, Some(Cil_types.CompoundInit(ty,ls)) -> 
+      (* TODO:deal with struct init *)
+      let _ = Mman_options.Self.feedback "init_global: struct init@." in 
+      List.iter 
+      ( fun (ofs,ci) -> 
+        match ci with
+        | Cil_types.SingleInit(ei) ->            
+              begin
+                match ofs with
+                | Field(fi,_) -> 
+                  let al, ex = Mman_asyn.transform_field2exp vi fi in 
+                    init_glv  := !init_glv  @ [al];
+                  let aex = Mman_asyn.transform_exp ei in
+                    init_gexp := !init_gexp @ [aex];
+                | _ -> ()
+              end
+        | _ -> ()
+      )
+      ls
+
   | Cil_types.Static, None ->
       (* depend on the type *)
       init_gcnd := !init_gcnd @ (Mman_asyn.coerce_var vi vi.vtype)
@@ -448,7 +467,7 @@ module Compute(AnPar: ComputeArg) = struct
     MV.Model.do_assign aval llv lexp 
 
   and transfer_sbrk (s: Cil_types.stmt) lv argl
-      (aval: t) : t
+    (aval: t) : t
     =
     let _ = (Mman_options.Self.debug ~dkey:dflw_dkey
                "transfer_sbrk: %a@.on %a@."
@@ -460,7 +479,7 @@ module Compute(AnPar: ComputeArg) = struct
     MV.Model.do_assign aval llv lexp
       
   and transfer_call (s: Cil_types.stmt) kf_callee lv argl
-      (aval: t) : t
+    (aval: t) : t
     =
     (* assert (kf.fname != sbrk) && not(isIgnoredFunction kf) *)
     let _, kf_caller = Kernel_function.find_from_sid s.sid in
@@ -717,6 +736,27 @@ and get_init_state kf =
                 Cil_datatype.Stmt.pretty_sid init_stmt 
   in 
   let _ = init_globals () in
+  
+
+  let _ = 
+      List.iter 
+      ( fun lv ->
+        Mman_options.Self.feedback "init_global_avals: %a, @."
+        Mman_asyn.pp_alval lv 
+      ) 
+      !init_glv
+      in 
+  let _ = 
+      List.iter 
+      ( fun ex ->
+        Mman_options.Self.feedback "init_global_aexps: %a, @."
+        Mman_asyn.pp_aexp ex
+      ) 
+      !init_gexp
+      in 
+
+
+
   let init_state = try
       Call_state.find init_stmt
     with Not_found -> (

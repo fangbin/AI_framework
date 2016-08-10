@@ -54,7 +54,7 @@ type sh2dw = MDW.t ModelMap.t
 let pretty_eshdw fmt (esh: MSH.t) (dw: MDW.t)
   : unit
   = 
-  Format.fprintf fmt "\\/ %a @.\t/ \\ %a@."
+  Format.fprintf fmt "eshape: %a @.\t dwords:%a @."
     MSH.pretty esh MDW.pretty dw
 
 let compare_eshdw (esh0: MSH.t) (dw0: MDW.t) (esh1: MSH.t) (dw1: MDW.t)
@@ -694,14 +694,21 @@ module Model = struct
     (*TODO bug Failure("hd") => llv is empty *)
     if (List.length llv == 0 ) then d 
     else 
-    let _ = (Mman_options.Self.debug ~level:1 "do_assign: %a:=%a,...@."
-               Mman_asyn.pp_alval (List.hd llv) Mman_asyn.pp_aexp (List.hd lexp);
-             Mman_options.Self.debug ~level:1 "on %a@."
-               (pretty_code_intern Type.Basic) d)
+    let _ = 
+        List.iter2 
+        ( fun lv le ->
+             (Mman_options.Self.debug ~level:1 "do_assigns: %a:=%a@."
+                   Mman_asyn.pp_alval (lv) Mman_asyn.pp_aexp (le);
+                 Mman_options.Self.debug ~level:1 "on %a@."
+                   (pretty_code_intern Type.Basic) d)
+        )
+        llv 
+        lexp 
     in
     let nmap =
       (match d.set with
       | None -> None
+      
       | Some(m) ->
           let nnmap = do_assign_set (env d) llv lexp m in
           match nnmap with
@@ -744,52 +751,74 @@ module Model = struct
     : (sh2dw option)
     =
     (* build from (esh, dw) the set of pairs where all assignments may be done *)
+    let _ = Mman_options.Self.debug ~level:1 "do_assign_one @." in 
     let nllv = ref [] in
     let nlexp = ref [] in
     let vf = ref [] in
-    let r = ref false in
+    let r = ref true  in
+    let l = ref true in 
     let isin = ref false in
     begin
-      List.iter (fun lv -> if !r then
-                    (let rlv, rvf = MSH.evalL lv esh in
+      List.iter (fun lv -> 
+                     
+                    let _ = Mman_options.Self.debug ~level:1 " evaluate alval:%a @." 
+                            Mman_asyn.pp_alval  lv 
+                            in 
+                    let rlv, rvf = MSH.evalL lv esh in
                      match rlv with
-                     | None -> r := false
+                     | None -> 
+                        let _ = Mman_options.Self.debug ~level:1 " evalL is None @." 
+                        in 
+
+                        r := false
                      | Some(lv') ->
                          begin
+                          let _ = Mman_options.Self.debug ~level:1 " evalL is Some() @." 
+                          in 
                            nllv := lv' :: (!nllv);
                            vf := rvf @ (!vf)
                          end
-                    )
-                    else ()
+                     
                 )
         llv
       ;
-      List.iter (fun e -> if !r then
-                    (let re, rvf = MSH.evalE e esh in
+      List.iter (fun e ->    
+                                      
+                    let _ = Mman_options.Self.debug ~level:1 " evaluate aexp:%a  @." 
+                            Mman_asyn.pp_aexp e 
+                            in 
+                    let re, rvf = MSH.evalE e esh in
                      match re with
-                     | None -> r := false
+                     | None -> 
+                        let _ = Mman_options.Self.debug ~level:1 " evalL is None @." in 
+                        l := false
                      | Some(e') ->
                          begin
+                          let _ = Mman_options.Self.debug ~level:1 " evalL is Some() @." 
+                          in 
                            nlexp := (e') :: (!nlexp);
                            vf := rvf @ (!vf)
-                         end
-                    )
+                         end 
+                    
                 )
         lexp
       ;
-      if (!r) then
+      if (!r) && (!l) then
         None
       else
         begin
-          if (!vf) = [] then
+          if (!vf) = [] then (* do not unfold *)
             (* the assignment may be done *)
+            let _ = Mman_options.Self.debug ~level:1 " do mutate@."  in 
+
             let nm = ref (ModelMap.empty) in
             begin
               List.iter2
                 (
                   fun lv e ->
-                   if (!r) then
+                   if ( not !r) then
                      (
+                      let _ = Mman_options.Self.debug ~level:1 " eshape mutate@."  in 
                       let t1_tn = MSH.mutate lv e esh in
                       if t1_tn = [] then
                         r := false

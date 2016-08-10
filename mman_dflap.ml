@@ -147,7 +147,8 @@ and init_global vi ii =
                 | Field(fi,_) -> 
                   let al, ex = Mman_asyn.transform_field2exp vi fi in 
                     init_glv  := !init_glv  @ [al];
-                    init_gexp := !init_gexp @ [ex];
+                  let aex = Mman_asyn.transform_exp ei in
+                    init_gexp := !init_gexp @ [aex];
                 | _ -> ()
               end
         | _ -> ()

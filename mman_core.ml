@@ -58,8 +58,8 @@ let run_compute () =
     (* 2a: for minit *)
     Mman_options.Self.feedback "--------------------------------------------";
     Mman_options.Self.feedback "Analysing 'minit'";
-    (*Mman_dflap.compute_for_minit ();
-    Mman_dflow.compute_for_minit ();*)
+    (*Mman_dflap.compute_for_minit ();*)
+    (*Mman_dflow.compute_for_minit ();*)
 
     (* 2b: for malloc *)
     Mman_options.Self.feedback "--------------------------------------------";
