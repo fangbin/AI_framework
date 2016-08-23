@@ -745,7 +745,7 @@ and get_init_state kf =
         Mman_asyn.pp_alval lv 
       ) 
       !init_glv
-      in 
+  in 
   let _ = 
       List.iter 
       ( fun ex ->
@@ -753,10 +753,7 @@ and get_init_state kf =
         Mman_asyn.pp_aexp ex
       ) 
       !init_gexp
-      in 
-
-
-
+  in 
   let init_state = try
       Call_state.find init_stmt
     with Not_found -> (
@@ -764,6 +761,7 @@ and get_init_state kf =
         let _ = Mman_options.Self.feedback "Computing global values@." in
         let glb_state = MV.init_globals eid_stmt
             !init_glv !init_gexp !init_gcnd in
+         
         let glb_loc_state = set_fun_locals kf eid_stmt glb_state in
         glb_loc_state
       )

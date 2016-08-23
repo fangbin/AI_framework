@@ -1,8 +1,5 @@
-[mman] env2apron: eid-1 -> [0][]
 [kernel] Parsing FRAMAC_SHARE/libc/__fc_builtin_for_normalization.i (no preprocessing)
-[kernel] Converting CABS->CIL
 [kernel] Parsing ../mem copy/bench/la/lamain.c (with preprocessing)
-[kernel] Converting CABS->CIL
 [mman] Welcome to the Mman plugin
 [mman] Reading data abstraction
 [mman] 'cty' definition: ok
@@ -25,27 +22,6 @@
 [mman] method 'mrealoc': undefined
 [mman] --------------------------------------------
 [mman] Analysed code in full.c
-[mman] Initialize global environment
-[mman] Add '_heapstart' of type HEADER (aka struct hdr)
-[mman] Add '_heapend' of type HEADER (aka struct hdr)
-[mman] Add 'memleft' of type short (aka short)
-[mman] Initialize penv for 'laAlloc'
-[mman] Add 'nbytes' of type int (aka int)
-[mman] Add 'nxt' of type HEADER * (aka struct hdr *)
-[mman] Add 'prev' of type HEADER * (aka struct hdr *)
-[mman] Add 'nunits' of type int (aka int)
-[mman] Initialize penv for 'laFree'
-[mman] Add 'ap' of type void * (aka void *)
-[mman] Add 'nxt' of type HEADER * (aka struct hdr *)
-[mman] Add 'prev' of type HEADER * (aka struct hdr *)
-[mman] Add 'f' of type HEADER * (aka struct hdr *)
-[mman] Initialize penv for 'laInit'
-[mman] Initialize penv for 'main'
-[mman] Add 'man' of type void * (aka void *)
-[mman] Add 'p1' of type void * (aka void *)
-[mman] Add 'p2' of type void * (aka void *)
-[mman] Initialize penv for 'warm_boot'
-[mman] Add 'str' of type char * (aka char *)
 [mman] stmt2penvs:
        (1) s_1 (@line 29) -> e_4
        (1) s_4 (@line 49) -> e_2
@@ -142,36 +118,17 @@
 [mman] Entry_point: main
 [mman] running init globals
 [mman] init_global: struct init
-[mman] transform expression: (struct hdr *)0
 [mman] Exp:(struct hdr *)0
-[mman] transform expression: 0
 [mman] Exp:0
-[mman] build cast(4) of (4)
-[mman] transform expression: (unsigned int)0
 [mman] Exp:(unsigned int)0
-[mman] transform expression: 0
 [mman] Exp:0
-[mman] build cast(4) of (4)
 [mman] init_global: struct init
-[mman] replace_vinfo _heapend/_heapstart in fn(_heapstart)
-[mman] transform expression: (struct hdr *)0
 [mman] Exp:(struct hdr *)0
-[mman] transform expression: 0
 [mman] Exp:0
-[mman] build cast(4) of (4)
-[mman] replace_vinfo _heapend/_heapstart in (csz(_heapstart) / 8)
-[mman] replace_vinfo _heapend/_heapstart in 8
-[mman] replace_vinfo _heapend/_heapstart in csz(_heapstart)
-[mman] transform expression: (unsigned int)0
 [mman] Exp:(unsigned int)0
-[mman] transform expression: 0
 [mman] Exp:0
-[mman] build cast(4) of (4)
-[mman] transform expression: (short)0
 [mman] Exp:(short)0
-[mman] transform expression: 0
 [mman] Exp:0
-[mman] build cast(2) of (2)
 [mman] initialization done
        --------------
 [mman] init_global_avals: fn(_heapstart),
@@ -187,7 +144,6 @@
 [mman] #########################
         MV-init_globals
 [mman] mman_valap: do assign
-[mman] env2apron: eid3 -> [1][0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> _heapend:int 5> _heapstart:int 6> man:int 7> memleft:int 8> p1:int 9> p2:int]
 [mman] do_assigns: fn(_heapstart):=0
 [mman] on ({eid_3}top)
 [mman] do_assigns: csz(_heapstart):=0
@@ -211,23 +167,20 @@
 [mman] mman_valap: after meep ({eid_3}[|__hole=0|])
 [mman] mman_valap: init_globals finished 
         #########################
+[mman] Global state: ({eid_3}[|__hole=0|])
 [mman] Initial_state_stmt (sid:85)
 [mman] to_var: man in eid_3
 [mman] to_var: p1 in eid_3
 [mman] to_var: p2 in eid_3
 [mman] Start general analysis
+[mman] transfer_call
 [mman] do_call: laInit(...)
-[mman] forget __retres,... in {eid_3}[|__hole=0; p2>=0; p1>=0; man>=0|]
+[mman] compute_call_state
 [mman] to_var: __retres in eid_3
 [mman] Unify penvs 3, 0
-[mman] unified penv_3 = (3,
-       [10]{ 0> (0)__null; 1> (1)__hole; 2> (2)__hli; 3> (3)__hst; 4> (4)_heapstart; 5> (5)_heapend; 6> (6)memleft; 7> (7)man; 8> (8)p1; 9> (9)p2;
-       })
-[mman] Assertion value eid 3 = old eid 3
-[mman] env2apron: eid0 -> [2][0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> _heapend:int 5> _heapstart:int 6> memleft:int]
-[mman] transform expression: 65360
+[mman] init_callee_state: ({eid_0}top)
+[mman] compute_return_state
 [mman] Exp:65360
-[mman] transform_lval2var: _heapstart.ptr
 [mman] feature2exph: _heapstart->ptr to fn
 [mman] transform_sbrk: fn(_heapstart):=__hole[sbrk(65360)]
 [mman] to: fn(_heapstart):=__hli
@@ -241,9 +194,7 @@
 [mman] to_var: __hli in eid_0
 [mman] to_var: __hli in eid_0
 [mman] to bottom
-[mman] transform expression: 0
 [mman] Exp:0
-[mman] transform_lval2var: _heapend.ptr
 [mman] feature2exph: _heapend->ptr to fn
 [mman] transform_sbrk: fn(_heapend):=__hole[sbrk(0)]
 [mman] to: fn(_heapend):=__hli
@@ -258,11 +209,8 @@
 [mman] to_var: __hli in eid_0
 [mman] to bottom
 [mman] transform_assign: frhd:=_heapstart.ptr
-[mman] transform_lval2var: frhd
 [mman] transform_assign: frhd:=__hole[_heapstart.ptr]
-[mman] transform expression: _heapstart.ptr
 [mman] Exp:_heapstart.ptr
-[mman] replace_vinfo _heapstart/_heapstart in fn(_heapstart)
 [mman] to: frhd:=fn(_heapstart)
 [mman] do_assigns: frhd:=fn(_heapstart)
 [mman] on ({eid_0}bottom)
@@ -270,43 +218,25 @@
 [mman] to_var: fn(_heapstart) in eid_0
 [mman] to bottom
 [mman] transform_assign: frhd->ptr:=(struct hdr *)0
-[mman] transform_lval2var: frhd->ptr
 [mman] feature2exph: frhd->ptr to fn
 [mman] transform_assign: fn(frhd):=__hole[(struct hdr *)0]
-[mman] transform expression: (struct hdr *)0
 [mman] Exp:(struct hdr *)0
-[mman] transform expression: 0
 [mman] Exp:0
-[mman] build cast(4) of (4)
 [mman] to: fn(frhd):=0
 [mman] do_assigns: fn(frhd):=0
 [mman] on ({eid_0}bottom)
 [mman] to_var: fn(frhd) in eid_0
 [mman] to bottom
 [mman] transform_assign: frhd->size:=(unsigned int)((char *)_heapend.ptr - (char *)_heapstart.ptr) / sizeof(HEADER)
-[mman] transform_lval2var: frhd->size
 [mman] feature2exph: frhd->size to csz
 [mman] transform_assign: csz(frhd):=(__hole * 8)[(unsigned int)((char *)_heapend.ptr - (char *)_heapstart.ptr) / sizeof(HEADER)]
-[mman] transform expression: (unsigned int)((char *)_heapend.ptr - (char *)_heapstart.ptr) / sizeof(HEADER)
 [mman] Exp:(unsigned int)((char *)_heapend.ptr - (char *)_heapstart.ptr) / sizeof(HEADER)
-[mman] transform expression: (unsigned int)((char *)_heapend.ptr - (char *)_heapstart.ptr)
 [mman] Exp:(unsigned int)((char *)_heapend.ptr - (char *)_heapstart.ptr)
-[mman] transform expression: (char *)_heapend.ptr - (char *)_heapstart.ptr
 [mman] Exp:(char *)_heapend.ptr - (char *)_heapstart.ptr
-[mman] transform expression: (char *)_heapend.ptr
 [mman] Exp:(char *)_heapend.ptr
-[mman] transform expression: _heapend.ptr
 [mman] Exp:_heapend.ptr
-[mman] replace_vinfo _heapend/_heapstart in fn(_heapstart)
-[mman] build cast(4) of (4)
-[mman] transform expression: (char *)_heapstart.ptr
 [mman] Exp:(char *)_heapstart.ptr
-[mman] transform expression: _heapstart.ptr
 [mman] Exp:_heapstart.ptr
-[mman] replace_vinfo _heapstart/_heapstart in fn(_heapstart)
-[mman] build cast(4) of (4)
-[mman] build cast(4) of (4)
-[mman] transform expression: sizeof(HEADER)
 [mman] Exp:sizeof(HEADER)
 [mman] to: csz(frhd):=(((fn(_heapend) - fn(_heapstart)) / 8) * 8)
 [mman] do_assigns: csz(frhd):=(((fn(_heapend) - fn(_heapstart)) / 8) * 8)
@@ -316,16 +246,9 @@
 [mman] to_var: fn(_heapstart) in eid_0
 [mman] to bottom
 [mman] transform_assign: memleft:=(short)frhd->size
-[mman] transform_lval2var: memleft
 [mman] transform_assign: memleft:=__hole[(short)frhd->size]
-[mman] transform expression: (short)frhd->size
 [mman] Exp:(short)frhd->size
-[mman] transform expression: frhd->size
 [mman] Exp:frhd->size
-[mman] replace_vinfo frhd/_heapstart in (csz(_heapstart) / 8)
-[mman] replace_vinfo frhd/_heapstart in 8
-[mman] replace_vinfo frhd/_heapstart in csz(_heapstart)
-[mman] build cast(2) of (2)
 [mman] to: memleft:=(csz(frhd) / 8)
 [mman] do_assigns: memleft:=(csz(frhd) / 8)
 [mman] on ({eid_0}bottom)
@@ -334,320 +257,176 @@
 [mman] to bottom
 [mman] ret_call: laInit(...)
 [mman] Unify penvs 3, 0
-[mman] unified penv_3 = (4,
-       [10]{ 0> (0)__null; 1> (1)__hole; 2> (2)__hli; 3> (3)__hst; 4> (4)_heapstart; 5> (5)_heapend; 6> (6)memleft; 7> (7)man; 8> (8)p1; 9> (9)p2;
-       })
-[mman] forget _heapstart,... in {eid_3}[|__hole=0; p2>=0; p1>=0; man>=0|]
 [mman] to_var: _heapstart in eid_3
 [mman] to_var: _heapend in eid_3
 [mman] to_var: memleft in eid_3
-[mman] return state: {eid_0}bottom
-[mman] Assertion value eid 0 = old eid 0
 [mman] transform_assign: man:=(void *)0
-[mman] transform_lval2var: man
 [mman] transform_assign: man:=__hole[(void *)0]
-[mman] transform expression: (void *)0
 [mman] Exp:(void *)0
-[mman] transform expression: 0
 [mman] Exp:0
-[mman] build cast(4) of (4)
 [mman] to: man:=0
 [mman] do_assigns: man:=0
 [mman] on ({eid_3}bottom)
 [mman] to_var: man in eid_3
 [mman] to bottom
+[mman] transfer_call
 [mman] do_call: laAlloc(...)
-[mman] forget __retres,... in {eid_3}bottom
+[mman] compute_call_state
 [mman] to_var: __retres in eid_3
 [mman] Unify penvs 3, 1
-[mman] old pvar_7/11 -> pvar_10
-[mman] old pvar_8/11 -> pvar_11
-[mman] old pvar_9/11 -> pvar_12
-[mman] old pvar_10/11 -> pvar_13
-[mman] unified penv_5 = (1,
-       [14]{ 0> (0)__null; 1> (1)__hole; 2> (2)__hli; 3> (3)__hst; 4> (4)_heapstart; 5> (5)_heapend; 6> (6)memleft; 7> (7)man; 8> (8)p1; 9> (9)p2;
-        10> (10)f1676_nbytes; 11> (11)nxt; 12> (12)prev; 13> (13)nunits;})
-[mman] Assertion value eid 3 = old eid 3
-[mman] env2apron: eid5 -> [3][0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> _heapend:int 5> _heapstart:int 6> f1676_nbytes:int 7> man:int 8> memleft:int 9> nunits:int 10> nxt:int 11> p1:int 12> p2:int 13> prev:int]
-[mman] transform expression: 20
 [mman] Exp:20
 [mman] do_assigns: nbytes:=20
 [mman] on ({eid_5}bottom)
 [mman] to_var: nbytes in eid_5
 [mman] to bottom
-[mman] Assertion value eid 5 = old eid 5
-[mman] env2apron: eid1 -> [4][0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> _heapend:int 5> _heapstart:int 6> f1676_nbytes:int 7> memleft:int 8> nunits:int 9> nxt:int 10> prev:int]
 [mman] to_var: nxt in eid_1
 [mman] to_var: prev in eid_1
 [mman] to_var: __retres in eid_1
+[mman] init_callee_state: ({eid_1}bottom)
+[mman] compute_return_state
 [mman] ret_call: laAlloc(...)
 [mman] Unify penvs 3, 1
-[mman] old pvar_7/11 -> pvar_10
-[mman] old pvar_8/11 -> pvar_11
-[mman] old pvar_9/11 -> pvar_12
-[mman] old pvar_10/11 -> pvar_13
-[mman] unified penv_5 = (2,
-       [14]{ 0> (0)__null; 1> (1)__hole; 2> (2)__hli; 3> (3)__hst; 4> (4)_heapstart; 5> (5)_heapend; 6> (6)memleft; 7> (7)man; 8> (8)p1; 9> (9)p2;
-        10> (10)f1676_nbytes; 11> (11)nxt; 12> (12)prev; 13> (13)nunits;})
-[mman] forget _heapstart,... in {eid_3}bottom
 [mman] to_var: _heapstart in eid_3
 [mman] to_var: _heapend in eid_3
 [mman] to_var: memleft in eid_3
-[mman] Assertion value eid 3 = old eid 3
 [mman] do_assigns: __hole:=__retres
 [mman] on ({eid_1}bottom)
 [mman] to_var: __hole in eid_1
 [mman] to_var: __retres in eid_1
 [mman] to bottom
-[mman] forget __retres,... in {eid_1}bottom
 [mman] to_var: __retres in eid_1
-[mman] return state: {eid_1}bottom
-[mman] Assertion value eid 1 = old eid 1
-[mman] Assertion value eid 5 = old eid 5
 [mman] transform_assign: p1:=__hole
-[mman] transform_lval2var: p1
 [mman] transform_assign: p1:=__hole[__hole]
-[mman] transform expression: __hole
 [mman] Exp:__hole
-[mman] lval2exp: found __hole
 [mman] to: p1:=__hole
 [mman] do_assigns: p1:=__hole
 [mman] on ({eid_3}bottom)
 [mman] to_var: p1 in eid_3
 [mman] to_var: __hole in eid_3
 [mman] to bottom
-[mman] forget __hole,... in {eid_3}bottom
 [mman] to_var: __hole in eid_3
+[mman] transfer_call
 [mman] do_call: laAlloc(...)
-[mman] forget __retres,... in {eid_3}bottom
+[mman] compute_call_state
 [mman] to_var: __retres in eid_3
 [mman] Unify penvs 3, 1
-[mman] old pvar_7/11 -> pvar_10
-[mman] old pvar_8/11 -> pvar_11
-[mman] old pvar_9/11 -> pvar_12
-[mman] old pvar_10/11 -> pvar_13
-[mman] unified penv_5 = (3,
-       [14]{ 0> (0)__null; 1> (1)__hole; 2> (2)__hli; 3> (3)__hst; 4> (4)_heapstart; 5> (5)_heapend; 6> (6)memleft; 7> (7)man; 8> (8)p1; 9> (9)p2;
-        10> (10)f1676_nbytes; 11> (11)nxt; 12> (12)prev; 13> (13)nunits;})
-[mman] Assertion value eid 3 = old eid 3
-[mman] transform expression: 20
 [mman] Exp:20
 [mman] do_assigns: nbytes:=20
 [mman] on ({eid_5}bottom)
 [mman] to_var: nbytes in eid_5
 [mman] to bottom
-[mman] Assertion value eid 5 = old eid 5
 [mman] to_var: nxt in eid_1
 [mman] to_var: prev in eid_1
 [mman] to_var: __retres in eid_1
+[mman] init_callee_state: ({eid_1}bottom)
+[mman] compute_return_state
 [mman] ret_call: laAlloc(...)
 [mman] Unify penvs 3, 1
-[mman] old pvar_7/11 -> pvar_10
-[mman] old pvar_8/11 -> pvar_11
-[mman] old pvar_9/11 -> pvar_12
-[mman] old pvar_10/11 -> pvar_13
-[mman] unified penv_5 = (4,
-       [14]{ 0> (0)__null; 1> (1)__hole; 2> (2)__hli; 3> (3)__hst; 4> (4)_heapstart; 5> (5)_heapend; 6> (6)memleft; 7> (7)man; 8> (8)p1; 9> (9)p2;
-        10> (10)f1676_nbytes; 11> (11)nxt; 12> (12)prev; 13> (13)nunits;})
-[mman] forget _heapstart,... in {eid_3}bottom
 [mman] to_var: _heapstart in eid_3
 [mman] to_var: _heapend in eid_3
 [mman] to_var: memleft in eid_3
-[mman] Assertion value eid 3 = old eid 3
-[mman] forget __retres,... in {eid_1}bottom
 [mman] to_var: __retres in eid_1
-[mman] return state: {eid_1}bottom
-[mman] Assertion value eid 1 = old eid 1
-[mman] Assertion value eid 5 = old eid 5
+[mman] transfer_call
 [mman] do_call: laAlloc(...)
-[mman] forget __retres,... in {eid_3}bottom
+[mman] compute_call_state
 [mman] to_var: __retres in eid_3
 [mman] Unify penvs 3, 1
-[mman] old pvar_7/11 -> pvar_10
-[mman] old pvar_8/11 -> pvar_11
-[mman] old pvar_9/11 -> pvar_12
-[mman] old pvar_10/11 -> pvar_13
-[mman] unified penv_5 = (5,
-       [14]{ 0> (0)__null; 1> (1)__hole; 2> (2)__hli; 3> (3)__hst; 4> (4)_heapstart; 5> (5)_heapend; 6> (6)memleft; 7> (7)man; 8> (8)p1; 9> (9)p2;
-        10> (10)f1676_nbytes; 11> (11)nxt; 12> (12)prev; 13> (13)nunits;})
-[mman] Assertion value eid 3 = old eid 3
-[mman] transform expression: 20
 [mman] Exp:20
 [mman] do_assigns: nbytes:=20
 [mman] on ({eid_5}bottom)
 [mman] to_var: nbytes in eid_5
 [mman] to bottom
-[mman] Assertion value eid 5 = old eid 5
 [mman] to_var: nxt in eid_1
 [mman] to_var: prev in eid_1
 [mman] to_var: __retres in eid_1
+[mman] init_callee_state: ({eid_1}bottom)
+[mman] compute_return_state
 [mman] ret_call: laAlloc(...)
 [mman] Unify penvs 3, 1
-[mman] old pvar_7/11 -> pvar_10
-[mman] old pvar_8/11 -> pvar_11
-[mman] old pvar_9/11 -> pvar_12
-[mman] old pvar_10/11 -> pvar_13
-[mman] unified penv_5 = (6,
-       [14]{ 0> (0)__null; 1> (1)__hole; 2> (2)__hli; 3> (3)__hst; 4> (4)_heapstart; 5> (5)_heapend; 6> (6)memleft; 7> (7)man; 8> (8)p1; 9> (9)p2;
-        10> (10)f1676_nbytes; 11> (11)nxt; 12> (12)prev; 13> (13)nunits;})
-[mman] forget _heapstart,... in {eid_3}bottom
 [mman] to_var: _heapstart in eid_3
 [mman] to_var: _heapend in eid_3
 [mman] to_var: memleft in eid_3
-[mman] Assertion value eid 3 = old eid 3
 [mman] do_assigns: __hole:=__retres
 [mman] on ({eid_1}bottom)
 [mman] to_var: __hole in eid_1
 [mman] to_var: __retres in eid_1
 [mman] to bottom
-[mman] forget __retres,... in {eid_1}bottom
 [mman] to_var: __retres in eid_1
-[mman] return state: {eid_1}bottom
-[mman] Assertion value eid 1 = old eid 1
-[mman] Assertion value eid 5 = old eid 5
 [mman] transform_assign: p2:=__hole
-[mman] transform_lval2var: p2
 [mman] transform_assign: p2:=__hole[__hole]
-[mman] transform expression: __hole
 [mman] Exp:__hole
-[mman] lval2exp: found __hole
 [mman] to: p2:=__hole
 [mman] do_assigns: p2:=__hole
 [mman] on ({eid_3}bottom)
 [mman] to_var: p2 in eid_3
 [mman] to_var: __hole in eid_3
 [mman] to bottom
-[mman] forget __hole,... in {eid_3}bottom
 [mman] to_var: __hole in eid_3
+[mman] transfer_call
 [mman] do_call: laAlloc(...)
-[mman] forget __retres,... in {eid_3}bottom
+[mman] compute_call_state
 [mman] to_var: __retres in eid_3
 [mman] Unify penvs 3, 1
-[mman] old pvar_7/11 -> pvar_10
-[mman] old pvar_8/11 -> pvar_11
-[mman] old pvar_9/11 -> pvar_12
-[mman] old pvar_10/11 -> pvar_13
-[mman] unified penv_5 = (7,
-       [14]{ 0> (0)__null; 1> (1)__hole; 2> (2)__hli; 3> (3)__hst; 4> (4)_heapstart; 5> (5)_heapend; 6> (6)memleft; 7> (7)man; 8> (8)p1; 9> (9)p2;
-        10> (10)f1676_nbytes; 11> (11)nxt; 12> (12)prev; 13> (13)nunits;})
-[mman] Assertion value eid 3 = old eid 3
-[mman] transform expression: 20
 [mman] Exp:20
 [mman] do_assigns: nbytes:=20
 [mman] on ({eid_5}bottom)
 [mman] to_var: nbytes in eid_5
 [mman] to bottom
-[mman] Assertion value eid 5 = old eid 5
 [mman] to_var: nxt in eid_1
 [mman] to_var: prev in eid_1
 [mman] to_var: __retres in eid_1
+[mman] init_callee_state: ({eid_1}bottom)
+[mman] compute_return_state
 [mman] ret_call: laAlloc(...)
 [mman] Unify penvs 3, 1
-[mman] old pvar_7/11 -> pvar_10
-[mman] old pvar_8/11 -> pvar_11
-[mman] old pvar_9/11 -> pvar_12
-[mman] old pvar_10/11 -> pvar_13
-[mman] unified penv_5 = (8,
-       [14]{ 0> (0)__null; 1> (1)__hole; 2> (2)__hli; 3> (3)__hst; 4> (4)_heapstart; 5> (5)_heapend; 6> (6)memleft; 7> (7)man; 8> (8)p1; 9> (9)p2;
-        10> (10)f1676_nbytes; 11> (11)nxt; 12> (12)prev; 13> (13)nunits;})
-[mman] forget _heapstart,... in {eid_3}bottom
 [mman] to_var: _heapstart in eid_3
 [mman] to_var: _heapend in eid_3
 [mman] to_var: memleft in eid_3
-[mman] Assertion value eid 3 = old eid 3
-[mman] forget __retres,... in {eid_1}bottom
 [mman] to_var: __retres in eid_1
-[mman] return state: {eid_1}bottom
-[mman] Assertion value eid 1 = old eid 1
-[mman] Assertion value eid 5 = old eid 5
+[mman] transfer_call
 [mman] do_call: laFree(...)
-[mman] forget __retres,... in {eid_3}bottom
+[mman] compute_call_state
 [mman] to_var: __retres in eid_3
 [mman] Unify penvs 3, 2
-[mman] old pvar_7/11 -> pvar_10
-[mman] old pvar_8/11 -> pvar_11
-[mman] old pvar_9/11 -> pvar_12
-[mman] old pvar_10/11 -> pvar_13
-[mman] unified penv_6 = (1,
-       [14]{ 0> (0)__null; 1> (1)__hole; 2> (2)__hli; 3> (3)__hst; 4> (4)_heapstart; 5> (5)_heapend; 6> (6)memleft; 7> (7)man; 8> (8)p1; 9> (9)p2;
-        10> (10)f1670_ap; 11> (11)nxt; 12> (12)prev; 13> (13)f;})
-[mman] Assertion value eid 3 = old eid 3
-[mman] env2apron: eid6 -> [5][0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> _heapend:int 5> _heapstart:int 6> f:int 7> f1670_ap:int 8> man:int 9> memleft:int 10> nxt:int 11> p1:int 12> p2:int 13> prev:int]
-[mman] transform expression: p1
 [mman] Exp:p1
-[mman] lval2exp: found p1
 [mman] do_assigns: ap:=p1
 [mman] on ({eid_6}bottom)
 [mman] to_var: ap in eid_6
 [mman] to_var: p1 in eid_6
 [mman] to bottom
-[mman] Assertion value eid 6 = old eid 6
-[mman] env2apron: eid2 -> [6][0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> _heapend:int 5> _heapstart:int 6> f:int 7> f1670_ap:int 8> memleft:int 9> nxt:int 10> prev:int]
 [mman] to_var: nxt in eid_2
 [mman] to_var: prev in eid_2
 [mman] to_var: f in eid_2
+[mman] init_callee_state: ({eid_2}bottom)
+[mman] compute_return_state
 [mman] ret_call: laFree(...)
 [mman] Unify penvs 3, 2
-[mman] old pvar_7/11 -> pvar_10
-[mman] old pvar_8/11 -> pvar_11
-[mman] old pvar_9/11 -> pvar_12
-[mman] old pvar_10/11 -> pvar_13
-[mman] unified penv_6 = (2,
-       [14]{ 0> (0)__null; 1> (1)__hole; 2> (2)__hli; 3> (3)__hst; 4> (4)_heapstart; 5> (5)_heapend; 6> (6)memleft; 7> (7)man; 8> (8)p1; 9> (9)p2;
-        10> (10)f1670_ap; 11> (11)nxt; 12> (12)prev; 13> (13)f;})
-[mman] forget _heapstart,... in {eid_3}bottom
 [mman] to_var: _heapstart in eid_3
 [mman] to_var: _heapend in eid_3
 [mman] to_var: memleft in eid_3
-[mman] Assertion value eid 3 = old eid 3
-[mman] return state: {eid_2}bottom
-[mman] Assertion value eid 2 = old eid 2
-[mman] Assertion value eid 6 = old eid 6
+[mman] transfer_call
 [mman] do_call: laFree(...)
-[mman] forget __retres,... in {eid_3}bottom
+[mman] compute_call_state
 [mman] to_var: __retres in eid_3
 [mman] Unify penvs 3, 2
-[mman] old pvar_7/11 -> pvar_10
-[mman] old pvar_8/11 -> pvar_11
-[mman] old pvar_9/11 -> pvar_12
-[mman] old pvar_10/11 -> pvar_13
-[mman] unified penv_6 = (3,
-       [14]{ 0> (0)__null; 1> (1)__hole; 2> (2)__hli; 3> (3)__hst; 4> (4)_heapstart; 5> (5)_heapend; 6> (6)memleft; 7> (7)man; 8> (8)p1; 9> (9)p2;
-        10> (10)f1670_ap; 11> (11)nxt; 12> (12)prev; 13> (13)f;})
-[mman] Assertion value eid 3 = old eid 3
-[mman] transform expression: p2
 [mman] Exp:p2
-[mman] lval2exp: found p2
 [mman] do_assigns: ap:=p2
 [mman] on ({eid_6}bottom)
 [mman] to_var: ap in eid_6
 [mman] to_var: p2 in eid_6
 [mman] to bottom
-[mman] Assertion value eid 6 = old eid 6
 [mman] to_var: nxt in eid_2
 [mman] to_var: prev in eid_2
 [mman] to_var: f in eid_2
+[mman] init_callee_state: ({eid_2}bottom)
+[mman] compute_return_state
 [mman] ret_call: laFree(...)
 [mman] Unify penvs 3, 2
-[mman] old pvar_7/11 -> pvar_10
-[mman] old pvar_8/11 -> pvar_11
-[mman] old pvar_9/11 -> pvar_12
-[mman] old pvar_10/11 -> pvar_13
-[mman] unified penv_6 = (4,
-       [14]{ 0> (0)__null; 1> (1)__hole; 2> (2)__hli; 3> (3)__hst; 4> (4)_heapstart; 5> (5)_heapend; 6> (6)memleft; 7> (7)man; 8> (8)p1; 9> (9)p2;
-        10> (10)f1670_ap; 11> (11)nxt; 12> (12)prev; 13> (13)f;})
-[mman] forget _heapstart,... in {eid_3}bottom
 [mman] to_var: _heapstart in eid_3
 [mman] to_var: _heapend in eid_3
 [mman] to_var: memleft in eid_3
-[mman] Assertion value eid 3 = old eid 3
-[mman] return state: {eid_2}bottom
-[mman] Assertion value eid 2 = old eid 2
-[mman] Assertion value eid 6 = old eid 6
 [mman] transform_assign: __retres:=0
-[mman] transform_lval2var: __retres
 [mman] transform_assign: __retres:=__hole[0]
-[mman] transform expression: 0
 [mman] Exp:0
 [mman] to: __retres:=0
 [mman] do_assigns: __retres:=0

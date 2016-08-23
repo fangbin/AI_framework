@@ -643,8 +643,8 @@ module Model = struct
     in
     let eid = env d in
     let apv1_apvn = List.map (fun lvi -> to_var eid lvi) llv in
-    {eid=eid;
-     vap=of_apron (Apron.Abstract1.forget_array man_apron
+    {eid = eid;
+     vap = of_apron (Apron.Abstract1.forget_array man_apron
                      (to_apron d.vap)
                      (Array.of_list apv1_apvn) false)}
     

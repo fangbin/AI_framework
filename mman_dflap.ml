@@ -222,8 +222,7 @@ let rec compute_fun_init s kf_caller kf_callee argl state =
     if Kernel_function.returns_void kf_caller then state
     else
       MV.Model.forget_list state
-        [Mman_asyn.AVar(vinfo_retres
-                          (Kernel_function.get_return_type kf_caller))]
+        [Mman_asyn.AVar( vinfo_retres(Kernel_function.get_return_type kf_caller) )]
   in
   (*     o compute the unifying environment *)
   let eid_common, _, _ = Mman_env.penv_unify eid_caller eid_callee in
@@ -422,7 +421,10 @@ module Compute(AnPar: ComputeArg) = struct
           else if (isIgnoredFunction kf) then
             aval
           else
-            (transfer_call s kf lv argl aval) 
+            (
+            let _ = Mman_options.Self.debug ~level:1 "transfer_call@."
+             in 
+            transfer_call s kf lv argl aval) 
         in
         map_on_all_succs s newaval
           
@@ -497,9 +499,18 @@ module Compute(AnPar: ComputeArg) = struct
         Kernel_function.pretty kf_callee in
     
     (* compute the call state for kf to see if not yet computed *)
+    let _ = Mman_options.Self.debug ~level:1 "compute_call_state@."
+    in
     let init_callee = compute_fun_init s kf_caller kf_callee argl aval in
     
+    let _ = ( Mman_options.Self.debug ~level:1 "init_callee_state: %a@."
+                  (MV.Model.pretty_code_intern Type.Basic) init_callee)
+    in 
+
+
     (* compute the return state of the callee *)
+    let _ = Mman_options.Self.debug ~level:1 "compute_return_state@."
+    in
     let ret_callee = !compute_fun AnPar.stack s kf_callee init_callee in
     
     (* recombine the call state with the end state *)
@@ -767,6 +778,11 @@ and get_init_state kf =
 
         let glb_state = MV.init_globals eid_stmt
             !init_glv !init_gexp !init_gcnd in 
+
+        let _ = ( Mman_options.Self.debug ~level:1 "Global state: %a@."
+                  (MV.Model.pretty_code_intern Type.Basic) glb_state)
+        in 
+
         let _ = Mman_options.Self.feedback "Initial_state_stmt (sid:%a)@."
                 Cil_datatype.Stmt.pretty_sid init_stmt 
         in 
