@@ -391,12 +391,20 @@ module Compute(AnPar: ComputeArg) = struct
                Cil_datatype.Stmt.pretty_sid s
                MV.Model.pretty aval)
     in
+    let _ = (Mman_options.Self.feedback "transfer_stmt_main sid: %a on %a'" 
+             Cil_datatype.Stmt.pretty_sid s
+             MV.Model.pretty aval)
+    in 
     match s.skind with
     | Instr(Set (lv, exp, _)) ->
+        let _ = Mman_options.Self.feedback "s.skind: Instr1 @."
+          in 
         map_on_all_succs s (transfer_assign s lv exp aval)
           
     | Instr(Call(lv, fe, argl,_)) ->
         (* special case sbrk *)
+        let _ = Mman_options.Self.feedback "s.skind: Instr2 @."
+          in 
         let kf =
           (match Kernel_function.get_called fe with
            | Some(f) -> f
@@ -405,9 +413,13 @@ module Compute(AnPar: ComputeArg) = struct
                raise (Mman_asyn.Not_dealt "Dynamic call")
           )
         in
+        let _ = Mman_options.Self.feedback "function called: %a'" 
+            Kernel_function.pretty kf;
+        in 
         let newaval =
           if (String.compare (Kernel_function.get_name kf) "sbrk") == 0
           then (* sbrk call *)
+
             (transfer_sbrk s lv argl aval)
           else if (isIgnoredFunction kf) then
             aval
@@ -417,6 +429,8 @@ module Compute(AnPar: ComputeArg) = struct
         map_on_all_succs s newaval
           
     | Instr(i) ->
+        let _ = Mman_options.Self.feedback "s.skind: Instr3 @."
+          in 
         let _ = Mman_options.Self.not_yet_implemented "Instruction" in
         begin
           Mman_options.Self.debug ~dkey:dflw_dkey ~level:2 "Instr %a@."
@@ -425,9 +439,13 @@ module Compute(AnPar: ComputeArg) = struct
         end
         
     | Switch (_,_,_,_) ->
+        let _ = Mman_options.Self.feedback "s.skind: Switch @."
+          in 
         Dataflows.transfer_switch_from_guard transfer_guard s aval
           
     | If (_,_,_,_) ->
+        let _ = Mman_options.Self.feedback "s.skind: If @."
+          in 
         Dataflows.transfer_if_from_guard transfer_guard s aval
           
     | Return (_exp,_) ->
@@ -474,6 +492,10 @@ module Compute(AnPar: ComputeArg) = struct
                Printer.pp_stmt s
                MV.Model.pretty aval)
     in
+    let _ = (Mman_options.Self.feedback "transfer_sbrk: %a@.on %a@."
+               Printer.pp_stmt s
+               MV.Model.pretty aval)
+    in  
     (* transform in assignment *)
     let llv, lexp, _ = Mman_asyn.transform_sbrk lv argl in
     MV.Model.do_assign aval llv lexp
@@ -784,7 +806,13 @@ and compute_for_minit () =
       Mman_options.Self.feedback "Analysing method minit='%a'" 
         Kernel_function.pretty kf;
       (* TODO: do domething with the initial state *)
-      compute kf (get_init_state kf);
+      
+      let init_state =  get_init_state kf in 
+
+      Mman_options.Self.feedback "init state:%a" 
+           MV.Model.pretty (init_state) ;
+
+      compute kf (init_state);
       print_results_fun false kf
     end
   with Not_found ->

@@ -685,6 +685,9 @@ module Model = struct
 
   (** Apply the list of assignments *)
   (** The list should be applied in parallel on the abstract value *)
+  
+  (** create shape formulas after assignement eg, sbrk(sz) *)
+
   let rec do_assign (d: t)
     (llv: Mman_asyn.alval list) (lexp: Mman_asyn.aexp list)
     : t
@@ -757,20 +760,20 @@ module Model = struct
     let vf = ref [] in
     let r = ref true  in
     let l = ref true in 
-    let isin = ref false in
+    let isin = ref false in 
     begin
-      List.iter (fun lv -> 
-                     
+        List.iter (fun lv -> 
+                    
                     let _ = Mman_options.Self.debug ~level:1 " evaluate alval:%a @." 
                             Mman_asyn.pp_alval  lv 
                             in 
                     let rlv, rvf = MSH.evalL lv esh in
                      match rlv with
-                     | None -> 
-                        let _ = Mman_options.Self.debug ~level:1 " evalL is None @." 
-                        in 
+                     | None ->  
+                            let _ = Mman_options.Self.debug ~level:1 " evalL is None @." 
+                            in 
+                            r := false; 
 
-                        r := false
                      | Some(lv') ->
                          begin
                           let _ = Mman_options.Self.debug ~level:1 " evalL is Some() @." 
@@ -780,72 +783,79 @@ module Model = struct
                          end
                      
                 )
-        llv
-      ;
-      List.iter (fun e ->    
-                                      
+              llv
+        ;
+      List.iter (fun e -> 
+                    
                     let _ = Mman_options.Self.debug ~level:1 " evaluate aexp:%a  @." 
                             Mman_asyn.pp_aexp e 
                             in 
                     let re, rvf = MSH.evalE e esh in
                      match re with
-                     | None -> 
-                        let _ = Mman_options.Self.debug ~level:1 " evalL is None @." in 
-                        l := false
+                     | None ->  
+                          let _ = Mman_options.Self.debug ~level:1 " evalE is None @." in 
+                          l := false;            
                      | Some(e') ->
                          begin
-                          let _ = Mman_options.Self.debug ~level:1 " evalL is Some() @." 
+                          let _ = Mman_options.Self.debug ~level:1 " evalE is Some() @." 
                           in 
                            nlexp := (e') :: (!nlexp);
                            vf := rvf @ (!vf)
                          end 
                     
                 )
-        lexp
-      ;
-      if (!r) && (!l) then
-        None
-      else
+                lexp
+        ;
+    
+      match esh.mem with
+      | Top -> 
+          if (!r)&&(!l) then 
+          let _ = Mman_options.Self.debug ~level:1 " initi shape value@."  in 
+            None
+          else 
+            None
+      | _ -> 
+         
         begin
-          if (!vf) = [] then (* do not unfold *)
-            (* the assignment may be done *)
-            let _ = Mman_options.Self.debug ~level:1 " do mutate@."  in 
-
-            let nm = ref (ModelMap.empty) in
-            begin
-              List.iter2
-                (
-                  fun lv e ->
-                   if ( not !r) then
-                     (
-                      let _ = Mman_options.Self.debug ~level:1 " eshape mutate@."  in 
-                      let t1_tn = MSH.mutate lv e esh in
-                      if t1_tn = [] then
-                        r := false
-                      else
-                        List.iter
-                          (
-                            fun (nsh, vl, cl) ->
-                             let ndw = MDW.assign lv e (MDW.addV dw vl cl) in
-                             nm := join_map_isin isin !nm
-                                 (ModelMap.singleton nsh ndw)
-                          )
-                          t1_tn
-                     )
-                   else
-                     ()
-                )
-                (List.rev !nllv)
-                (List.rev !nlexp)
-              ;
-              if (!r) then None
-              else Some (!nm)
-            end
-          else
-            (* assignment needs some unfolding *)
-            let m = unfold_one esh dw (!vf) in
-            do_assign_set eid llv lexp m
-        end
+              if (!vf) = [] then (* do not unfold *)
+                (* the assignment may be done *)
+                let _ = Mman_options.Self.debug ~level:1 " do mutate@."  in 
+                let nm = ref (ModelMap.empty) in
+                begin
+                  List.iter2
+                    (
+                      fun lv e ->
+                       if ( not !r) then
+                         (
+                          let _ = Mman_options.Self.debug ~level:1 " eshape mutate@."  in 
+                          let t1_tn = MSH.mutate lv e esh in
+                          if t1_tn = [] then
+                            r := false
+                          else
+                            List.iter
+                              (
+                                fun (nsh, vl, cl) ->
+                                 let ndw = MDW.assign lv e (MDW.addV dw vl cl) in
+                                 nm := join_map_isin isin !nm
+                                     (ModelMap.singleton nsh ndw)
+                              )
+                              t1_tn
+                         )
+                       else
+                         ()
+                    )
+                    (List.rev !nllv)
+                    (List.rev !nlexp)
+                  ;
+                  if (!r) then None
+                  else Some (!nm)
+                end
+              else
+                (* assignment needs some unfolding *)
+                let m = unfold_one esh dw (!vf) in
+                do_assign_set eid llv lexp m
+          end
+        
     end
 
 

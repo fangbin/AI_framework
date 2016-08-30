@@ -1435,12 +1435,7 @@ let unfold (lv: Mman_asyn.alval) (sh:valinfo)
 
 
 
-(* TODO:
- * fold 
- * blk(a,b) * blk(b,c) => blk(a,c)  
- * chk()
- * 
-*)
+(* TODO:*)
 let fold (_p:Mman_asyn.aconstr) (_vl:Mman_svar.svarinfo) (_g:valinfo)
   : valinfo
   = _g 

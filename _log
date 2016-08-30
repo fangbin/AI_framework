@@ -453,8 +453,154 @@
 [mman] (sid:79): {eid_0}bottom
 [mman] --------------------------------------------
 [mman] Analysing the application starting at 'MAIN'
+[mman] Computing initial state
+[mman] Initial_state_stmt (sid:85)
+[mman] init_global: struct init
+[mman] Exp:(struct hdr *)0
+[mman] Exp:(unsigned int)0
+[mman] init_global: struct init
+[mman] Exp:(struct hdr *)0
+[mman] Exp:(unsigned int)0
+[mman] Exp:(short)0
+[mman] init_global_avals: fn(_heapstart),
+[mman] init_global_avals: csz(_heapstart),
+[mman] init_global_avals: fn(_heapend),
+[mman] init_global_avals: csz(_heapend),
+[mman] init_global_avals: memleft,
+[mman] init_global_aexps: 0,
+[mman] init_global_aexps: 0,
+[mman] init_global_aexps: 0,
+[mman] init_global_aexps: 0,
+[mman] init_global_aexps: 0,
+[mman] Computing global values
+[mman] Dflow:init_globals
+[mman] Dflow:do_assign
+[mman] doing assign
+[mman] do_assigns: fn(_heapstart):=0
+[mman] on ({peid:3}Top)
+[mman] do_assigns: csz(_heapstart):=0
+[mman] on ({peid:3}Top)
+[mman] do_assigns: fn(_heapend):=0
+[mman] on ({peid:3}Top)
+[mman] do_assigns: csz(_heapend):=0
+[mman] on ({peid:3}Top)
+[mman] do_assigns: memleft:=0
+[mman] on ({peid:3}Top)
+[mman] do_assign_one
+[mman] evaluate alval:fn(_heapstart)
+[mman] evalL is None
+[mman] evaluate alval:csz(_heapstart)
+[mman] evalL is None
+[mman] evaluate alval:fn(_heapend)
+[mman] evalL is None
+[mman] evaluate alval:csz(_heapend)
+[mman] evalL is None
+[mman] evaluate alval:memleft
+[mman] evalL is None
+[mman] evaluate aexp:0
+[mman] evalE is None
+[mman] evaluate aexp:0
+[mman] evalE is None
+[mman] evaluate aexp:0
+[mman] evalE is None
+[mman] evaluate aexp:0
+[mman] evalE is None
+[mman] evaluate aexp:0
+[mman] evalE is None
+[mman] Dflow:assign_done
+[mman] Initial_state {peid:3}Bot
+[mman] transfer_stmt_main sid: 85 on {peid:3}Bot'
+[mman] s.skind: Instr2
+[mman] function called: laInit'
+[mman] do_call: laInit(...)
+[mman] Unify penvs 3, 0
+[mman] ret_call: laInit(...)
+[mman] Unify penvs 3, 0
+[mman] (sid:85): {peid:3}Bot
+[mman] (sid:86): {peid:-1}Bot
+[mman] (sid:87): {peid:-1}Bot
+[mman] (sid:88): {peid:-1}Bot
+[mman] (sid:89): {peid:-1}Bot
+[mman] (sid:106): {peid:-1}Bot
+[mman] (sid:90): {peid:-1}Bot
+[mman] (sid:91): {peid:-1}Bot
+[mman] (sid:92): {peid:-1}Bot
+[mman] (sid:93): {peid:-1}Bot
 [mman] --------------------------------------------
 [mman] Analysing 'minit'
+[mman] Analysing method minit='laInit'
+[mman] Computing initial state
+[mman] Initial_state_stmt (sid:77)
+[mman] init_global_avals: fn(_heapstart),
+[mman] init_global_avals: csz(_heapstart),
+[mman] init_global_avals: fn(_heapend),
+[mman] init_global_avals: csz(_heapend),
+[mman] init_global_avals: memleft,
+[mman] init_global_aexps: 0,
+[mman] init_global_aexps: 0,
+[mman] init_global_aexps: 0,
+[mman] init_global_aexps: 0,
+[mman] init_global_aexps: 0,
+[mman] Computing global values
+[mman] Dflow:init_globals
+[mman] Dflow:do_assign
+[mman] doing assign
+[mman] do_assigns: fn(_heapstart):=0
+[mman] on ({peid:0}Top)
+[mman] do_assigns: csz(_heapstart):=0
+[mman] on ({peid:0}Top)
+[mman] do_assigns: fn(_heapend):=0
+[mman] on ({peid:0}Top)
+[mman] do_assigns: csz(_heapend):=0
+[mman] on ({peid:0}Top)
+[mman] do_assigns: memleft:=0
+[mman] on ({peid:0}Top)
+[mman] do_assign_one
+[mman] evaluate alval:fn(_heapstart)
+[mman] evalL is None
+[mman] evaluate alval:csz(_heapstart)
+[mman] evalL is None
+[mman] evaluate alval:fn(_heapend)
+[mman] evalL is None
+[mman] evaluate alval:csz(_heapend)
+[mman] evalL is None
+[mman] evaluate alval:memleft
+[mman] evalL is None
+[mman] evaluate aexp:0
+[mman] evalE is None
+[mman] evaluate aexp:0
+[mman] evalE is None
+[mman] evaluate aexp:0
+[mman] evalE is None
+[mman] evaluate aexp:0
+[mman] evalE is None
+[mman] evaluate aexp:0
+[mman] evalE is None
+[mman] Dflow:assign_done
+[mman] init state:{peid:0}Bot
+[mman] transfer_stmt_main sid: 77 on {peid:0}Bot'
+[mman] s.skind: Instr2
+[mman] function called: sbrk'
+[mman] transfer_sbrk: /* sid:77 */
+                      _heapstart.ptr = (struct hdr *)sbrk(65360);
+       on {peid:0}Bot
+[mman] Exp:65360
+[mman] feature2exph: _heapstart->ptr to fn
+[mman] transform_sbrk: fn(_heapstart):=__hole[sbrk(65360)]
+[mman] to: fn(_heapstart):=__hli
+[mman] to: __hli:=(__hli + 65360)
+[mman] doing assign
+[mman] do_assigns: fn(_heapstart):=__hli
+[mman] on ({peid:0}Bot)
+[mman] do_assigns: __hli:=(__hli + 65360)
+[mman] on ({peid:0}Bot)
+[mman] (sid:80): {peid:-1}Bot
+[mman] (sid:81): {peid:-1}Bot
+[mman] (sid:82): {peid:-1}Bot
+[mman] (sid:104): {peid:-1}Bot
+[mman] (sid:77): {peid:0}Bot
+[mman] (sid:78): {peid:-1}Bot
+[mman] (sid:79): {peid:-1}Bot
 [mman] --------------------------------------------
 [mman] Analysing 'malloc'
 [mman] --------------------------------------------
