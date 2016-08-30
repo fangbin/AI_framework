@@ -763,24 +763,26 @@ module Model = struct
     let isin = ref false in 
     begin
         List.iter (fun lv -> 
-                    
-                    let _ = Mman_options.Self.debug ~level:1 " evaluate alval:%a @." 
+                    if (!r) then 
+                    ( let _ = Mman_options.Self.debug ~level:1 " evaluate alval:%a @." 
                             Mman_asyn.pp_alval  lv 
-                            in 
-                    let rlv, rvf = MSH.evalL lv esh in
-                     match rlv with
-                     | None ->  
+                           in 
+                      let rlv, rvf = MSH.evalL lv esh in
+                      match rlv with
+                      | None ->  
                             let _ = Mman_options.Self.debug ~level:1 " evalL is None @." 
                             in 
                             r := false; 
 
-                     | Some(lv') ->
-                         begin
-                          let _ = Mman_options.Self.debug ~level:1 " evalL is Some() @." 
-                          in 
-                           nllv := lv' :: (!nllv);
-                           vf := rvf @ (!vf)
-                         end
+                      | Some(lv') ->
+                            begin
+                              let _ = Mman_options.Self.debug ~level:1 " evalL is Some() @." 
+                              in 
+                               nllv := lv' :: (!nllv);
+                               vf := rvf @ (!vf)
+                            end
+                    )
+                  else ()
                      
                 )
               llv
