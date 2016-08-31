@@ -78,10 +78,10 @@
        (1) s_75 (@line 158) -> e_1
        (1) s_77 (@line 167) -> e_0
        (1) s_78 (@line 168) -> e_0
-       (1) s_79 (@line 171) -> e_0
-       (1) s_80 (@line 172) -> e_0
-       (1) s_81 (@line 174) -> e_0
-       (1) s_82 (@line 175) -> e_0
+       (1) s_79 (@line 172) -> e_0
+       (1) s_80 (@line 174) -> e_0
+       (1) s_81 (@line 176) -> e_0
+       (1) s_82 (@line 177) -> e_0
        (1) s_85 (@line 8) -> e_3
        (1) s_86 (@line 8) -> e_3
        (1) s_87 (@line 9) -> e_3
@@ -97,7 +97,7 @@
        (1) s_99 (@line 110) -> e_2
        (1) s_101 (@line 148) -> e_1
        (1) s_102 (@line 158) -> e_1
-       (1) s_104 (@line 177) -> e_0
+       (1) s_104 (@line 179) -> e_0
        (1) s_106 (@line 15) -> e_3
 [mman] ENVS:
        (1) pe_0 -> penv_0 = (2,
@@ -115,353 +115,22 @@
        [8]{ 0> (0)__null; 1> (1)__hole; 2> (2)__hli; 3> (3)__hst; 4> (4)_heapstart; 5> (5)_heapend; 6> (6)memleft; 7> (7)f1665_str;})
 [mman] --------------------------------------------
 [mman] Analysing the application starting at 'MAIN'
-[mman] Entry_point: main
-[mman] running init globals
-[mman] init_global: struct init
-[mman] Exp:(struct hdr *)0
-[mman] Exp:0
-[mman] Exp:(unsigned int)0
-[mman] Exp:0
-[mman] init_global: struct init
-[mman] Exp:(struct hdr *)0
-[mman] Exp:0
-[mman] Exp:(unsigned int)0
-[mman] Exp:0
-[mman] Exp:(short)0
-[mman] Exp:0
-[mman] initialization done
-       --------------
-[mman] init_global_avals: fn(_heapstart),
-[mman] init_global_avals: csz(_heapstart),
-[mman] init_global_avals: fn(_heapend),
-[mman] init_global_avals: csz(_heapend),
-[mman] init_global_avals: memleft,
-[mman] init_global_aexps: 0,
-[mman] init_global_aexps: 0,
-[mman] init_global_aexps: 0,
-[mman] init_global_aexps: 0,
-[mman] init_global_aexps: 0,
-[mman] #########################
-        MV-init_globals
-[mman] mman_valap: do assign
-[mman] do_assigns: fn(_heapstart):=0
-[mman] on ({eid_3}top)
-[mman] do_assigns: csz(_heapstart):=0
-[mman] on ({eid_3}top)
-[mman] do_assigns: fn(_heapend):=0
-[mman] on ({eid_3}top)
-[mman] do_assigns: csz(_heapend):=0
-[mman] on ({eid_3}top)
-[mman] do_assigns: memleft:=0
-[mman] on ({eid_3}top)
-[mman] to_var: fn(_heapstart) in eid_3
-[mman] to_var: csz(_heapstart) in eid_3
-[mman] to_var: fn(_heapend) in eid_3
-[mman] to_var: csz(_heapend) in eid_3
-[mman] to_var: memleft in eid_3
-[mman] to [|__hole=0|]
-[mman] mman_valap: do assign done
-[mman] mman_valap: do meet exp
-[mman] mman_valap: constraint: __hli>=0
-[mman] to_var: __hli in eid_3
-[mman] mman_valap: after meep ({eid_3}[|__hole=0|])
-[mman] mman_valap: init_globals finished 
-        #########################
-[mman] Global state: ({eid_3}[|__hole=0|])
-[mman] Initial_state_stmt (sid:85)
-[mman] to_var: man in eid_3
-[mman] to_var: p1 in eid_3
-[mman] to_var: p2 in eid_3
-[mman] Start general analysis
-[mman] transfer_call
-[mman] do_call: laInit(...)
-[mman] compute_call_state
-[mman] to_var: __retres in eid_3
-[mman] Unify penvs 3, 0
-[mman] init_callee_state: ({eid_0}top)
-[mman] compute_return_state
-[mman] Exp:65360
-[mman] feature2exph: _heapstart->ptr to fn
-[mman] transform_sbrk: fn(_heapstart):=__hole[sbrk(65360)]
-[mman] to: fn(_heapstart):=__hli
-[mman] to: __hli:=(__hli + 65360)
-[mman] do_assigns: fn(_heapstart):=__hli
-[mman] on ({eid_0}top)
-[mman] do_assigns: __hli:=(__hli + 65360)
-[mman] on ({eid_0}top)
-[mman] to_var: fn(_heapstart) in eid_0
-[mman] to_var: __hli in eid_0
-[mman] to_var: __hli in eid_0
-[mman] to_var: __hli in eid_0
-[mman] to bottom
-[mman] Exp:0
-[mman] feature2exph: _heapend->ptr to fn
-[mman] transform_sbrk: fn(_heapend):=__hole[sbrk(0)]
-[mman] to: fn(_heapend):=__hli
-[mman] to: __hli:=(__hli + 0)
-[mman] do_assigns: fn(_heapend):=__hli
-[mman] on ({eid_0}bottom)
-[mman] do_assigns: __hli:=(__hli + 0)
-[mman] on ({eid_0}bottom)
-[mman] to_var: fn(_heapend) in eid_0
-[mman] to_var: __hli in eid_0
-[mman] to_var: __hli in eid_0
-[mman] to_var: __hli in eid_0
-[mman] to bottom
-[mman] transform_assign: frhd:=_heapstart.ptr
-[mman] transform_assign: frhd:=__hole[_heapstart.ptr]
-[mman] Exp:_heapstart.ptr
-[mman] to: frhd:=fn(_heapstart)
-[mman] do_assigns: frhd:=fn(_heapstart)
-[mman] on ({eid_0}bottom)
-[mman] to_var: frhd in eid_0
-[mman] to_var: fn(_heapstart) in eid_0
-[mman] to bottom
-[mman] transform_assign: frhd->ptr:=(struct hdr *)0
-[mman] feature2exph: frhd->ptr to fn
-[mman] transform_assign: fn(frhd):=__hole[(struct hdr *)0]
-[mman] Exp:(struct hdr *)0
-[mman] Exp:0
-[mman] to: fn(frhd):=0
-[mman] do_assigns: fn(frhd):=0
-[mman] on ({eid_0}bottom)
-[mman] to_var: fn(frhd) in eid_0
-[mman] to bottom
-[mman] transform_assign: frhd->size:=(unsigned int)((char *)_heapend.ptr - (char *)_heapstart.ptr) / sizeof(HEADER)
-[mman] feature2exph: frhd->size to csz
-[mman] transform_assign: csz(frhd):=(__hole * 8)[(unsigned int)((char *)_heapend.ptr - (char *)_heapstart.ptr) / sizeof(HEADER)]
-[mman] Exp:(unsigned int)((char *)_heapend.ptr - (char *)_heapstart.ptr) / sizeof(HEADER)
-[mman] Exp:(unsigned int)((char *)_heapend.ptr - (char *)_heapstart.ptr)
-[mman] Exp:(char *)_heapend.ptr - (char *)_heapstart.ptr
-[mman] Exp:(char *)_heapend.ptr
-[mman] Exp:_heapend.ptr
-[mman] Exp:(char *)_heapstart.ptr
-[mman] Exp:_heapstart.ptr
-[mman] Exp:sizeof(HEADER)
-[mman] to: csz(frhd):=(((fn(_heapend) - fn(_heapstart)) / 8) * 8)
-[mman] do_assigns: csz(frhd):=(((fn(_heapend) - fn(_heapstart)) / 8) * 8)
-[mman] on ({eid_0}bottom)
-[mman] to_var: csz(frhd) in eid_0
-[mman] to_var: fn(_heapend) in eid_0
-[mman] to_var: fn(_heapstart) in eid_0
-[mman] to bottom
-[mman] transform_assign: memleft:=(short)frhd->size
-[mman] transform_assign: memleft:=__hole[(short)frhd->size]
-[mman] Exp:(short)frhd->size
-[mman] Exp:frhd->size
-[mman] to: memleft:=(csz(frhd) / 8)
-[mman] do_assigns: memleft:=(csz(frhd) / 8)
-[mman] on ({eid_0}bottom)
-[mman] to_var: memleft in eid_0
-[mman] to_var: csz(frhd) in eid_0
-[mman] to bottom
-[mman] ret_call: laInit(...)
-[mman] Unify penvs 3, 0
-[mman] to_var: _heapstart in eid_3
-[mman] to_var: _heapend in eid_3
-[mman] to_var: memleft in eid_3
-[mman] transform_assign: man:=(void *)0
-[mman] transform_assign: man:=__hole[(void *)0]
-[mman] Exp:(void *)0
-[mman] Exp:0
-[mman] to: man:=0
-[mman] do_assigns: man:=0
-[mman] on ({eid_3}bottom)
-[mman] to_var: man in eid_3
-[mman] to bottom
-[mman] transfer_call
-[mman] do_call: laAlloc(...)
-[mman] compute_call_state
-[mman] to_var: __retres in eid_3
-[mman] Unify penvs 3, 1
-[mman] Exp:20
-[mman] do_assigns: nbytes:=20
-[mman] on ({eid_5}bottom)
-[mman] to_var: nbytes in eid_5
-[mman] to bottom
-[mman] to_var: nxt in eid_1
-[mman] to_var: prev in eid_1
-[mman] to_var: __retres in eid_1
-[mman] init_callee_state: ({eid_1}bottom)
-[mman] compute_return_state
-[mman] ret_call: laAlloc(...)
-[mman] Unify penvs 3, 1
-[mman] to_var: _heapstart in eid_3
-[mman] to_var: _heapend in eid_3
-[mman] to_var: memleft in eid_3
-[mman] do_assigns: __hole:=__retres
-[mman] on ({eid_1}bottom)
-[mman] to_var: __hole in eid_1
-[mman] to_var: __retres in eid_1
-[mman] to bottom
-[mman] to_var: __retres in eid_1
-[mman] transform_assign: p1:=__hole
-[mman] transform_assign: p1:=__hole[__hole]
-[mman] Exp:__hole
-[mman] to: p1:=__hole
-[mman] do_assigns: p1:=__hole
-[mman] on ({eid_3}bottom)
-[mman] to_var: p1 in eid_3
-[mman] to_var: __hole in eid_3
-[mman] to bottom
-[mman] to_var: __hole in eid_3
-[mman] transfer_call
-[mman] do_call: laAlloc(...)
-[mman] compute_call_state
-[mman] to_var: __retres in eid_3
-[mman] Unify penvs 3, 1
-[mman] Exp:20
-[mman] do_assigns: nbytes:=20
-[mman] on ({eid_5}bottom)
-[mman] to_var: nbytes in eid_5
-[mman] to bottom
-[mman] to_var: nxt in eid_1
-[mman] to_var: prev in eid_1
-[mman] to_var: __retres in eid_1
-[mman] init_callee_state: ({eid_1}bottom)
-[mman] compute_return_state
-[mman] ret_call: laAlloc(...)
-[mman] Unify penvs 3, 1
-[mman] to_var: _heapstart in eid_3
-[mman] to_var: _heapend in eid_3
-[mman] to_var: memleft in eid_3
-[mman] to_var: __retres in eid_1
-[mman] transfer_call
-[mman] do_call: laAlloc(...)
-[mman] compute_call_state
-[mman] to_var: __retres in eid_3
-[mman] Unify penvs 3, 1
-[mman] Exp:20
-[mman] do_assigns: nbytes:=20
-[mman] on ({eid_5}bottom)
-[mman] to_var: nbytes in eid_5
-[mman] to bottom
-[mman] to_var: nxt in eid_1
-[mman] to_var: prev in eid_1
-[mman] to_var: __retres in eid_1
-[mman] init_callee_state: ({eid_1}bottom)
-[mman] compute_return_state
-[mman] ret_call: laAlloc(...)
-[mman] Unify penvs 3, 1
-[mman] to_var: _heapstart in eid_3
-[mman] to_var: _heapend in eid_3
-[mman] to_var: memleft in eid_3
-[mman] do_assigns: __hole:=__retres
-[mman] on ({eid_1}bottom)
-[mman] to_var: __hole in eid_1
-[mman] to_var: __retres in eid_1
-[mman] to bottom
-[mman] to_var: __retres in eid_1
-[mman] transform_assign: p2:=__hole
-[mman] transform_assign: p2:=__hole[__hole]
-[mman] Exp:__hole
-[mman] to: p2:=__hole
-[mman] do_assigns: p2:=__hole
-[mman] on ({eid_3}bottom)
-[mman] to_var: p2 in eid_3
-[mman] to_var: __hole in eid_3
-[mman] to bottom
-[mman] to_var: __hole in eid_3
-[mman] transfer_call
-[mman] do_call: laAlloc(...)
-[mman] compute_call_state
-[mman] to_var: __retres in eid_3
-[mman] Unify penvs 3, 1
-[mman] Exp:20
-[mman] do_assigns: nbytes:=20
-[mman] on ({eid_5}bottom)
-[mman] to_var: nbytes in eid_5
-[mman] to bottom
-[mman] to_var: nxt in eid_1
-[mman] to_var: prev in eid_1
-[mman] to_var: __retres in eid_1
-[mman] init_callee_state: ({eid_1}bottom)
-[mman] compute_return_state
-[mman] ret_call: laAlloc(...)
-[mman] Unify penvs 3, 1
-[mman] to_var: _heapstart in eid_3
-[mman] to_var: _heapend in eid_3
-[mman] to_var: memleft in eid_3
-[mman] to_var: __retres in eid_1
-[mman] transfer_call
-[mman] do_call: laFree(...)
-[mman] compute_call_state
-[mman] to_var: __retres in eid_3
-[mman] Unify penvs 3, 2
-[mman] Exp:p1
-[mman] do_assigns: ap:=p1
-[mman] on ({eid_6}bottom)
-[mman] to_var: ap in eid_6
-[mman] to_var: p1 in eid_6
-[mman] to bottom
-[mman] to_var: nxt in eid_2
-[mman] to_var: prev in eid_2
-[mman] to_var: f in eid_2
-[mman] init_callee_state: ({eid_2}bottom)
-[mman] compute_return_state
-[mman] ret_call: laFree(...)
-[mman] Unify penvs 3, 2
-[mman] to_var: _heapstart in eid_3
-[mman] to_var: _heapend in eid_3
-[mman] to_var: memleft in eid_3
-[mman] transfer_call
-[mman] do_call: laFree(...)
-[mman] compute_call_state
-[mman] to_var: __retres in eid_3
-[mman] Unify penvs 3, 2
-[mman] Exp:p2
-[mman] do_assigns: ap:=p2
-[mman] on ({eid_6}bottom)
-[mman] to_var: ap in eid_6
-[mman] to_var: p2 in eid_6
-[mman] to bottom
-[mman] to_var: nxt in eid_2
-[mman] to_var: prev in eid_2
-[mman] to_var: f in eid_2
-[mman] init_callee_state: ({eid_2}bottom)
-[mman] compute_return_state
-[mman] ret_call: laFree(...)
-[mman] Unify penvs 3, 2
-[mman] to_var: _heapstart in eid_3
-[mman] to_var: _heapend in eid_3
-[mman] to_var: memleft in eid_3
-[mman] transform_assign: __retres:=0
-[mman] transform_assign: __retres:=__hole[0]
-[mman] Exp:0
-[mman] to: __retres:=0
-[mman] do_assigns: __retres:=0
-[mman] on ({eid_3}bottom)
-[mman] to_var: __retres in eid_3
-[mman] to bottom
-[mman] End general analysis
-[mman] (sid:80): {eid_0}bottom
-[mman] (sid:81): {eid_0}bottom
-[mman] (sid:82): {eid_0}bottom
-[mman] (sid:85): {eid_3}[|__hole=0; p2>=0; p1>=0; man>=0|]
-[mman] (sid:86): {eid_3}bottom
-[mman] (sid:87): {eid_3}bottom
-[mman] (sid:88): {eid_3}bottom
-[mman] (sid:104): {eid_0}bottom
-[mman] (sid:89): {eid_3}bottom
-[mman] (sid:106): {eid_3}bottom
-[mman] (sid:90): {eid_3}bottom
-[mman] (sid:91): {eid_3}bottom
-[mman] (sid:92): {eid_3}bottom
-[mman] (sid:93): {eid_3}bottom
-[mman] (sid:77): {eid_0}top
-[mman] (sid:78): {eid_0}bottom
-[mman] (sid:79): {eid_0}bottom
 [mman] --------------------------------------------
 [mman] Analysing the application starting at 'MAIN'
 [mman] Computing initial state
 [mman] Initial_state_stmt (sid:85)
 [mman] init_global: struct init
 [mman] Exp:(struct hdr *)0
+[mman] Exp:0
 [mman] Exp:(unsigned int)0
+[mman] Exp:0
 [mman] init_global: struct init
 [mman] Exp:(struct hdr *)0
+[mman] Exp:0
 [mman] Exp:(unsigned int)0
+[mman] Exp:0
 [mman] Exp:(short)0
+[mman] Exp:0
 [mman] init_global_avals: fn(_heapstart),
 [mman] init_global_avals: csz(_heapstart),
 [mman] init_global_avals: fn(_heapend),
@@ -487,6 +156,11 @@
 [mman] do_assigns: memleft:=0
 [mman] on ({peid:3}Top)
 [mman] do_assign_one
+[mman] fn(_heapstart):=0
+[mman] csz(_heapstart):=0
+[mman] fn(_heapend):=0
+[mman] csz(_heapend):=0
+[mman] memleft:=0
 [mman] evaluate alval:fn(_heapstart)
 [mman] evalL is None
 [mman] evaluate alval:csz(_heapstart)
@@ -507,83 +181,53 @@
 [mman] evalE is None
 [mman] evaluate aexp:0
 [mman] evalE is None
+[mman] do_one_assign: fn(_heapstart):=0,...
+[mman] on ({eid_3}top)
+[mman] to_var: fn(_heapstart) in eid_3
+[mman] to [|__hole=0|]
+[mman] do_one_assign: csz(_heapstart):=0,...
+[mman] on ({eid_3}top)
+[mman] to_var: csz(_heapstart) in eid_3
+[mman] to [|__hole=0|]
+[mman] do_one_assign: fn(_heapend):=0,...
+[mman] on ({eid_3}top)
+[mman] to_var: fn(_heapend) in eid_3
+[mman] to [|__hole=0|]
+[mman] do_one_assign: csz(_heapend):=0,...
+[mman] on ({eid_3}top)
+[mman] to_var: csz(_heapend) in eid_3
+[mman] to [|__hole=0|]
+[mman] do_one_assign: memleft:=0,...
+[mman] on ({eid_3}top)
+[mman] to_var: memleft in eid_3
+[mman] to [|memleft=0|]
 [mman] Dflow:assign_done
-[mman] Initial_state {peid:3}Bot
-[mman] transfer_stmt_main sid: 85 on {peid:3}Bot'
+[mman] MSH:------
+[mman] Initial_state {peid:3}eshape: top,
+        
+       	 dwords:{eid_3}[|memleft=0|]
+[mman] MSH:------
+[mman] transfer_stmt_main sid: 85 on {peid:3}eshape: top,
+        
+       	 dwords:{eid_3}[|memleft=0|] 
+       '
 [mman] s.skind: Instr2
 [mman] function called: laInit'
 [mman] do_call: laInit(...)
 [mman] Unify penvs 3, 0
-[mman] ret_call: laInit(...)
-[mman] Unify penvs 3, 0
-[mman] (sid:85): {peid:3}Bot
-[mman] (sid:86): {peid:-1}Bot
-[mman] (sid:87): {peid:-1}Bot
-[mman] (sid:88): {peid:-1}Bot
-[mman] (sid:89): {peid:-1}Bot
-[mman] (sid:106): {peid:-1}Bot
-[mman] (sid:90): {peid:-1}Bot
-[mman] (sid:91): {peid:-1}Bot
-[mman] (sid:92): {peid:-1}Bot
-[mman] (sid:93): {peid:-1}Bot
-[mman] --------------------------------------------
-[mman] Analysing 'minit'
-[mman] Analysing method minit='laInit'
-[mman] Computing initial state
-[mman] Initial_state_stmt (sid:77)
-[mman] init_global_avals: fn(_heapstart),
-[mman] init_global_avals: csz(_heapstart),
-[mman] init_global_avals: fn(_heapend),
-[mman] init_global_avals: csz(_heapend),
-[mman] init_global_avals: memleft,
-[mman] init_global_aexps: 0,
-[mman] init_global_aexps: 0,
-[mman] init_global_aexps: 0,
-[mman] init_global_aexps: 0,
-[mman] init_global_aexps: 0,
-[mman] Computing global values
-[mman] Dflow:init_globals
-[mman] Dflow:do_assign
-[mman] doing assign
-[mman] do_assigns: fn(_heapstart):=0
-[mman] on ({peid:0}Top)
-[mman] do_assigns: csz(_heapstart):=0
-[mman] on ({peid:0}Top)
-[mman] do_assigns: fn(_heapend):=0
-[mman] on ({peid:0}Top)
-[mman] do_assigns: csz(_heapend):=0
-[mman] on ({peid:0}Top)
-[mman] do_assigns: memleft:=0
-[mman] on ({peid:0}Top)
-[mman] do_assign_one
-[mman] evaluate alval:fn(_heapstart)
-[mman] evalL is None
-[mman] evaluate alval:csz(_heapstart)
-[mman] evalL is None
-[mman] evaluate alval:fn(_heapend)
-[mman] evalL is None
-[mman] evaluate alval:csz(_heapend)
-[mman] evalL is None
-[mman] evaluate alval:memleft
-[mman] evalL is None
-[mman] evaluate aexp:0
-[mman] evalE is None
-[mman] evaluate aexp:0
-[mman] evalE is None
-[mman] evaluate aexp:0
-[mman] evalE is None
-[mman] evaluate aexp:0
-[mman] evalE is None
-[mman] evaluate aexp:0
-[mman] evalE is None
-[mman] Dflow:assign_done
-[mman] init state:{peid:0}Bot
-[mman] transfer_stmt_main sid: 77 on {peid:0}Bot'
+[mman] MSH:------
+[mman] transfer_stmt_main sid: 77 on {peid:3}eshape: top,
+        
+       	 dwords:{eid_3}[|memleft=0|] 
+       '
 [mman] s.skind: Instr2
 [mman] function called: sbrk'
+[mman] MSH:------
 [mman] transfer_sbrk: /* sid:77 */
                       _heapstart.ptr = (struct hdr *)sbrk(65360);
-       on {peid:0}Bot
+       on {peid:3}eshape: top,
+        
+       	 dwords:{eid_3}[|memleft=0|]
 [mman] Exp:65360
 [mman] feature2exph: _heapstart->ptr to fn
 [mman] transform_sbrk: fn(_heapstart):=__hole[sbrk(65360)]
@@ -591,18 +235,59 @@
 [mman] to: __hli:=(__hli + 65360)
 [mman] doing assign
 [mman] do_assigns: fn(_heapstart):=__hli
-[mman] on ({peid:0}Bot)
+[mman] MSH:------
+[mman] on ({peid:3}eshape: top,
+        
+       	 dwords:{eid_3}[|memleft=0|] 
+       )
 [mman] do_assigns: __hli:=(__hli + 65360)
-[mman] on ({peid:0}Bot)
-[mman] (sid:80): {peid:-1}Bot
-[mman] (sid:81): {peid:-1}Bot
-[mman] (sid:82): {peid:-1}Bot
-[mman] (sid:104): {peid:-1}Bot
-[mman] (sid:77): {peid:0}Bot
-[mman] (sid:78): {peid:-1}Bot
-[mman] (sid:79): {peid:-1}Bot
-[mman] --------------------------------------------
-[mman] Analysing 'malloc'
-[mman] --------------------------------------------
-[mman] Analysing 'mfree'
-[wp] Logging keys: .
+[mman] MSH:------
+[mman] on ({peid:3}eshape: top,
+        
+       	 dwords:{eid_3}[|memleft=0|] 
+       )
+[mman] do_assign_one
+[mman] fn(_heapstart):=__hli
+[mman] __hli:=(__hli + 65360)
+[mman] evaluate alval:fn(_heapstart)
+[mman] evalL is None
+[mman] evaluate alval:__hli
+[mman] evalL is None
+[mman] evaluate aexp:__hli
+[mman] evalE is None
+[mman] evaluate aexp:(__hli + 65360)
+[mman] evalE is None
+[mman] call shape init_state
+[mman] MSH:init shape value
+[mman] do_one_assign: fn(_heapstart):=__hli,...
+[mman] on ({eid_3}[|memleft=0|])
+[mman] to_var: fn(_heapstart) in eid_3
+[mman] to_var: __hli in eid_3
+[mman] to [|memleft=0|]
+[mman] do_one_assign: __hli:=(__hli + 65360),...
+[mman] on ({eid_3}[|memleft=0|])
+[mman] to_var: __hli in eid_3
+[mman] to_var: __hli in eid_3
+[mman] to [|memleft=0|]
+[mman] !!!!!!!!
+[mman] MSH:------
+[mman] MSH:------+++++
+[mman] failure: Unexpected exception.
+                Please submit bug report (Ref. "Not_found").
+[kernel] Current source was: /Users/yuezhuang/Documents/projects/mem copy/bench/la/lamalloc.c:167
+         The full backtrace is:
+         Raised at file "src/kernel_services/plugin_entry_points/log.ml", line 583, characters 30-31
+         Called from file "src/kernel_services/plugin_entry_points/log.ml", line 577, characters 9-16
+         Re-raised at file "src/kernel_services/plugin_entry_points/log.ml", line 580, characters 15-16
+         Called from file "queue.ml", line 134, characters 6-20
+         Called from file "src/kernel_internals/runtime/boot.ml", line 37, characters 4-20
+         Called from file "src/kernel_services/cmdline_parameters/cmdline.ml", line 787, characters 2-9
+         Called from file "src/kernel_services/cmdline_parameters/cmdline.ml", line 817, characters 18-64
+         Called from file "src/kernel_services/cmdline_parameters/cmdline.ml", line 228, characters 4-8
+         
+         Plug-in mman aborted: internal error.
+         Please report as 'crash' at http://bts.frama-c.com/.
+         Your Frama-C version is Aluminium-20160501.
+         Note that a version and a backtrace alone often do not contain enough
+         information to understand the bug. Guidelines for reporting bugs are at:
+         http://bts.frama-c.com/dokuwiki/doku.php?id=mantis:frama-c:bug_reporting_guidelines

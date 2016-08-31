@@ -848,7 +848,7 @@ and evalE_svid (svid: Mman_svar.svid) (seid: MEV.t) (g: meminfo)
     )
 
 and evalE_feat (seid: MEV.t)
-    (svid: Mman_svar.svid) (fk: Mman_dabs.feature_kind) g
+  (svid: Mman_svar.svid) (fk: Mman_dabs.feature_kind) g
   : (Mman_asyn.aexp option) * (Mman_asyn.alval list)
   =
   (* if it is a location in stack, get the location in heap *)
@@ -1014,7 +1014,7 @@ and guard_one (d: t) (ci: Mman_asyn.aconstr)
       )
 
 and guard_eq (d: t) (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
-    (oc: Mman_asyn.aconstr)
+  (oc: Mman_asyn.aconstr)
   : (t * Mman_asyn.aconstr) option
   =
   match d.mem with
@@ -1053,7 +1053,7 @@ and guard_eq (d: t) (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
     )
 
 and guard_geq (d: t) (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
-    (oc: Mman_asyn.aconstr)
+  (oc: Mman_asyn.aconstr)
   : (t * Mman_asyn.aconstr) option
   =
   match d.mem with
@@ -1082,7 +1082,7 @@ and guard_geq (d: t) (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
         )
 
 and guard_gt (d: t) (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
-    (oc: Mman_asyn.aconstr)
+  (oc: Mman_asyn.aconstr)
   : (t * Mman_asyn.aconstr) option
   =
   match d.mem with
@@ -1108,7 +1108,7 @@ and guard_gt (d: t) (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
       )
 
 and guard_neq (d: t) (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
-    (oc: Mman_asyn.aconstr)
+  (oc: Mman_asyn.aconstr)
   : (t * Mman_asyn.aconstr) option
   =
   match d.mem with
@@ -1164,7 +1164,6 @@ and guard_neq (d: t) (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
         )
 
 (** Compute a memory layout from the constraints.
-
     Return also the constraints to be applied to the data part.
 *)
 and of_constraints (d: t) (c1_cn: Mman_asyn.aconstr list)
@@ -1225,7 +1224,7 @@ let rec mutate (lv: Mman_asyn.alval) (e: Mman_asyn.aexp) (d: t)
     )
 
 and mutate_meminfo (seid: MEV.t) (g: meminfo)
-    (sviL: Mman_svar.svid) (e: Mman_asyn.aexp)
+  (sviL: Mman_svar.svid) (e: Mman_asyn.aexp)
   : (t * (Mman_svar.svid list) * (Mman_asyn.aconstr list)) list
   =
   match e with
@@ -1303,7 +1302,7 @@ and mutate_meminfo (seid: MEV.t) (g: meminfo)
       in []
 
 and mutate_stack (seid: MEV.t) (g: meminfo)
-    (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
+  (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
   : meminfo
   =
   { stack = MEV.EnvMap.add sviL sviR g.stack;
@@ -1336,7 +1335,7 @@ and mutate_hli (seid: MEV.t) (g: meminfo)
 
 (** Mutate sviL to a location hli + aexp. *)
 and mutate_hli_offset (seid: MEV.t) (g: meminfo)
-    (sviL: Mman_svar.svid) (eoff: Mman_asyn.aexp)
+  (sviL: Mman_svar.svid) (eoff: Mman_asyn.aexp)
   : (t * (Mman_svar.svid list) * (Mman_asyn.aconstr list)) list
   =
   let _ = Mman_options.Self.warning "Access outside data segment limit@." in

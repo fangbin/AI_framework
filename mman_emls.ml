@@ -157,9 +157,15 @@ let pretty_atominfo fmt (sei: MEV.t) (at: atominfo) =
 
 let pretty_stack fmt (sei: MEV.t) (s: MEV.envmap) =
   begin
+    let _ = Mman_options.Self.debug ~level:1 " MSH:------+++++ @."  
+   in 
     (MEV.VidMap.iter
        (fun vi ai ->
+
           let vinfo = MEV.senv_getvinfo sei vi in
+
+          let _ = Mman_options.Self.debug ~level:1 " MSH:------+++++ @." 
+          in 
           let ainfo = MEV.senv_getvinfo sei ai in
           Format.fprintf fmt "%a |-> %a, "
             Mman_svar.Svar.pretty vinfo
@@ -167,6 +173,8 @@ let pretty_stack fmt (sei: MEV.t) (s: MEV.envmap) =
        )
        s
     );
+
+  
     Format.fprintf fmt "@."
   end
   
@@ -202,6 +210,8 @@ let pretty_intern_meminfo fmt (sei: MEV.t) (mi: meminfo) =
   
 let pretty_code_meminfo fmt (sei: MEV.t) (mi: meminfo) =
   begin
+
+
     (* print stack *)
     pretty_stack fmt sei mi.stack;
     (* print SL formula *)
@@ -225,6 +235,7 @@ let pretty_intern_memval fmt (sei: MEV.t) (d: memval) =
   | S(mi) -> pretty_intern_meminfo fmt sei mi
 
 let pretty_code_memval fmt (sei: MEV.t) (d: memval) =
+
   match d with
   | Bot -> Format.fprintf fmt "bottom"
   | Top -> Format.fprintf fmt "top"
@@ -250,6 +261,8 @@ let pretty_code_intern (p_caller:Type.precedence) fmt (d: valinfo) =
 
 let pretty_code fmt (d: valinfo) =
   begin
+    let _ = Mman_options.Self.debug ~level:1 " MSH:------@."  
+   in 
     pretty_code_memval fmt d.seid d.mem;
     Format.fprintf fmt ",@."
   end
@@ -1481,5 +1494,29 @@ let stack_of (sh:valinfo) (svid: Mman_svar.svid)
       sk;
       !res 
     end 
+
+
+(**************************************************************************)
+(**  initial shape value *)
+(**************************************************************************)
+
+let init_state (pv:int) (sid: MEV.t) 
+  : valinfo
+  =
+  let _ = Mman_options.Self.debug ~level:1 " MSH:init shape value @."  
+  in 
+  let mi = empty_meminfo in 
+  let st = MEV.EnvMap.add pv Mman_svar.svid_hst mi.stack in 
+ 
+  let at = Blk(Mman_svar.svid_hst,Mman_svar.svid_hli) in 
+    
+  let ls = [(Mman_svar.svid_hst)]  in 
+  let atmp = MEV.EnvMap.add Mman_svar.svid_hst at mi.atoms in 
+     
+  let mi = {stack = st; mls = ls; atoms = atmp } in 
+  {
+    seid = sid;
+    mem = S (mi);
+  }
 
 

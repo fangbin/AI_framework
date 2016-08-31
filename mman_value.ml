@@ -761,9 +761,19 @@ module Model = struct
     let r = ref true  in
     let l = ref true in 
     let isin = ref false in 
+
+      let _ = 
+        List.iter2 
+        ( fun lv le ->
+             Mman_options.Self.debug ~level:1 " %a:=%a@."
+                   Mman_asyn.pp_alval (lv) Mman_asyn.pp_aexp (le) 
+        )
+        llv 
+        lexp 
+      in 
     begin
-        List.iter (fun lv -> 
-                    if (!r) then 
+      List.iter (fun lv -> 
+                     
                     ( let _ = Mman_options.Self.debug ~level:1 " evaluate alval:%a @." 
                             Mman_asyn.pp_alval  lv 
                            in 
@@ -781,44 +791,113 @@ module Model = struct
                                nllv := lv' :: (!nllv);
                                vf := rvf @ (!vf)
                             end
-                    )
-                  else ()
-                     
-                )
-              llv
+                    ) 
+                 )
+               llv
         ;
       List.iter (fun e -> 
-                    
-                    let _ = Mman_options.Self.debug ~level:1 " evaluate aexp:%a  @." 
+                     
+                      ( let _ = Mman_options.Self.debug ~level:1 " evaluate aexp:%a  @." 
                             Mman_asyn.pp_aexp e 
                             in 
-                    let re, rvf = MSH.evalE e esh in
-                     match re with
-                     | None ->  
-                          let _ = Mman_options.Self.debug ~level:1 " evalE is None @." in 
-                          l := false;            
-                     | Some(e') ->
-                         begin
-                          let _ = Mman_options.Self.debug ~level:1 " evalE is Some() @." 
-                          in 
-                           nlexp := (e') :: (!nlexp);
-                           vf := rvf @ (!vf)
-                         end 
-                    
+                      let re, rvf = MSH.evalE e esh in
+                       match re with
+                       | None ->  
+                            let _ = Mman_options.Self.debug ~level:1 " evalE is None @." in 
+                            l := false;            
+                       | Some(e') ->
+                           begin
+                            let _ = Mman_options.Self.debug ~level:1 " evalE is Some() @." 
+                            in 
+                             nlexp := (e') :: (!nlexp);
+                             vf := rvf @ (!vf)
+                           end 
+                      )
+                     
                 )
                 lexp
         ;
     
       match esh.mem with
-      | Top -> 
-          if (!r)&&(!l) then 
-          let _ = Mman_options.Self.debug ~level:1 " initi shape value@."  in 
-            None
-          else 
-            None
-      | _ -> 
+      | Top | Bot -> 
+          (* Initially, while eshape value is Top and __hli is 
+           * assigned (when sbrk is called), the initial eshape 
+           * value will be created.
+           *)
          
-        begin
+         let nm = ref (ModelMap.empty) in
+         if (not !r) && (not !l) then  
+            match List.hd lexp  with
+            | ALval(AVar vi2) -> (* = __hli *)         
+                  begin 
+                    
+                      if (String.compare (vi2.vname)  "__hli" == 0)
+                      then  
+                         match (List.hd llv) with
+                          | AVar vi  -> 
+                              begin  
+                                let eshv = MSH.init_state vi.vid eid in  
+                                 List.iter2 
+                                 (
+                                     fun lv e -> 
+                                          let ndw = MDW.assign lv e dw in 
+                                          nm :=  ModelMap.singleton eshv ndw;
+                                 )
+                                  llv 
+                                  lexp
+                                ; 
+                                Some (!nm)
+                              end 
+
+                          | AFeat (fk, lv) ->  
+                                begin 
+                                  match lv with
+                                      | AVar vi  ->  
+                                        begin 
+                                           let _ = Mman_options.Self.debug ~level:1 " call shape init_state  @."  
+                                           in 
+
+                                            let eshv = MSH.init_state vi.vid eid in  
+                                             List.iter2 
+                                               (
+                                                   fun lv e -> 
+                                                        let ndw = MDW.assign lv e dw in 
+                                                        nm :=  ModelMap.singleton eshv ndw;
+                                               )
+                                                llv 
+                                                lexp
+                                            ;
+                                           let _ = Mman_options.Self.debug ~level:1 " !!!!!!!! @."  
+                                           in 
+                                           let _ = Mman_options.Self.debug ~level:1 "shape init state:%a @."  
+                                           MSH.pretty eshv 
+                                           in  
+                                            Some (!nm)
+                                        end 
+                                      | _ ->  None     
+                                end  
+                      else 
+                        None
+                  end 
+           
+            | _ -> (*  fn(headpstart = 0 ) *)
+                begin
+                  
+                  List.iter2 
+                  ( 
+                    fun lv e ->
+                    let ndw = MDW.assign lv e dw in 
+                    nm :=  (ModelMap.singleton esh ndw)
+                  )
+                  llv 
+                  lexp 
+                  ; 
+                  Some (!nm) 
+                end
+          else Some(!nm)
+
+      | _ -> 
+          begin
               if (!vf) = [] then (* do not unfold *)
                 (* the assignment may be done *)
                 let _ = Mman_options.Self.debug ~level:1 " do mutate@."  in 
