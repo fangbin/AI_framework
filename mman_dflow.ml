@@ -103,9 +103,16 @@ let globals () =
  * to initialize the globals
 *)
 let init_done = ref false
+let init_galloc : Mman_asyn.alval list ref = ref []
 let init_glv : Mman_asyn.alval list ref = ref []
 let init_gexp : Mman_asyn.aexp list ref = ref []
 let init_gcnd : Mman_asyn.aconstr list ref = ref []
+
+
+(* initial global struct list *)
+let init_structs : Mman_asyn.alval list ref = ref [] 
+let init_structs_fi : Mman_asyn.alval list ref = ref [] 
+
     
 let rec init_globals ()
   : unit
@@ -128,25 +135,34 @@ and init_global vi ii =
         init_glv := !init_glv @ [avi];
         init_gexp := !init_gexp @ [aei]
       end
+  
   | Cil_types.Static, Some(Cil_types.CompoundInit(ty,ls)) -> 
       (* TODO:deal with struct init *)
       let _ = Mman_options.Self.feedback "init_global: struct init@." in 
-      List.iter 
-      ( fun (ofs,ci) -> 
-        match ci with
-        | Cil_types.SingleInit(ei) ->            
-              begin
-                match ofs with
-                | Field(fi,_) -> 
-                  let al, ex = Mman_asyn.transform_field2exp vi fi in 
-                    init_glv  := !init_glv  @ [al];
-                  let aex = Mman_asyn.transform_exp ei in
-                    init_gexp := !init_gexp @ [aex];
-                | _ -> ()
-              end
-        | _ -> ()
-      )
-      ls
+      begin
+        init_galloc := !init_galloc @ [Mman_asyn.AVar(vi)];
+        (List.iter 
+          (fun (ofs,ci) -> 
+            match ci with
+            | Cil_types.SingleInit(ei) ->            
+                  begin
+                    match ofs with
+                    | Field(fi,_) -> 
+                      let al, ex = Mman_asyn.transform_field2exp vi fi in 
+                        init_glv  := !init_glv  @ [al];
+                        
+                        init_structs_fi := !init_structs_fi @ [al];
+
+                      let aex = Mman_asyn.transform_exp ei in
+                        init_gexp := !init_gexp @ [aex];
+
+                        (*stinit := Some (ii);*)
+                    | _ -> ()
+                  end
+            | _ -> ()
+          )
+        ls)
+      end
 
   | Cil_types.Static, None ->
       (* depend on the type *)
@@ -776,12 +792,22 @@ and get_init_state kf =
       ) 
       !init_gexp
   in 
+
+  let _ = 
+      List.iter 
+      ( fun lv ->
+        Mman_options.Self.feedback "struct fiels : %a, @."
+        Mman_asyn.pp_alval lv 
+      ) 
+      !init_structs_fi
+  in 
+
   let init_state = try
       Call_state.find init_stmt
     with Not_found -> (
         (* compute initials from inital globals and restricted locals *)
         let _ = Mman_options.Self.feedback "Computing global values@." in
-        let glb_state = MV.init_globals eid_stmt
+        let glb_state = MV.init_globals eid_stmt !init_galloc !init_structs_fi
             !init_glv !init_gexp !init_gcnd in
          
         let glb_loc_state = set_fun_locals kf eid_stmt glb_state in

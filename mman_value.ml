@@ -700,14 +700,16 @@ module Model = struct
     let _ = 
         List.iter2 
         ( fun lv le ->
-             (Mman_options.Self.debug ~level:1 "do_assigns: %a:=%a@."
+             Mman_options.Self.debug ~level:1 "do_assigns: %a:=%a@."
                    Mman_asyn.pp_alval (lv) Mman_asyn.pp_aexp (le);
-                 Mman_options.Self.debug ~level:1 "on %a@."
-                   (pretty_code_intern Type.Basic) d)
+                 
         )
         llv 
         lexp 
     in
+    let _ = Mman_options.Self.debug ~level:1 "on %a@."
+                   (pretty_code_intern Type.Basic) d
+      in 
     let nmap =
       (match d.set with
       | None -> None
@@ -754,7 +756,7 @@ module Model = struct
     : (sh2dw option)
     =
     (* build from (esh, dw) the set of pairs where all assignments may be done *)
-    let _ = Mman_options.Self.debug ~level:1 "do_assign_one @." in 
+    let _ = Mman_options.Self.debug ~level:1 "do_assign_one.... @." in 
     let nllv = ref [] in
     let nlexp = ref [] in
     let vf = ref [] in
@@ -898,6 +900,17 @@ module Model = struct
 
       | _ -> 
           begin
+               let _ = 
+                List.iter2 
+                ( fun lv le ->
+                     Mman_options.Self.debug ~level:1 " %a:=%a@."
+                           Mman_asyn.pp_alval (lv) Mman_asyn.pp_aexp (le) 
+                )
+                !nllv 
+                !nlexp 
+              in 
+
+
               if (!vf) = [] then (* do not unfold *)
                 (* the assignment may be done *)
                 let _ = Mman_options.Self.debug ~level:1 " do mutate@."  in 
@@ -906,7 +919,10 @@ module Model = struct
                   List.iter2
                     (
                       fun lv e ->
-                       if ( not !r) then
+                        Mman_options.Self.debug ~level:1 "mutations: %a:=%a@."
+                           Mman_asyn.pp_alval (lv) Mman_asyn.pp_aexp (e);
+
+                       if (!r) then
                          (
                           let _ = Mman_options.Self.debug ~level:1 " eshape mutate@."  in 
                           let t1_tn = MSH.mutate lv e esh in
@@ -938,6 +954,191 @@ module Model = struct
           end
         
     end
+
+  (* Create values to store globally allocated variables, eg struct {} v; *)
+  let do_alloc (d:t) (llv: Mman_asyn.alval list) (v1_vn: Mman_asyn.alval list) 
+    :value 
+    = 
+    begin 
+      let _ =  Mman_options.Self.debug ~level:1 "-------------------do_alloc-------------------@."
+        in 
+      let peid = d.eid in  (* *)
+      let le = List.length llv in 
+      let ls = List.length v1_vn in 
+      let nsvars = ref [] in 
+      List.iter 
+      (
+        fun lv -> 
+        Mman_options.Self.debug ~level:1 "struct global vars: %a @."
+                   Mman_asyn.pp_alval (lv);
+      )
+      llv
+      ;  
+      List.iter 
+      (
+        fun lv -> 
+        Mman_options.Self.debug ~level:1 "struct fields functions: %a @."
+                   Mman_asyn.pp_alval (lv);
+      )
+      v1_vn
+      ;
+
+      let _ = (Mman_options.Self.debug ~level:1 "penv: %a@."
+                 MEV.penv_print (MEV.penv_get peid)) 
+      in
+      (* initialize the symbolic environment *)
+      let seid =   Mman_env.senvs_init peid in 
+      let _ = (Mman_options.Self.debug ~level:1 "senv: %a @."
+                 MEV.senv_print (MEV.senv_get seid)) 
+      in
+
+
+      let st  = ref MEV.EnvMap.empty in (* mapping from pvar to symbolic loction *)
+      let atmp = ref MEV.EnvMap.empty in (* atoms of struct variables *)
+      let mls = ref [] in  
+
+      List.iteri
+      ( fun i lv ->
+               Mman_options.Self.debug ~level:1 "globally allocated vars: %a @."
+                   Mman_asyn.pp_alval (lv);
+         match lv with
+          | AVar vi ->  
+               begin  
+                  (* create new svar *)
+                  let _ = Mman_options.Self.debug ~level:1 "creating new svar for struct variable: %a... @."
+                        Mman_asyn.pp_alval (lv);
+                    in 
+                  let svinfo = MEV.senv_getvar seid  (Mman_svar.sv_mk_var vi) in
+                  let svid = Mman_svar.Svar.id svinfo in
+                    nsvars := !nsvars @[(svinfo)];
+                  
+                  let psvinfo = MEV.penv_getvar peid  (Mman_svar.sv_mk_var vi) in
+                  let psvid = Mman_svar.Svar.id psvinfo in
+
+                  let _ = Mman_options.Self.debug ~level:1 "new svar created:%a@."
+                            Mman_svar.Svar.pretty svinfo
+                    in 
+
+                  (* create new feature svar *)
+                  for j = i*le to ((i+1)*le -1) do 
+                    let ft = List.nth v1_vn j in 
+                        match ft with
+                        | AFeat(fk, lv') -> 
+                              Mman_options.Self.debug ~level:1  "creating new svar for feature : %s" 
+                                      (Mman_dabs.get_fname fk);
+
+                            (*let fkinfo = MEV.senv_getvar seid (Mman_svar.sv_mk_feat (Some(svid)) fk) in 
+                            let svfkid = Mman_svar.Svar.id fkinfo in *)
+
+                            let newsv = Mman_svar.sv_mk_feat (Some(psvid)) fk in 
+                                nsvars := !nsvars @[(newsv)];
+
+                            Mman_options.Self.debug ~level:1 "new feature svar created:%a@."
+                                      Mman_svar.Svar.pretty newsv
+                                     
+                        | _ -> () 
+                  done;
+
+                  
+
+
+
+               end 
+          |_ -> ()
+      )
+      llv 
+      ;
+
+      
+      (* initial symbolic envi *)
+      let sei, ls = Mman_env.senv_addsvar seid !nsvars in 
+      sei;
+      let _ = (Mman_options.Self.debug ~level:1 "new senv: %a @."
+                 MEV.senv_print (MEV.senv_get sei)) 
+      in
+
+       List.iteri
+        ( fun i lv ->
+
+                (* TODO:create shape value, atom Chd for struct variable *)
+            Mman_options.Self.debug ~level:1 "creating shape value for struct variable: %a @."
+                  Mman_asyn.pp_alval (lv);
+            match lv with
+            | AVar vi ->  
+                begin
+                  let _ = Mman_options.Self.debug ~level:1 "get pv in penv @." in 
+                  let psvinfo = MEV.penv_getvar peid  (Mman_svar.sv_mk_var vi) in
+                  let psvid = Mman_svar.Svar.id psvinfo in
+                  let _ = Mman_options.Self.debug ~level:1 "pv:%a@."
+                            Mman_svar.Svar.pretty psvinfo
+                    in 
+                  let _ = Mman_options.Self.debug ~level:1
+                        " psvid: %d @."
+                          psvid 
+                    in 
+
+                  let _ = Mman_options.Self.debug ~level:1 "get symbolic variable of pv @." in 
+                  
+                  let ssvinfo = MEV.senv_getvar sei  (Mman_svar.sv_mk_var vi) in
+                  let ssvid = Mman_svar.Svar.id ssvinfo in 
+                        st := MEV.EnvMap.add psvid ssvid !st;
+                        mls := !mls @[ssvid];
+
+                  let _ = Mman_options.Self.debug ~level:1 "symbolic svar of pv:%a@."
+                            Mman_svar.Svar.pretty ssvinfo
+                    in 
+                  let _ = Mman_options.Self.debug ~level:1
+                        " ssvid: %d @."
+                          ssvid 
+                    in 
+                   
+
+                  let fkl = ref [] in 
+                  for j = i*le to ((i+1)*le -1) do 
+                    let ft = List.nth v1_vn j in 
+                        match ft with
+                        | AFeat(fk, lv') -> 
+                              Mman_options.Self.debug ~level:1  "get svfeat(%s) of symbolic pv." 
+                                      (Mman_dabs.get_fname fk);
+                              let svinfo = MEV.senv_getvar seid (Mman_svar.sv_mk_feat (Some(ssvid)) fk) in  
+                              let ssvid = Mman_svar.Svar.id ssvinfo in 
+                              fkl := !fkl @ [(fk,Mman_svar.sv_mk_hole.id)]; 
+                        | _-> ()
+                  done 
+                  ;
+
+                  Mman_options.Self.debug ~level:1  "fk list created";
+                  let nchd = Mman_emls.new_Chd ssvid !fkl in 
+                  atmp := MEV.EnvMap.add ssvid nchd !atmp;
+                end
+            | _-> ()  
+
+
+       )
+      llv
+      ;
+      (* new shape value *) 
+      let meminfo = Mman_emls.new_mem !st !mls !atmp in 
+      let nshapev = Mman_emls.new_msh sei meminfo in  
+      let _ = Mman_options.Self.debug ~level:1 "old value  %a@."
+                   (pretty_code_intern Type.Basic) d
+      in  
+      let nvalue = 
+      {   
+          eid = sei; 
+          (*set = ModelMap.add nshapev MDW.dummy_bot !mres;*)
+          set = Some(ModelMap.singleton nshapev MDW.dummy_bot)
+      }
+      in 
+      let _ = Mman_options.Self.debug ~level:1 "new value:\n  %a@."
+                   (pretty_code_intern Type.Basic) nvalue 
+          in 
+       let _ =  Mman_options.Self.debug ~level:1 "-------------------do_alloc-------------------@."
+        in 
+      nvalue    
+
+    end         
+
 
 
   (** Project out the list of variables.
@@ -973,7 +1174,7 @@ end
 *)
 let global_state : Model.t ref = ref Model.dummy_top
 
-let init_globals (eid:MEV.t)
+let init_globals (eid:MEV.t) (av1_avn: Mman_asyn.alval list) (sv1_fn:Mman_asyn.alval list)
     (v1_vn: Mman_asyn.alval list) (e1_en: Mman_asyn.aexp list)
     (c1_cn: Mman_asyn.aconstr list)
     : Model.t
@@ -983,8 +1184,12 @@ let init_globals (eid:MEV.t)
     then !global_state
     else
     (* Do assign *)
+    let _ = Mman_options.Self.feedback "Dflow:do_alloc@." in
+    let vall = Model.do_alloc (Model.top_of eid) (av1_avn) sv1_fn in
+    
     let _ = Mman_options.Self.feedback "Dflow:do_assign@." in
-    let vinit = Model.do_assign (Model.top_of eid) (v1_vn) (e1_en) in
+    let vinit = Model.do_assign vall (v1_vn) (e1_en) in
+    
     let _ = Mman_options.Self.feedback "Dflow:assign_done@." in
     let v = Model.meet_exp vinit c1_cn in
     begin

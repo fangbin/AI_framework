@@ -141,140 +141,168 @@
 [mman] init_global_aexps: 0,
 [mman] init_global_aexps: 0,
 [mman] init_global_aexps: 0,
+[mman] struct fiels : fn(_heapstart),
+[mman] struct fiels : csz(_heapstart),
+[mman] struct fiels : fn(_heapend),
+[mman] struct fiels : csz(_heapend),
 [mman] Computing global values
 [mman] Dflow:init_globals
+[mman] Dflow:do_alloc
+[mman] -------------------do_alloc-------------------
+[mman] struct global vars: _heapstart
+[mman] struct global vars: _heapend
+[mman] struct fields functions: fn(_heapstart)
+[mman] struct fields functions: csz(_heapstart)
+[mman] struct fields functions: fn(_heapend)
+[mman] struct fields functions: csz(_heapend)
+[mman] penv: penv_3 = (2,
+       [10]{ 0> (0)__null; 1> (1)__hole; 2> (2)__hli; 3> (3)__hst; 4> (4)_heapstart; 5> (5)_heapend; 6> (6)memleft; 7> (7)man; 8> (8)p1; 9> (9)p2;
+       })
+[mman] initialise symbolic environment
+[mman] create symbolic environment
+[mman] adding global svars...
+[mman] global svars added
+[mman] senv: senv_1 = @(0,penv_3,
+       [4]{ 1> (1)__null; 2> (2)__hole; 3> (3)__hli; 4> (4)__hst;}@)
+[mman] globally allocated vars: _heapstart
+[mman] creating new svar for struct variable: _heapstart...
+[mman] new svar created:(4)_heapstart
+[mman] creating new svar for feature : fn
+[mman] new feature svar created:(0)c4__fn
+[mman] creating new svar for feature : csz
+[mman] new feature svar created:(0)c4__csz
+[mman] globally allocated vars: _heapend
+[mman] creating new svar for struct variable: _heapend...
+[mman] new svar created:(5)_heapend
+[mman] creating new svar for feature : fn
+[mman] new feature svar created:(0)c5__fn
+[mman] creating new svar for feature : csz
+[mman] new feature svar created:(0)c5__csz
+[mman] adding global svars...
+[mman] global svars added
+[mman] new senv: senv_2 = @(0,penv_3,
+       [10]{ 1> (1)__null; 2> (2)__hole; 3> (3)__hli; 4> (4)__hst; 5> (5)_heapstart; 6> (6)c4__fn; 7> (7)c4__csz; 8> (8)_heapend; 9> (9)c5__fn;
+        10> (10)c5__csz;}@)
+[mman] creating shape value for struct variable: _heapstart
+[mman] get pv in penv
+[mman] pv:(4)_heapstart
+[mman] psvid: 4
+[mman] get symbolic variable of pv
+[mman] symbolic svar of pv:(5)_heapstart
+[mman] ssvid: 5
+[mman] get svfeat(fn) of symbolic pv.
+[mman] get svfeat(csz) of symbolic pv.
+[mman] fk list created
+[mman] creating shape value for struct variable: _heapend
+[mman] get pv in penv
+[mman] pv:(5)_heapend
+[mman] psvid: 5
+[mman] get symbolic variable of pv
+[mman] symbolic svar of pv:(8)_heapend
+[mman] ssvid: 8
+[mman] get svfeat(fn) of symbolic pv.
+[mman] get svfeat(csz) of symbolic pv.
+[mman] fk list created
+[mman] old value  ({peid:3}Top)
+[mman] new value:
+         ({peid:2}eshape: (4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(1)__hole,csz:(1)__hole,] * chd((8)_heapend)[fn:(1)__hole,csz:(1)__hole,] * emp,
+        
+       	 dwords:{eid_-1}bottom 
+       )
+[mman] -------------------do_alloc-------------------
 [mman] Dflow:do_assign
 [mman] doing assign
 [mman] do_assigns: fn(_heapstart):=0
-[mman] on ({peid:3}Top)
 [mman] do_assigns: csz(_heapstart):=0
-[mman] on ({peid:3}Top)
 [mman] do_assigns: fn(_heapend):=0
-[mman] on ({peid:3}Top)
 [mman] do_assigns: csz(_heapend):=0
-[mman] on ({peid:3}Top)
 [mman] do_assigns: memleft:=0
-[mman] on ({peid:3}Top)
-[mman] do_assign_one
+[mman] on ({peid:2}eshape: (4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(1)__hole,csz:(1)__hole,] * chd((8)_heapend)[fn:(1)__hole,csz:(1)__hole,] * emp,
+        
+       	 dwords:{eid_-1}bottom 
+       )
+[mman] do_assign_one....
 [mman] fn(_heapstart):=0
 [mman] csz(_heapstart):=0
 [mman] fn(_heapend):=0
 [mman] csz(_heapend):=0
 [mman] memleft:=0
 [mman] evaluate alval:fn(_heapstart)
-[mman] evalL is None
+[mman] ASYN:to_senv_lval ...
+[mman] ASYN:is not location ...
+[mman] after evaL:sv_4
+[mman] in senv: senv_2 = @(0,penv_3,
+       [10]{ 1> (1)__null; 2> (2)__hole; 3> (3)__hli; 4> (4)__hst; 5> (5)_heapstart; 6> (6)c4__fn; 7> (7)c4__csz; 8> (8)_heapend; 9> (9)c5__fn;
+        10> (10)c5__csz;}@)
+[mman] svid: 4
+[mman] location_id: 5
+[mman] evalL is Some()
 [mman] evaluate alval:csz(_heapstart)
-[mman] evalL is None
+[mman] ASYN:to_senv_lval ...
+[mman] ASYN:is not location ...
+[mman] after evaL:sv_4
+[mman] in senv: senv_2 = @(0,penv_3,
+       [10]{ 1> (1)__null; 2> (2)__hole; 3> (3)__hli; 4> (4)__hst; 5> (5)_heapstart; 6> (6)c4__fn; 7> (7)c4__csz; 8> (8)_heapend; 9> (9)c5__fn;
+        10> (10)c5__csz;}@)
+[mman] svid: 4
+[mman] location_id: 5
+[mman] evalL is Some()
 [mman] evaluate alval:fn(_heapend)
-[mman] evalL is None
+[mman] ASYN:to_senv_lval ...
+[mman] ASYN:is not location ...
+[mman] after evaL:sv_5
+[mman] in senv: senv_2 = @(0,penv_3,
+       [10]{ 1> (1)__null; 2> (2)__hole; 3> (3)__hli; 4> (4)__hst; 5> (5)_heapstart; 6> (6)c4__fn; 7> (7)c4__csz; 8> (8)_heapend; 9> (9)c5__fn;
+        10> (10)c5__csz;}@)
+[mman] svid: 5
+[mman] location_id: 8
+[mman] evalL is Some()
 [mman] evaluate alval:csz(_heapend)
-[mman] evalL is None
+[mman] ASYN:to_senv_lval ...
+[mman] ASYN:is not location ...
+[mman] after evaL:sv_5
+[mman] in senv: senv_2 = @(0,penv_3,
+       [10]{ 1> (1)__null; 2> (2)__hole; 3> (3)__hli; 4> (4)__hst; 5> (5)_heapstart; 6> (6)c4__fn; 7> (7)c4__csz; 8> (8)_heapend; 9> (9)c5__fn;
+        10> (10)c5__csz;}@)
+[mman] svid: 5
+[mman] location_id: 8
+[mman] evalL is Some()
 [mman] evaluate alval:memleft
-[mman] evalL is None
+[mman] ASYN:to_senv_lval ...
+[mman] ASYN:is not location ...
+[mman] after evaL:sv_6
+[mman] in senv: senv_2 = @(0,penv_3,
+       [10]{ 1> (1)__null; 2> (2)__hole; 3> (3)__hli; 4> (4)__hst; 5> (5)_heapstart; 6> (6)c4__fn; 7> (7)c4__csz; 8> (8)_heapend; 9> (9)c5__fn;
+        10> (10)c5__csz;}@)
+[mman] evalL is Some()
 [mman] evaluate aexp:0
-[mman] evalE is None
+[mman] evalE is Some()
 [mman] evaluate aexp:0
-[mman] evalE is None
+[mman] evalE is Some()
 [mman] evaluate aexp:0
-[mman] evalE is None
+[mman] evalE is Some()
 [mman] evaluate aexp:0
-[mman] evalE is None
+[mman] evalE is Some()
 [mman] evaluate aexp:0
-[mman] evalE is None
-[mman] do_one_assign: fn(_heapstart):=0,...
-[mman] on ({eid_3}top)
-[mman] to_var: fn(_heapstart) in eid_3
-[mman] to [|__hole=0|]
-[mman] do_one_assign: csz(_heapstart):=0,...
-[mman] on ({eid_3}top)
-[mman] to_var: csz(_heapstart) in eid_3
-[mman] to [|__hole=0|]
-[mman] do_one_assign: fn(_heapend):=0,...
-[mman] on ({eid_3}top)
-[mman] to_var: fn(_heapend) in eid_3
-[mman] to [|__hole=0|]
-[mman] do_one_assign: csz(_heapend):=0,...
-[mman] on ({eid_3}top)
-[mman] to_var: csz(_heapend) in eid_3
-[mman] to [|__hole=0|]
-[mman] do_one_assign: memleft:=0,...
-[mman] on ({eid_3}top)
-[mman] to_var: memleft in eid_3
-[mman] to [|memleft=0|]
-[mman] Dflow:assign_done
-[mman] MSH:------
-[mman] Initial_state {peid:3}eshape: top,
-        
-       	 dwords:{eid_3}[|memleft=0|]
-[mman] MSH:------
-[mman] transfer_stmt_main sid: 85 on {peid:3}eshape: top,
-        
-       	 dwords:{eid_3}[|memleft=0|] 
-       '
-[mman] s.skind: Instr2
-[mman] function called: laInit'
-[mman] do_call: laInit(...)
-[mman] Unify penvs 3, 0
-[mman] MSH:------
-[mman] transfer_stmt_main sid: 77 on {peid:3}eshape: top,
-        
-       	 dwords:{eid_3}[|memleft=0|] 
-       '
-[mman] s.skind: Instr2
-[mman] function called: sbrk'
-[mman] MSH:------
-[mman] transfer_sbrk: /* sid:77 */
-                      _heapstart.ptr = (struct hdr *)sbrk(65360);
-       on {peid:3}eshape: top,
-        
-       	 dwords:{eid_3}[|memleft=0|]
-[mman] Exp:65360
-[mman] feature2exph: _heapstart->ptr to fn
-[mman] transform_sbrk: fn(_heapstart):=__hole[sbrk(65360)]
-[mman] to: fn(_heapstart):=__hli
-[mman] to: __hli:=(__hli + 65360)
-[mman] doing assign
-[mman] do_assigns: fn(_heapstart):=__hli
-[mman] MSH:------
-[mman] on ({peid:3}eshape: top,
-        
-       	 dwords:{eid_3}[|memleft=0|] 
-       )
-[mman] do_assigns: __hli:=(__hli + 65360)
-[mman] MSH:------
-[mman] on ({peid:3}eshape: top,
-        
-       	 dwords:{eid_3}[|memleft=0|] 
-       )
-[mman] do_assign_one
-[mman] fn(_heapstart):=__hli
-[mman] __hli:=(__hli + 65360)
-[mman] evaluate alval:fn(_heapstart)
-[mman] evalL is None
-[mman] evaluate alval:__hli
-[mman] evalL is None
-[mman] evaluate aexp:__hli
-[mman] evalE is None
-[mman] evaluate aexp:(__hli + 65360)
-[mman] evalE is None
-[mman] call shape init_state
-[mman] MSH:init shape value
-[mman] do_one_assign: fn(_heapstart):=__hli,...
-[mman] on ({eid_3}[|memleft=0|])
-[mman] to_var: fn(_heapstart) in eid_3
-[mman] to_var: __hli in eid_3
-[mman] to [|memleft=0|]
-[mman] do_one_assign: __hli:=(__hli + 65360),...
-[mman] on ({eid_3}[|memleft=0|])
-[mman] to_var: __hli in eid_3
-[mman] to_var: __hli in eid_3
-[mman] to [|memleft=0|]
-[mman] !!!!!!!!
-[mman] MSH:------
-[mman] MSH:------+++++
+[mman] evalE is Some()
+[mman] sv_6:=0
+[mman] csz(sv_8):=0
+[mman] fn(sv_8):=0
+[mman] csz(sv_5):=0
+[mman] fn(sv_5):=0
+[mman] do mutate
+[mman] mutations: fn(sv_5):=0
+[mman] eshape mutate
+[mman] left alval:fn(sv_5)
+[mman] failure: Unexpected left value
+[mman] do_one_assign: fn(sv_5):=0,...
+[mman] on ({eid_-1}bottom)
+[mman] to_var: fn(sv_5) in eid_-1
 [mman] failure: Unexpected exception.
-                Please submit bug report (Ref. "Not_found").
-[kernel] Current source was: /Users/yuezhuang/Documents/projects/mem copy/bench/la/lamalloc.c:167
+                Please submit bug report (Ref. "Mman_valap.Not_dealt("Field dereference left value")").
+[kernel] Current source was: /Users/yuezhuang/Documents/projects/mem copy/bench/la/lamain.c:7
          The full backtrace is:
          Raised at file "src/kernel_services/plugin_entry_points/log.ml", line 583, characters 30-31
          Called from file "src/kernel_services/plugin_entry_points/log.ml", line 577, characters 9-16

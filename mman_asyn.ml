@@ -1298,10 +1298,17 @@ and to_senv_lval (sei: Mman_env.t) (lv: alval) (isLoc: bool)
   =
   match lv with
   | AVar(vi) ->
-      let svi = Mman_env.senv_getvar sei (Mman_svar.sv_mk_var vi) in
+      let _ = Mman_options.Self.debug ~level:1 "ASYN:to_senv_lval ... @." 
+        in
+
+      let svi = Mman_env.penv_getvar sei (Mman_svar.sv_mk_var vi) in
       let svil = if isLoc then
-          Mman_env.senv_getvar sei (Mman_svar.sv_mk_loc (Mman_svar.Svar.id svi))
+          let _ = Mman_options.Self.debug ~level:1 "ASYN:is location... @." 
+            in
+          Mman_env.penv_getvar sei (Mman_svar.sv_mk_loc (Mman_svar.Svar.id svi))
         else
+          let _ = Mman_options.Self.debug ~level:1 "ASYN:is not location ... @." 
+            in
           svi
       in
       let isptr = Cil.isPointerType vi.vtype in
