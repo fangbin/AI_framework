@@ -115,7 +115,7 @@ type senvinfo = {
 *)
 let pp_vidmap fmt (m: vidmap) =
   begin
-    Format.fprintf fmt "{";
+    Format.fprintf fmt "\n{";
     VidMap.iter
       (fun i svi -> 
            Format.fprintf fmt " %d> %a%s"

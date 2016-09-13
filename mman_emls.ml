@@ -558,15 +558,14 @@ let rec evalL (lv: Mman_asyn.alval) (d: t)
            (* as a left value, a program variable is always defined *)
            (* returns the corresponding symbolic variable *)
            
+           (* find the correspoding symbolic variable in or *)
+
            let alv, _ = Mman_asyn.to_senv_lval seid lv false in
 
-
-
-           let _ = Mman_options.Self.debug ~level:1 "after evaL:%a@."
+           let _ = Mman_options.Self.debug ~level:1 "MSH:after to_senv_lval:%a in penv @."
                    Mman_asyn.pp_alval (alv) in 
-           let _ = (Mman_options.Self.debug ~level:1 "in senv: %a @."
-                 MEV.senv_print (MEV.senv_get seid)) 
-                  in
+
+          
            Some(alv), []
 
        | AMem(vi) ->
@@ -607,15 +606,18 @@ let rec evalL (lv: Mman_asyn.alval) (d: t)
        | AFeat(fk,al) ->
            (* evaluate first the location at al *)
            begin
+            let _ = Mman_options.Self.debug ~level:1 "MSH:evalL afeat @."
+                      in 
+
              let r, vf = evalL al d in
              match r with
              | None -> (* propagate the error *)
                  None, vf
+             
              | Some (ASVar svid) ->
                  if vf != [] then
                    Some(lv), vf (* return the same left value *)
-                 else
-                 
+                 else 
                    evalL_feat seid svid fk g
              | _ ->
                  let _ =
@@ -636,6 +638,10 @@ and evalL_feat (seid: MEV.t)
   (svid: Mman_svar.svid) (fk: Mman_dabs.feature_kind) g
   : (Mman_asyn.alval option) * (Mman_asyn.alval list)
   =
+   let _ = Mman_options.Self.debug ~level:1 "MSH:evalL_feat @."
+                      in 
+
+
   (* if it is a location in stack, get the location in heap *)
   let psz, _ = (MEV.senv_size seid) in
   if (svid <= Mman_svar.svid_hole) 
@@ -657,27 +663,39 @@ and evalL_feat (seid: MEV.t)
     evalL_atom svid fk at
   else if (svid < psz)
   then
-
-   let _ = Mman_options.Self.debug ~level:1
-               " svid: %d @."
+    (
+    let _ = Mman_options.Self.debug ~level:1
+               "MSH:find location of sv_%d on stack ...@."
                   svid 
             in 
 
+   
     (* it is a location on stack, check its atom at the location given 
        by the stack *)
-    (let slid = try MEV.EnvMap.find svid g.stack with Not_found -> 0 (* null *)
-    in
-    if (slid == 0)
-    then None, [] (* not an allocated location *)
-    else
-       
-      let _ = Mman_options.Self.debug ~level:1
-               "location_id: %d @."
-                  slid 
-            in 
-      let at = try MEV.EnvMap.find slid g.atoms with Not_found -> Emp in
-       
-      evalL_atom slid fk at
+    begin 
+
+         
+          let slid = MEV.EnvMap.find svid g.stack in
+
+        
+
+          if (slid == 0)
+          then 
+              begin 
+                let _ =  Mman_options.Self.debug ~level:1 "MSH:location on stack not found @." 
+                  in 
+                None, [] (* not an allocated location *)
+              end 
+          else 
+                let _ = Mman_options.Self.debug ~level:1
+                         "MSH:location of %d is %d...@."
+                            svid slid 
+                      in 
+                let at = try MEV.EnvMap.find slid g.atoms with Not_found -> Emp in
+                 
+                evalL_atom slid fk at
+              
+      end 
     )
   else (* it is simply a location in heap *)
     let at = try MEV.EnvMap.find svid g.atoms with Not_found -> Emp in
@@ -689,6 +707,9 @@ and evalL_atom
   (svid: Mman_svar.svid) (fk: Mman_dabs.feature_kind) (at: atominfo)
   : (Mman_asyn.alval option) * (Mman_asyn.alval list)
   =
+  let _ =  Mman_options.Self.debug ~level:1 "MSH:evalL_atom...@." 
+              in  
+
   match at with
   | Emp | Blk (_,_) -> None, [] (* error *)
   
@@ -702,8 +723,12 @@ and evalL_atom
          None, []
        else
          try
+           let _ =  Mman_options.Self.debug ~level:1 "MSH:atom Chd or Chk, eval is feature... @." 
+              in 
            let _ = List.assoc fk fl in
            Some(AFeat(fk, ASVar(svid))), []
+         
+
          with Not_found ->
            let _ = Mman_options.Self.failure "Bad feature for atoms@." in
            None, []
@@ -1222,15 +1247,38 @@ let rec mutate (lv: Mman_asyn.alval) (e: Mman_asyn.aexp) (d: t)
                             Mman_asyn.pp_alval  lv 
                           in 
   (* check that the left value is a program variable of pointer type *)
-  let sviL = (match lv with
+  let sviL = 
+    (
+      match lv with
       | Mman_asyn.ASVar(svi) -> svi
+      | Mman_asyn.AFeat(fk, lv') -> 
+              begin
+                  match lv' with
+                  | Mman_asyn.ASVar(vi) -> vi
+                  | _ -> Mman_svar.svid_null
+              end
       | _ -> Mman_svar.svid_null
     )
   in
+
+  let _ = Mman_options.Self.debug ~level:1 "MSH:left value svi:%d ...@."  
+      sviL
+  in 
+
   let svinfoL = Mman_env.senv_getvinfo seid sviL in
-  if (sviL == Mman_svar.svid_null) ||
+
+  let _ = Mman_options.Self.debug ~level:1 "MSH:svinfoL:%a@."
+                            Mman_svar.Svar.pretty svinfoL
+                    in 
+  
+
+  (*if (sviL == Mman_svar.svid_null) ||
      (sviL >= psz) ||
-     (svinfoL.typ != SVAddr)
+     (svinfoL.typ != SVAddr)*)
+
+  if (sviL == Mman_svar.svid_null) ||
+     (sviL >= psz)  
+
   then
     (let _ = Mman_options.Self.failure "Unexpected left value@."
      in
@@ -1250,6 +1298,9 @@ and mutate_meminfo (seid: MEV.t) (g: meminfo)
   (sviL: Mman_svar.svid) (e: Mman_asyn.aexp) 
   : (t * (Mman_svar.svid list) * (Mman_asyn.aconstr list)) list
   =
+  let _ = Mman_options.Self.debug ~level:1 "MSH:mutate_meminfo...@."  
+  in 
+
   match e with
   | ALval(ASVar(sviR)) ->
       let svR = Mman_env.senv_getvinfo seid sviR in
