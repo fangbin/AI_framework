@@ -763,9 +763,14 @@ let rec evalE (exp: Mman_asyn.aexp) (d: t)
             Some (ACst it), []
 
         | ALval(al) -> (* evaluate to a value -- may be location *)
+            let _ =  Mman_options.Self.debug ~level:1 "MSH:evalE_lval, ALval ... @." 
+                    in  
+
             evalE_lval al d
 
         | AAddrOf (al) -> (* evaluate to a location *)
+            let _ =  Mman_options.Self.debug ~level:1 "MSH:evalE_lval, AAddrOf ... @." 
+                    in             
             evalE_lval al d
 
         | AUnOp (op, ex) ->
@@ -782,11 +787,23 @@ let rec evalE (exp: Mman_asyn.aexp) (d: t)
             let r1, vf1 = evalE ex1 d in
             let r2, vf2 = evalE ex2 d in
             if (vf1 != []) || (vf2 != [])  then
+              let _ =  Mman_options.Self.debug ~level:1 "MSH:after evalE, need unfolding ... @." 
+                    in  
               Some (exp), (vf1) @ (vf2)
             else  (* (vf1 == []) && (vf2 == []) *)
-              (match r1, r2 with
-               | None, _ | _, None -> None, []
+              (
+
+                match r1, r2 with
+               | None, _ | _, None -> 
+                  let _ =  Mman_options.Self.debug ~level:1 "MSH:after evalE is None ... @." 
+                    in 
+                    None, []
+               
                | Some(e1), Some(e2) ->
+                   let _ =  Mman_options.Self.debug ~level:1 "MSH:after evalE is Some ... @." 
+                    in 
+
+
                    (* if ptr arithmetics on e1 which is not a block, unfold *)
                    let osvi = Mman_asyn.get_saddr e1 in
                    (match osvi, bop with
@@ -828,14 +845,35 @@ and evalE_lval (lv: Mman_asyn.alval) (d: t)
       begin
         match lv with
         | AVar vi ->
+
+            let _ = Mman_options.Self.debug ~level:1 "MSH:lv: %a... @."
+                        Mman_asyn.pp_alval (lv);
+                    in 
+            let _ = (Mman_options.Self.debug ~level:1 "MSH senv: %a @."
+                 MEV.senv_print (MEV.senv_get seid)) 
+                    in
+
+                    
             (* as a value, a program variable is defined when initialized *)
             (* get the corresponding symbolic variable and,
                if pointer type, search in the stack *)
+            
             let svi = Mman_env.senv_getvar seid (Mman_svar.sv_mk_var vi) in
+
+            let _ = Mman_options.Self.debug ~level:1 "MSH:evalE_lval AVar:%a@."
+                            Mman_svar.Svar.pretty svi
+                    in 
+
+            
+
             let svid = (Mman_svar.Svar.id svi) in
             evalE_svid svid seid g
               
         | ASVar svid ->
+
+            let _ =  Mman_options.Self.debug ~level:1 "MSH:evalE_lval, ASVar ... @." 
+                    in  
+
             (* if it is a program variable, get its value in stack *)
             evalE_svid svid seid g
 
@@ -868,6 +906,8 @@ and evalE_lval (lv: Mman_asyn.alval) (d: t)
 and evalE_svid (svid: Mman_svar.svid) (seid: MEV.t) (g: meminfo)
   : (Mman_asyn.aexp option) * (Mman_asyn.alval list)
   =
+  
+
   let psz, _ = MEV.senv_size seid in
   if svid == Mman_svar.svid_null
   then
@@ -964,6 +1004,16 @@ and evalE_atom
 let rec guard (d: t) (c1_cn: Mman_asyn.aconstr list)
   : (t * Mman_asyn.aconstr list) option * (Mman_asyn.alval list)
   =
+  let _ =  Mman_options.Self.debug ~level:1 "MSH:do guard... @." 
+              in 
+  let _ = 
+    List.iter 
+        (fun ac -> 
+              Mman_options.Self.debug ~level:1 "MSH:constraints:%a @." 
+                   Mman_asyn.pp_aconstr ac;
+        )
+        c1_cn
+    in 
   let seid = env d in
   if is_bottom d then
     Some(d, c1_cn), []
@@ -1006,6 +1056,11 @@ let rec guard (d: t) (c1_cn: Mman_asyn.aconstr list)
 and guard_one (d: t) (ci: Mman_asyn.aconstr)
   : (t * Mman_asyn.aconstr) option * (Mman_asyn.alval list)
   =
+  let _ =  Mman_options.Self.debug ~level:1 "MSH:do guard_one... @." 
+              in 
+  let _ =  Mman_options.Self.debug ~level:1 "MSH:constraint:%a @." 
+           Mman_asyn.pp_aconstr ci 
+    in 
   let seid = env d in
   match d.mem with
   | Bot ->
@@ -1013,10 +1068,16 @@ and guard_one (d: t) (ci: Mman_asyn.aconstr)
   | Top ->
       Some(d, ci), [] (* TODO *)
   | S(_) ->
-      (match ci with
+      (
+
+        match ci with
        | Mman_asyn.ATrue -> Some(d, ci), []
        | Mman_asyn.AFalse -> Some((bottom_of seid), ci), []
        | Mman_asyn.ACmp(op, aeL, aeR) ->
+           
+           let _ =  Mman_options.Self.debug ~level:1 "MSH:evalE:%a op %a @." 
+                 Mman_asyn.pp_aexp (aeL) Mman_asyn.pp_aexp (aeR) 
+           in 
            (* evaluate expressions of ci using the shape *)
            let oeLn, lvL = evalE aeL d in
            let oeRn, lvR = evalE aeR d in
@@ -1024,8 +1085,10 @@ and guard_one (d: t) (ci: Mman_asyn.aconstr)
              (* unfolding required to evaluate the constraint *)
              Some(d, ci), lvL @ lvR
            else
-             (match oeLn, oeRn with
+             (
+              match oeLn, oeRn with
               | None, _ | _, None -> None, []
+              
               | Some(aeLn), Some(aeRn) ->
                   (* both expressions contains only 
                      constants, locations, operators *)
@@ -1097,7 +1160,7 @@ and guard_eq (d: t) (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
     )
 
 and guard_geq (d: t) (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
-    (oc: Mman_asyn.aconstr)
+  (oc: Mman_asyn.aconstr)
   : (t * Mman_asyn.aconstr) option
   =
   match d.mem with
@@ -1126,7 +1189,7 @@ and guard_geq (d: t) (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
         )
 
 and guard_gt (d: t) (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
-    (oc: Mman_asyn.aconstr)
+  (oc: Mman_asyn.aconstr)
   : (t * Mman_asyn.aconstr) option
   =
   match d.mem with
@@ -1152,7 +1215,7 @@ and guard_gt (d: t) (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
       )
 
 and guard_neq (d: t) (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
-    (oc: Mman_asyn.aconstr)
+  (oc: Mman_asyn.aconstr)
   : (t * Mman_asyn.aconstr) option
   =
   match d.mem with
@@ -1241,6 +1304,11 @@ and remove_atom (svi: Mman_svar.svid) (g: meminfo)
 let rec mutate (lv: Mman_asyn.alval) (e: Mman_asyn.aexp) (d: t)
   : (t * (Mman_svar.svid list) * (Mman_asyn.aconstr list)) list
   =
+  let _ = Mman_options.Self.debug ~level:1 "MSH:old eshape value:%a @." 
+    pretty d 
+  in 
+
+
   let seid = (env d) in
   let psz, _ = MEV.senv_size seid in
   let _ = Mman_options.Self.debug ~level:1 "left alval:%a @." 
@@ -1291,7 +1359,10 @@ let rec mutate (lv: Mman_asyn.alval) (e: Mman_asyn.aexp) (d: t)
          let ng = empty_meminfo in
          mutate_meminfo seid ng sviL e
      | S(g) ->
-         mutate_meminfo seid g sviL e
+          let rs = mutate_meminfo seid g sviL e in 
+          if rs == [] then [(d, [], [])]
+          else rs 
+
     )
     
 and mutate_meminfo (seid: MEV.t) (g: meminfo)
@@ -1301,7 +1372,17 @@ and mutate_meminfo (seid: MEV.t) (g: meminfo)
   let _ = Mman_options.Self.debug ~level:1 "MSH:mutate_meminfo...@."  
   in 
 
+
+  let _ = 
+           Mman_options.Self.debug ~level:1 "MSH:aexp:%a@."
+           Mman_asyn.pp_aexp (e)
+  in 
   match e with
+  | ACst i -> 
+
+        []
+
+
   | ALval(ASVar(sviR)) ->
       let svR = Mman_env.senv_getvinfo seid sviR in
       begin

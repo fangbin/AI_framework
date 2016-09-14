@@ -758,7 +758,7 @@ let rec compute_from_entry_point () =
     (* compute initial state *)
     let init_state = get_init_state kf
     in
-    let _ = Mman_options.Self.feedback "Initial_state %a@." 
+    let _ = Mman_options.Self.feedback "DF:initial_state %a@." 
                 MV.Model.pretty init_state
     in 
     compute kf init_state
@@ -769,8 +769,8 @@ let rec compute_from_entry_point () =
 and get_init_state kf = 
   let init_stmt = Kernel_function.find_first_stmt kf in
   let eid_stmt = Mman_env.penv_of_stmt init_stmt in
-  let _ = Mman_options.Self.feedback "Computing initial state@." in
-  let _ = Mman_options.Self.feedback "Initial_state_stmt (sid:%a)@."
+  let _ = Mman_options.Self.feedback "DF:Computing initial state@." in
+  let _ = Mman_options.Self.feedback "DF:Initial_state_stmt (sid:%a)@."
                 Cil_datatype.Stmt.pretty_sid init_stmt 
   in 
   let _ = init_globals () in
@@ -779,7 +779,7 @@ and get_init_state kf =
   let _ = 
       List.iter 
       ( fun lv ->
-        Mman_options.Self.feedback "init_global_avals: %a, @."
+        Mman_options.Self.feedback "DF:init_global_avals: %a, @."
         Mman_asyn.pp_alval lv 
       ) 
       !init_glv
@@ -787,7 +787,7 @@ and get_init_state kf =
   let _ = 
       List.iter 
       ( fun ex ->
-        Mman_options.Self.feedback "init_global_aexps: %a, @."
+        Mman_options.Self.feedback "DF:init_global_aexps: %a, @."
         Mman_asyn.pp_aexp ex
       ) 
       !init_gexp
@@ -796,7 +796,7 @@ and get_init_state kf =
   let _ = 
       List.iter 
       ( fun lv ->
-        Mman_options.Self.feedback "struct fiels : %a, @."
+        Mman_options.Self.feedback "DF:struct fiels : %a, @."
         Mman_asyn.pp_alval lv 
       ) 
       !init_structs_fi
@@ -806,7 +806,7 @@ and get_init_state kf =
       Call_state.find init_stmt
     with Not_found -> (
         (* compute initials from inital globals and restricted locals *)
-        let _ = Mman_options.Self.feedback "Computing global values@." in
+        let _ = Mman_options.Self.feedback "DF:Computing global values@." in
         let glb_state = MV.init_globals eid_stmt !init_galloc !init_structs_fi
             !init_glv !init_gexp !init_gcnd in
          
@@ -815,7 +815,7 @@ and get_init_state kf =
       )
   in
   let _ = Mman_options.Self.debug ~dkey:dflw_dkey ~level:1
-      "Initial state (sid:%a): %a@."
+      "DF:Initial state (sid:%a): %a@."
       Cil_datatype.Stmt.pretty_sid init_stmt
       MV.Model.pretty init_state
   in

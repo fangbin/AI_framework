@@ -163,7 +163,12 @@ let comem_vidmap (m: vidmap) (sv: Mman_svar.Svar.t)
   : Mman_svar.Svar.t
   =
   let svmap =
-    VidMap.filter (fun _i sv' -> Mman_svar.Svar.equal sv sv') m
+    VidMap.filter 
+    (
+        fun _i sv' -> 
+            Mman_svar.Svar.equal sv sv'
+    ) 
+    m
   in
   if VidMap.is_empty svmap then
     raise Not_found
@@ -719,6 +724,8 @@ let senv_getvar (eid: int) (sv: Mman_svar.Svar.t)
   =
   (* *) 
   let se = senv_get eid in
+
+   
   try
     comem_vidmap se.svars sv
   with Not_found ->

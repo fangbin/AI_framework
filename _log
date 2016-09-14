@@ -122,8 +122,8 @@
 [mman] Analysing the application starting at 'MAIN'
 [mman] --------------------------------------------
 [mman] Analysing the application starting at 'MAIN'
-[mman] Computing initial state
-[mman] Initial_state_stmt (sid:85)
+[mman] DF:Computing initial state
+[mman] DF:Initial_state_stmt (sid:85)
 [mman] init_global: struct init
 [mman] Exp:(struct hdr *)0
 [mman] Exp:0
@@ -136,23 +136,23 @@
 [mman] Exp:0
 [mman] Exp:(short)0
 [mman] Exp:0
-[mman] init_global_avals: fn(_heapstart),
-[mman] init_global_avals: csz(_heapstart),
-[mman] init_global_avals: fn(_heapend),
-[mman] init_global_avals: csz(_heapend),
-[mman] init_global_avals: memleft,
-[mman] init_global_aexps: 0,
-[mman] init_global_aexps: 0,
-[mman] init_global_aexps: 0,
-[mman] init_global_aexps: 0,
-[mman] init_global_aexps: 0,
-[mman] struct fiels : fn(_heapstart),
-[mman] struct fiels : csz(_heapstart),
-[mman] struct fiels : fn(_heapend),
-[mman] struct fiels : csz(_heapend),
-[mman] Computing global values
-[mman] Dflow:init_globals
-[mman] Dflow:do_alloc
+[mman] DF:init_global_avals: fn(_heapstart),
+[mman] DF:init_global_avals: csz(_heapstart),
+[mman] DF:init_global_avals: fn(_heapend),
+[mman] DF:init_global_avals: csz(_heapend),
+[mman] DF:init_global_avals: memleft,
+[mman] DF:init_global_aexps: 0,
+[mman] DF:init_global_aexps: 0,
+[mman] DF:init_global_aexps: 0,
+[mman] DF:init_global_aexps: 0,
+[mman] DF:init_global_aexps: 0,
+[mman] DF:struct fiels : fn(_heapstart),
+[mman] DF:struct fiels : csz(_heapstart),
+[mman] DF:struct fiels : fn(_heapend),
+[mman] DF:struct fiels : csz(_heapend),
+[mman] DF:Computing global values
+[mman] MV:init_globals
+[mman] MV:do_alloc
 [mman] -------------------do_alloc-------------------
 [mman] MV:struct global vars: _heapstart
 [mman] MV:struct global vars: _heapend
@@ -214,12 +214,12 @@
 [mman] old value  ({peid:3}Top)
 [mman] new value:
          ({peid:2}eshape: (4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
-       chd((5)_heapstart)[fn:(1)__hole,csz:(1)__hole,] * chd((8)_heapend)[fn:(1)__hole,csz:(1)__hole,] * emp,
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
         
        	 dwords:{eid_-1}bottom 
        )
 [mman] -------------------do_alloc end-------------------
-[mman] Dflow:do_assign
+[mman] MV:do_assign
 [mman] doing assign
 [mman] do_assigns: fn(_heapstart):=0
 [mman] do_assigns: csz(_heapstart):=0
@@ -227,10 +227,13 @@
 [mman] do_assigns: csz(_heapend):=0
 [mman] do_assigns: memleft:=0
 [mman] on ({peid:2}eshape: (4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
-       chd((5)_heapstart)[fn:(1)__hole,csz:(1)__hole,] * chd((8)_heapend)[fn:(1)__hole,csz:(1)__hole,] * emp,
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
         
        	 dwords:{eid_-1}bottom 
        )
+[mman] MV:do_assign_set, exsh:(4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+[mman] MV:do_assign_set, dw value:{eid_-1}bottom
 [mman] do_assign_one....
 [mman] --------- 
         MV:evaluate alval:fn(_heapstart)
@@ -313,133 +316,115 @@
 [mman] csz(sv_5):=0
 [mman] fn(sv_5):=0
 [mman] do mutate
-[mman] mutations: fn(sv_5):=0
-[mman] eshape mutate
+[mman] MV:eshape mutate
+[mman] MSH:old eshape value:(4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
 [mman] left alval:fn(sv_5)
 [mman] MSH:left value svi:5 ...
 [mman] MSH:svinfoL:(5)_heapstart
 [mman] MSH:mutate_meminfo...
-[mman] failure: Unsupported assign
-[mman] mutations: csz(sv_5):=0
-[mman] mutations: fn(sv_8):=0
-[mman] mutations: csz(sv_8):=0
-[mman] mutations: sv_6:=0
-[mman] Dflow:assign_done
-[mman] Initial_state {peid:2}eshape: top,
+[mman] MSH:aexp:0
+[mman] MV:after mutation, eshape value:(4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+[mman] MV:after mutation, dw value:{eid_-1}bottom
+[mman] MV:eshape mutate
+[mman] MSH:old eshape value:(4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+[mman] left alval:csz(sv_5)
+[mman] MSH:left value svi:5 ...
+[mman] MSH:svinfoL:(5)_heapstart
+[mman] MSH:mutate_meminfo...
+[mman] MSH:aexp:0
+[mman] MV:after mutation, eshape value:(4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+[mman] MV:after mutation, dw value:{eid_-1}bottom
+[mman] MV:eshape mutate
+[mman] MSH:old eshape value:(4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+[mman] left alval:fn(sv_8)
+[mman] MSH:left value svi:8 ...
+[mman] MSH:svinfoL:(8)_heapend
+[mman] MSH:mutate_meminfo...
+[mman] MSH:aexp:0
+[mman] MV:after mutation, eshape value:(4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+[mman] MV:after mutation, dw value:{eid_-1}bottom
+[mman] MV:eshape mutate
+[mman] MSH:old eshape value:(4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+[mman] left alval:csz(sv_8)
+[mman] MSH:left value svi:8 ...
+[mman] MSH:svinfoL:(8)_heapend
+[mman] MSH:mutate_meminfo...
+[mman] MSH:aexp:0
+[mman] MV:after mutation, eshape value:(4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+[mman] MV:after mutation, dw value:{eid_-1}bottom
+[mman] MV:eshape mutate
+[mman] MSH:old eshape value:(4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+[mman] left alval:sv_6
+[mman] MSH:left value svi:6 ...
+[mman] MSH:svinfoL:(6)c4__fn
+[mman] MSH:mutate_meminfo...
+[mman] MSH:aexp:0
+[mman] MV:after mutation, eshape value:(4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+[mman] MV:after mutation, dw value:{eid_-1}bottom
+[mman] MV:finish mutating, Some
+[mman] MV:after do_assign_one
+[mman] MV:after assign_set is Some()
+[mman] MV:assign_done, value: ({peid:2}eshape: (4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
         
-       	 dwords:{eid_2}top
-[mman] transfer_stmt_main sid: 85 on {peid:2}eshape: top,
-        
-       	 dwords:{eid_2}top 
-       '
+       	 dwords:{eid_-1}bottom 
+       )
+[mman] MV:meet_exp....
+[mman] MV:meet_exp_set....
+[mman] MV:meet_exp_set, exsh:(4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+[mman] MV:meet_exp_set, dw value:{eid_-1}bottom
+[mman] MV:meet_exp_one....
+[mman] MSH:do guard...
+[mman] MSH:constraints:__hli>=0
+[mman] MSH:do guard_one...
+[mman] MSH:constraint:__hli>=0
+[mman] MSH:evalE:__hli op 0
+[mman] MSH:evalE_lval, ALval ...
+[mman] MSH:lv: __hli...
+[mman] MSH senv: senv_2 = @(0,penv_3,
+       [10]
+       { 1> (1)__null; 2> (2)__hole; 3> (3)__hli; 4> (4)__hst; 5> (5)_heapstart; 6> (6)c4__fn; 7> (7)c4__csz; 8> (8)_heapend; 9> (9)c5__fn;
+        10> (10)c5__csz;}@)
+[mman] MSH:evalE_lval AVar:(1)__hole
+[mman] MV:afte guard is NONE.
+[mman] MV:finish meet_exp.
+[mman] MV:meet_exp....
+[mman] MV:finish meet_exp.
+[mman] DF:initial_state {peid:2}Bot
+[mman] transfer_stmt_main sid: 85 on {peid:2}Bot'
 [mman] s.skind: Instr2
 [mman] function called: laInit'
 [mman] do_call: laInit(...)
 [mman] Unify penvs 3, 0
-[mman] transfer_stmt_main sid: 77 on {peid:2}eshape: top,
-        
-       	 dwords:{eid_2}top 
-       '
-[mman] s.skind: Instr2
-[mman] function called: sbrk'
-[mman] transfer_sbrk: /* sid:77 */
-                      _heapstart.ptr = (struct hdr *)sbrk(65360);
-       on {peid:2}eshape: top,
-        
-       	 dwords:{eid_2}top
-[mman] Exp:65360
-[mman] feature2exph: _heapstart->ptr to fn
-[mman] transform_sbrk: fn(_heapstart):=__hole[sbrk(65360)]
-[mman] to: fn(_heapstart):=__hli
-[mman] to: __hli:=(__hli + 65360)
-[mman] doing assign
-[mman] do_assigns: fn(_heapstart):=__hli
-[mman] do_assigns: __hli:=(__hli + 65360)
-[mman] on ({peid:2}eshape: top,
-        
-       	 dwords:{eid_2}top 
-       )
-[mman] do_assign_one....
-[mman] --------- 
-        MV:evaluate alval:fn(_heapstart)
-[mman] MV:evalL is None
-[mman] --------- 
-        MV:evaluate alval:__hli
-[mman] MV:evalL is None
-[mman] --------- 
-        evaluate aexp:__hli
-[mman] evalE is None
-[mman] --------- 
-        evaluate aexp:(__hli + 65360)
-[mman] evalE is None
-[mman] after evaluation of loction:
-[mman] call shape init_state
-[mman] MSH:init shape value
-[mman] do_one_assign: fn(_heapstart):=__hli,...
-[mman] on ({eid_2}top)
-[mman] to_var: fn(_heapstart) in eid_2
-[mman] to_var: __hli in eid_2
-[mman] to top
-[mman] do_one_assign: __hli:=(__hli + 65360),...
-[mman] on ({eid_2}top)
-[mman] to_var: __hli in eid_2
-[mman] to_var: __hli in eid_2
-[mman] to top
-[mman] !!!!!!!!
-[mman] shape init state:(1)__hole |-> (3)__hli, 
-       blk((3)__hli,(2)__hole) * emp,
-[mman] transfer_stmt_main sid: 78 on {peid:2}eshape: (1)__hole |-> (3)__hli, 
-       blk((3)__hli,(2)__hole) * emp,
-        
-       	 dwords:{eid_2}top 
-       '
-[mman] s.skind: Instr2
-[mman] function called: sbrk'
-[mman] transfer_sbrk: /* sid:78 */
-                      _heapend.ptr = (struct hdr *)sbrk(0);
-       on {peid:2}eshape: (1)__hole |-> (3)__hli, 
-       blk((3)__hli,(2)__hole) * emp,
-        
-       	 dwords:{eid_2}top
-[mman] Exp:0
-[mman] feature2exph: _heapend->ptr to fn
-[mman] transform_sbrk: fn(_heapend):=__hole[sbrk(0)]
-[mman] to: fn(_heapend):=__hli
-[mman] to: __hli:=(__hli + 0)
-[mman] doing assign
-[mman] do_assigns: fn(_heapend):=__hli
-[mman] do_assigns: __hli:=(__hli + 0)
-[mman] on ({peid:2}eshape: (1)__hole |-> (3)__hli, 
-       blk((3)__hli,(2)__hole) * emp,
-        
-       	 dwords:{eid_2}top 
-       )
-[mman] do_assign_one....
-[mman] --------- 
-        MV:evaluate alval:fn(_heapend)
-[mman] MSH:evalL afeat
-[mman] ASYN:to_senv_lval ...
-[mman] ASYN:is not location ...
-[mman] ASYN:(5)_heapend in penv
-[mman] MSH:after to_senv_lval:sv_5 in penv
-[mman] MSH:evalL_feat
-[mman] MSH:find location of sv_5 on stack ...
-[mman] failure: Unexpected exception.
-                Please submit bug report (Ref. "Not_found").
-[kernel] Current source was: /Users/yuezhuang/Documents/projects/mem copy/bench/la/lamalloc.c:168
-         The full backtrace is:
-         Raised at file "src/kernel_services/plugin_entry_points/log.ml", line 583, characters 30-31
-         Called from file "src/kernel_services/plugin_entry_points/log.ml", line 577, characters 9-16
-         Re-raised at file "src/kernel_services/plugin_entry_points/log.ml", line 580, characters 15-16
-         Called from file "queue.ml", line 134, characters 6-20
-         Called from file "src/kernel_internals/runtime/boot.ml", line 37, characters 4-20
-         Called from file "src/kernel_services/cmdline_parameters/cmdline.ml", line 787, characters 2-9
-         Called from file "src/kernel_services/cmdline_parameters/cmdline.ml", line 817, characters 18-64
-         Called from file "src/kernel_services/cmdline_parameters/cmdline.ml", line 228, characters 4-8
-         
-         Plug-in mman aborted: internal error.
-         Please report as 'crash' at http://bts.frama-c.com/.
-         Your Frama-C version is Aluminium-20160501.
-         Note that a version and a backtrace alone often do not contain enough
-         information to understand the bug. Guidelines for reporting bugs are at:
-         http://bts.frama-c.com/dokuwiki/doku.php?id=mantis:frama-c:bug_reporting_guidelines
+[mman] MV:meet_exp....
+[mman] MV:finish meet_exp.
+[mman] ret_call: laInit(...)
+[mman] Unify penvs 3, 0
+[mman] (sid:85): {peid:2}Bot
+[mman] (sid:86): {peid:-1}Bot
+[mman] (sid:87): {peid:-1}Bot
+[mman] (sid:88): {peid:-1}Bot
+[mman] (sid:89): {peid:-1}Bot
+[mman] (sid:106): {peid:-1}Bot
+[mman] (sid:90): {peid:-1}Bot
+[mman] (sid:91): {peid:-1}Bot
+[mman] (sid:92): {peid:-1}Bot
+[mman] (sid:93): {peid:-1}Bot
+[mman] --------------------------------------------
+[mman] Analysing 'minit'
+[mman] --------------------------------------------
+[mman] Analysing 'malloc'
+[mman] --------------------------------------------
+[mman] Analysing 'mfree'
+[wp] Logging keys: .
