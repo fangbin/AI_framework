@@ -894,6 +894,16 @@ module Model = struct
       let _ = Mman_options.Self.debug ~level:1 "MV:after evaluation of loction: @." 
                             in 
 
+      let _ = 
+      List.iter 
+      (
+        fun al -> 
+          Mman_options.Self.debug ~level:1 "\n --------- \n MV:evaluate alval:%a  @." 
+                            Mman_asyn.pp_alval  al 
+      )
+      !vf 
+      in 
+
       match esh.mem with
       | Top | Bot -> 
           (* Initially, while eshape value is Top and __hli is 
@@ -974,18 +984,22 @@ module Model = struct
 
       | _ -> 
           begin
-               let _ = 
-                List.iter2 
-                ( fun lv le ->
-                     Mman_options.Self.debug ~level:1 "MV: do_assign_one %a:=%a@."
-                           Mman_asyn.pp_alval (lv) Mman_asyn.pp_aexp (le) 
-                )
-                !nllv 
-                !nlexp 
-              in 
+               
+                   let _ = 
+                     if (List.length !nllv) == (List.length !nlexp) then 
+                      List.iter2 
+                      ( fun lv le ->
+                           Mman_options.Self.debug ~level:1 "MV: do_assign_one %a:=%a@."
+                                 Mman_asyn.pp_alval (lv) Mman_asyn.pp_aexp (le) 
+                      )
+                      !nllv 
+                      !nlexp 
+                    else 
+                    Mman_options.Self.debug ~level:1 "MV: do_assign_one different length@." 
+                               
+                      in 
 
-
-              if (!vf) = [] then (* do not unfold *)
+              if (!vf == []) then (* do not unfold *)
                 (* the assignment may be done *)
                 let _ = Mman_options.Self.debug ~level:1 "MV:do mutate@."  in 
                 let nm = ref (ModelMap.empty) in

@@ -587,7 +587,20 @@
 [mman] ASYN:get_saddr_lval...Some
 [mman] evalE is None
 [mman] MV:after evaluation of loction:
-[mman] MV: do_assign_one sv_1:=sv_3
+[mman] MV: do_assign_one different length
+[mman] MV:do mutate
+[mman] MV:eshape mutate
+[mman] MSH:old eshape value:(4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+[mman] left alval:fn(sv_5)
+[mman] MSH:left value svi:5 ...
+[mman] MSH:svinfoL:(5)_heapstart
+[mman] MSH:mutate_meminfo...
+[mman] MSH:aexp:sv_3
+[mman] failure: Undefined address
+[mman] MV:after mutation, eshape value:(4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+[mman] MV:after mutation, dw value:{eid_-1}bottom
 [mman] failure: Unexpected exception.
                 Please submit bug report (Ref. "Invalid_argument("List.iter2")").
 [kernel] Current source was: /Users/yuezhuang/Documents/projects/mem copy/bench/la/lamalloc.c:167
