@@ -407,7 +407,7 @@ module Compute(AnPar: ComputeArg) = struct
                Cil_datatype.Stmt.pretty_sid s
                MV.Model.pretty aval)
     in
-    let _ = (Mman_options.Self.feedback "transfer_stmt_main sid: %a on %a'" 
+    let _ = (Mman_options.Self.feedback "transfer_stmt_main sid: %a on \n %a'" 
              Cil_datatype.Stmt.pretty_sid s
              MV.Model.pretty aval)
     in 

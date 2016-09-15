@@ -760,6 +760,8 @@ let rec evalE (exp: Mman_asyn.aexp) (d: t)
       begin
         match exp with
         | ACst(it) -> (* finally evaluated in the data part *)
+            let _ =  Mman_options.Self.debug ~level:1 "MSH:evalE_lval, ACst ... @." 
+                    in  
             Some (ACst it), []
 
         | ALval(al) -> (* evaluate to a value -- may be location *)
@@ -846,25 +848,25 @@ and evalE_lval (lv: Mman_asyn.alval) (d: t)
         match lv with
         | AVar vi ->
 
-            let _ = Mman_options.Self.debug ~level:1 "MSH:lv: %a... @."
+            let _ = Mman_options.Self.debug ~level:1 "MSH:evalE_lval lv: %a... @."
                         Mman_asyn.pp_alval (lv);
-                    in 
-            let _ = (Mman_options.Self.debug ~level:1 "MSH senv: %a @."
-                 MEV.senv_print (MEV.senv_get seid)) 
-                    in
-
-                    
+                    in        
             (* as a value, a program variable is defined when initialized *)
             (* get the corresponding symbolic variable and,
                if pointer type, search in the stack *)
             
-            let svi = Mman_env.senv_getvar seid (Mman_svar.sv_mk_var vi) in
+
+            let svi = 
+              if (String.compare (vi.vname ) "__hli" == 0)
+              then   
+                  Mman_env.senv_getvar seid (Mman_svar.sv_mk_hli) 
+              else 
+                  Mman_env.senv_getvar seid (Mman_svar.sv_mk_var vi) 
+            in
 
             let _ = Mman_options.Self.debug ~level:1 "MSH:evalE_lval AVar:%a@."
                             Mman_svar.Svar.pretty svi
                     in 
-
-            
 
             let svid = (Mman_svar.Svar.id svi) in
             evalE_svid svid seid g
@@ -906,29 +908,41 @@ and evalE_lval (lv: Mman_asyn.alval) (d: t)
 and evalE_svid (svid: Mman_svar.svid) (seid: MEV.t) (g: meminfo)
   : (Mman_asyn.aexp option) * (Mman_asyn.alval list)
   =
-  
+  let _ =  Mman_options.Self.debug ~level:1 "MSH:evalE_svid...svid %d @."
+            svid  
+        in 
 
-  let psz, _ = MEV.senv_size seid in
+  let psz, _ = MEV.senv_size seid 
+        in
+ 
+
+
   if svid == Mman_svar.svid_null
   then
     Some(ACst(Integer.zero)), []
   else if (svid <= Mman_svar.svid_hst)
        || ((svid < psz) &&
-           not(Mman_svar.isPtrType (Mman_env.senv_getvtyp seid svid)))
+           not(Mman_svar.isPtrType (Mman_env.penv_getvtyp seid svid)))
        || (svid >= psz)
   then
     (* no need to look in stack *)
+    let _ =  Mman_options.Self.debug ~level:1 "MSH:evalE_svid, no need to look in stack... @."  
+        in 
     Some(ALval(ASVar svid)), [] 
   else
     (* TODO: and if it is DA_CDAT ? *)
     (* inspect the stack *)
     (try
+
+       let _ =  Mman_options.Self.debug ~level:1 "MSH:evalE_svid, inspect the stack... @."  
+        in 
        let svpto = MEV.EnvMap.find svid g.stack in
        if svpto == Mman_svar.svid_null
        then Some(ACst(Integer.zero)), []
        else Some(ALval(ASVar svpto)), []
      with Not_found -> (* Not initialized *)
-       None, []
+       Some(ALval(ASVar svid)), [] 
+       (*None, []*)
     )
 
 and evalE_feat (seid: MEV.t)
@@ -1031,14 +1045,24 @@ let rec guard (d: t) (c1_cn: Mman_asyn.aconstr list)
              ci
            else
              let odi, lvi = guard_one !nd ci in
+            
              match odi with
              | None ->
                  begin
+                  let _ =  Mman_options.Self.debug ~level:1 "MSH:guard_one return is None...@." 
+                    in 
                    nd := bottom_of seid;
                    ci
                  end
              | Some(ndi, nci) ->
                  begin
+                  let _ =  Mman_options.Self.debug ~level:1 "MSH:guard_one return constraint:%a @." 
+                        Mman_asyn.pp_aconstr nci 
+                      in 
+                   let _ = Mman_options.Self.debug ~level:1 "MSH:guard_one return value:%a @." 
+                        pretty ndi
+                      in 
+
                    nd := ndi;
                    nlv := lvi @ (!nlv);
                    nci
@@ -1047,6 +1071,8 @@ let rec guard (d: t) (c1_cn: Mman_asyn.aconstr list)
         c1_cn
     in
     if is_bottom !nd then
+      let _ =  Mman_options.Self.debug ~level:1 "MSH:guard return is None...@." 
+               in 
       None, []
     else
       Some(!nd, ac1_acn), !nlv
@@ -1087,22 +1113,42 @@ and guard_one (d: t) (ci: Mman_asyn.aconstr)
            else
              (
               match oeLn, oeRn with
-              | None, _ | _, None -> None, []
+              | None, _ | _, None -> 
+
+                let _ =  Mman_options.Self.debug ~level:1 "MSH:after evalE is None... @." 
+                in 
+                None, []
               
               | Some(aeLn), Some(aeRn) ->
                   (* both expressions contains only 
                      constants, locations, operators *)
                   (* the shape part deal only with 
                      comparison between locations *)
+                  let _ =  Mman_options.Self.debug ~level:1 "MSH:after evalE:%a op %a @." 
+                         Mman_asyn.pp_aexp (aeLn) Mman_asyn.pp_aexp (aeRn) 
+                  in 
+
+                  let _ =  Mman_options.Self.debug ~level:1 "MSH:evalE, no unfolding needed.... @."  
+                  in 
+
+
                   let svL = Mman_asyn.get_saddr aeLn in
                   let svR = Mman_asyn.get_saddr aeRn in
                   let aci = Mman_asyn.ACmp(op, aeLn, aeRn) in
+
+                  let _ =  Mman_options.Self.debug ~level:1 "MSH:%a @." 
+                           Mman_asyn.pp_aconstr aci 
+                          in 
                   (match svL, svR with
                    | None, _ | _, None ->
                        (* not a constraint on locations *)
                        Some(d, aci), []
+                   
                    | Some(sviL), Some(sviR) ->
                        (* a constraint on locations, only comparison accepted *)
+                       let _ =  Mman_options.Self.debug ~level:1 "MSH: a constraint on locations, only comparison accepted...@."  
+                          in 
+
                        (match op with
                         | Mman_asyn.AEQ ->
                             guard_eq d sviL sviR aci, []
@@ -1163,9 +1209,18 @@ and guard_geq (d: t) (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
   (oc: Mman_asyn.aconstr)
   : (t * Mman_asyn.aconstr) option
   =
+
+  let _ =  Mman_options.Self.debug ~level:1 "MSH:guard_geq...@."  
+                          in 
   match d.mem with
   | Bot | Top -> Some(d, Mman_asyn.AFalse)
+  
+
   | S(g) ->
+
+      let _ =  Mman_options.Self.debug ~level:1 "MSH:guard_geq, Some g ...@."  
+               in 
+
       if sviL == sviR then
         (* already equal locations *)
         (* nothing to propagate on data *)
@@ -1185,7 +1240,9 @@ and guard_geq (d: t) (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
            Not_found ->
              (* some location not in data segment, 
                 not able to compare in shape *)
-             Some(bottom_of (env d), Mman_asyn.AFalse)
+             (* TODO: if sviL is hli *) 
+             Some(d, oc)
+             (*Some(bottom_of (env d), Mman_asyn.AFalse)*)
         )
 
 and guard_gt (d: t) (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)

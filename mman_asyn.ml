@@ -1422,13 +1422,31 @@ let rec get_saddr (ae: aexp)
       else
         None
   | ALval(alv) ->
+
       get_saddr_lval alv
 
-  | _ -> None (* shall be a reduced expression *)
+  | _ -> 
+      let _ =  Mman_options.Self.debug ~level:1 "ASYN:get_saddr...None@."  
+          in 
+
+      None (* shall be a reduced expression *)
 
 and get_saddr_lval (lv: alval)
   : Mman_svar.svid option
   =
   match lv with
-  | ASVar(svi) -> Some(svi)
-  | _ -> None
+  | ASVar(svi) -> 
+           let _ =  Mman_options.Self.debug ~level:1 "ASYN:get_saddr_lval...Some@."  
+          in 
+          Some(svi)
+  | _ ->   
+        let _ =  Mman_options.Self.debug ~level:1 "ASYN:get_saddr_lval...None@."  
+          in  
+          None
+
+
+
+
+
+
+

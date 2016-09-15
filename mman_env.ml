@@ -162,14 +162,19 @@ let copy_vidmap (m: vidmap)
 let comem_vidmap (m: vidmap) (sv: Mman_svar.Svar.t)
   : Mman_svar.Svar.t
   =
+
+ 
   let svmap =
     VidMap.filter 
     (
         fun _i sv' -> 
-            Mman_svar.Svar.equal sv sv'
+           (* let _ = Mman_options.Self.debug ~level:1 "ENV:comem_vidmap v1:%a, v2:%a @."
+                            Mman_svar.Svar.pretty (sv') Mman_svar.Svar.pretty (sv) 
+                          in *)
+            Mman_svar.Svar.equal sv sv' 
     ) 
     m
-  in
+  in 
   if VidMap.is_empty svmap then
     raise Not_found
   else let svlist = VidMap.bindings svmap in
@@ -315,6 +320,13 @@ let penv_getvinfo (eid: int) (svid: int)
     VidMap.find svid e.pvars
   with Not_found -> Mman_svar.sv_mk_hole
                       
+let penv_getvtyp ei svid =
+  let svi = penv_getvinfo ei svid in
+  
+  let _ = Mman_options.Self.debug ~level:1 "ENV:penv_getvtyp, vi:%a@."
+          Mman_svar.Svar.pretty svi
+        in 
+  svi.Mman_svar.typ
 
 (* ********************************************************************** *)
 (* {4 Operations on global environments } *)
@@ -748,6 +760,11 @@ let senv_getvinfo (eid: int) (svid: int)
  *)
 let senv_getvtyp ei svid =
   let svi = senv_getvinfo ei svid in
+  
+
+  let _ = Mman_options.Self.debug ~level:1 "ENV:senv_getvtyp, vi:%a@."
+          Mman_svar.Svar.pretty svi
+        in 
   svi.Mman_svar.typ
 
 (**
@@ -813,7 +830,9 @@ let senvs_init (peid:int)
           { se_id = seid;
             se_ucnt = 0;
             peid = peid;
-            svars = VidMap.empty } 
+            svars = VidMap.empty 
+            (* svars = penv.pvars *)
+            } 
       in 
       let _ = Mman_options.Self.debug ~level:1 "create symbolic environment" 
       in 

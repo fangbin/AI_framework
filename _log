@@ -296,26 +296,31 @@
 [mman] MV:evalL is Some()
 [mman] --------- 
         evaluate aexp:0
+[mman] MSH:evalE_lval, ACst ...
 [mman] evalE is Some()
 [mman] --------- 
         evaluate aexp:0
+[mman] MSH:evalE_lval, ACst ...
 [mman] evalE is Some()
 [mman] --------- 
         evaluate aexp:0
+[mman] MSH:evalE_lval, ACst ...
 [mman] evalE is Some()
 [mman] --------- 
         evaluate aexp:0
+[mman] MSH:evalE_lval, ACst ...
 [mman] evalE is Some()
 [mman] --------- 
         evaluate aexp:0
+[mman] MSH:evalE_lval, ACst ...
 [mman] evalE is Some()
-[mman] after evaluation of loction:
-[mman] sv_6:=0
-[mman] csz(sv_8):=0
-[mman] fn(sv_8):=0
-[mman] csz(sv_5):=0
-[mman] fn(sv_5):=0
-[mman] do mutate
+[mman] MV:after evaluation of loction:
+[mman] MV: do_assign_one sv_6:=0
+[mman] MV: do_assign_one csz(sv_8):=0
+[mman] MV: do_assign_one fn(sv_8):=0
+[mman] MV: do_assign_one csz(sv_5):=0
+[mman] MV: do_assign_one fn(sv_5):=0
+[mman] MV:do mutate
 [mman] MV:eshape mutate
 [mman] MSH:old eshape value:(4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
        chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
@@ -374,7 +379,8 @@
 [mman] MV:finish mutating, Some
 [mman] MV:after do_assign_one
 [mman] MV:after assign_set is Some()
-[mman] MV:assign_done, value: ({peid:2}eshape: (4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+[mman] MV:assign_done, 
+        value: ({peid:2}eshape: (4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
        chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
         
        	 dwords:{eid_-1}bottom 
@@ -391,40 +397,213 @@
 [mman] MSH:constraint:__hli>=0
 [mman] MSH:evalE:__hli op 0
 [mman] MSH:evalE_lval, ALval ...
-[mman] MSH:lv: __hli...
-[mman] MSH senv: senv_2 = @(0,penv_3,
-       [10]
-       { 1> (1)__null; 2> (2)__hole; 3> (3)__hli; 4> (4)__hst; 5> (5)_heapstart; 6> (6)c4__fn; 7> (7)c4__csz; 8> (8)_heapend; 9> (9)c5__fn;
-        10> (10)c5__csz;}@)
-[mman] MSH:evalE_lval AVar:(1)__hole
-[mman] MV:afte guard is NONE.
+[mman] MSH:evalE_lval lv: __hli...
+[mman] MSH:evalE_lval AVar:(3)__hli
+[mman] MSH:evalE_svid...svid 3
+[mman] MSH:evalE_svid, no need to look in stack...
+[mman] MSH:evalE_lval, ACst ...
+[mman] MSH:after evalE:sv_3 op 0
+[mman] MSH:evalE, no unfolding needed....
+[mman] ASYN:get_saddr_lval...Some
+[mman] MSH:sv_3>=0
+[mman] MSH: a constraint on locations, only comparison accepted...
+[mman] MSH:guard_geq...
+[mman] MSH:guard_geq, Some g ...
+[mman] MSH:guard_one return constraint:sv_3>=0
+[mman] MSH:guard_one return value:(4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+[mman] MV:no need to unfold...
+[mman] MV:no constraints on data...
+[mman] MV:dw is Bot...
+[mman] MV:after meet_exp_set is Some()
 [mman] MV:finish meet_exp.
 [mman] MV:meet_exp....
+[mman] MV:meet_exp_set....
+[mman] MV:meet_exp_set, exsh:(4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+[mman] MV:meet_exp_set, dw value:{eid_-1}bottom
+[mman] MV:meet_exp_one....
+[mman] MSH:do guard...
+[mman] MSH:constraints:man>=0
+[mman] MSH:constraints:p1>=0
+[mman] MSH:constraints:p2>=0
+[mman] MSH:do guard_one...
+[mman] MSH:constraint:man>=0
+[mman] MSH:evalE:man op 0
+[mman] MSH:evalE_lval, ALval ...
+[mman] MSH:evalE_lval lv: man...
+[mman] MSH:evalE_lval AVar:(7)man
+[mman] MSH:evalE_svid...svid 7
+[mman] ENV:penv_getvtyp, vi:(7)f1670_ap
+[mman] MSH:evalE_svid, inspect the stack...
+[mman] MSH:evalE_lval, ACst ...
+[mman] MSH:after evalE:sv_7 op 0
+[mman] MSH:evalE, no unfolding needed....
+[mman] ASYN:get_saddr_lval...Some
+[mman] MSH:sv_7>=0
+[mman] MSH: a constraint on locations, only comparison accepted...
+[mman] MSH:guard_geq...
+[mman] MSH:guard_geq, Some g ...
+[mman] MSH:guard_one return constraint:sv_7>=0
+[mman] MSH:guard_one return value:(4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+[mman] MSH:do guard_one...
+[mman] MSH:constraint:p1>=0
+[mman] MSH:evalE:p1 op 0
+[mman] MSH:evalE_lval, ALval ...
+[mman] MSH:evalE_lval lv: p1...
+[mman] MSH:evalE_lval AVar:(8)p1
+[mman] MSH:evalE_svid...svid 8
+[mman] ENV:penv_getvtyp, vi:(8)nxt
+[mman] MSH:evalE_svid, inspect the stack...
+[mman] MSH:evalE_lval, ACst ...
+[mman] MSH:after evalE:sv_8 op 0
+[mman] MSH:evalE, no unfolding needed....
+[mman] ASYN:get_saddr_lval...Some
+[mman] MSH:sv_8>=0
+[mman] MSH: a constraint on locations, only comparison accepted...
+[mman] MSH:guard_geq...
+[mman] MSH:guard_geq, Some g ...
+[mman] MSH:guard_one return constraint:sv_8>=0
+[mman] MSH:guard_one return value:(4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+[mman] MSH:do guard_one...
+[mman] MSH:constraint:p2>=0
+[mman] MSH:evalE:p2 op 0
+[mman] MSH:evalE_lval, ALval ...
+[mman] MSH:evalE_lval lv: p2...
+[mman] MSH:evalE_lval AVar:(9)p2
+[mman] MSH:evalE_svid...svid 9
+[mman] ENV:penv_getvtyp, vi:(9)prev
+[mman] MSH:evalE_svid, inspect the stack...
+[mman] MSH:evalE_lval, ACst ...
+[mman] MSH:after evalE:sv_9 op 0
+[mman] MSH:evalE, no unfolding needed....
+[mman] ASYN:get_saddr_lval...Some
+[mman] MSH:sv_9>=0
+[mman] MSH: a constraint on locations, only comparison accepted...
+[mman] MSH:guard_geq...
+[mman] MSH:guard_geq, Some g ...
+[mman] MSH:guard_one return constraint:sv_9>=0
+[mman] MSH:guard_one return value:(4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+[mman] MV:no need to unfold...
+[mman] MV:no constraints on data...
+[mman] MV:dw is Bot...
+[mman] MV:after meet_exp_set is Some()
 [mman] MV:finish meet_exp.
-[mman] DF:initial_state {peid:2}Bot
-[mman] transfer_stmt_main sid: 85 on {peid:2}Bot'
+[mman] DF:initial_state {peid:2}eshape: (4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+        
+       	 dwords:{eid_-1}bottom
+[mman] transfer_stmt_main sid: 85 on 
+        {peid:2}eshape: (4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+        
+       	 dwords:{eid_-1}bottom 
+       '
 [mman] s.skind: Instr2
 [mman] function called: laInit'
 [mman] do_call: laInit(...)
 [mman] Unify penvs 3, 0
 [mman] MV:meet_exp....
+[mman] MV:meet_exp_set....
+[mman] MV:meet_exp_set, exsh:(4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+[mman] MV:meet_exp_set, dw value:{eid_-1}bottom
+[mman] MV:meet_exp_one....
+[mman] MSH:do guard...
+[mman] MV:no need to unfold...
+[mman] MV:after meet_exp_set is Some()
 [mman] MV:finish meet_exp.
-[mman] ret_call: laInit(...)
-[mman] Unify penvs 3, 0
-[mman] (sid:85): {peid:2}Bot
-[mman] (sid:86): {peid:-1}Bot
-[mman] (sid:87): {peid:-1}Bot
-[mman] (sid:88): {peid:-1}Bot
-[mman] (sid:89): {peid:-1}Bot
-[mman] (sid:106): {peid:-1}Bot
-[mman] (sid:90): {peid:-1}Bot
-[mman] (sid:91): {peid:-1}Bot
-[mman] (sid:92): {peid:-1}Bot
-[mman] (sid:93): {peid:-1}Bot
-[mman] --------------------------------------------
-[mman] Analysing 'minit'
-[mman] --------------------------------------------
-[mman] Analysing 'malloc'
-[mman] --------------------------------------------
-[mman] Analysing 'mfree'
-[wp] Logging keys: .
+[mman] transfer_stmt_main sid: 77 on 
+        {peid:2}eshape: (4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+        
+       	 dwords:{eid_-1}bottom 
+       '
+[mman] s.skind: Instr2
+[mman] function called: sbrk'
+[mman] transfer_sbrk: /* sid:77 */
+                      _heapstart.ptr = (struct hdr *)sbrk(65360);
+       on {peid:2}eshape: (4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+        
+       	 dwords:{eid_-1}bottom
+[mman] Exp:65360
+[mman] feature2exph: _heapstart->ptr to fn
+[mman] transform_sbrk: fn(_heapstart):=__hole[sbrk(65360)]
+[mman] to: fn(_heapstart):=__hli
+[mman] to: __hli:=(__hli + 65360)
+[mman] doing assign
+[mman] do_assigns: fn(_heapstart):=__hli
+[mman] do_assigns: __hli:=(__hli + 65360)
+[mman] on ({peid:2}eshape: (4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+        
+       	 dwords:{eid_-1}bottom 
+       )
+[mman] MV:do_assign_set, exsh:(4)_heapstart |-> (5)_heapstart, (5)_heapend |-> (8)_heapend, 
+       chd((5)_heapstart)[fn:(0)__null,csz:(0)__null,] * chd((8)_heapend)[fn:(0)__null,csz:(0)__null,] * emp,
+[mman] MV:do_assign_set, dw value:{eid_-1}bottom
+[mman] do_assign_one....
+[mman] --------- 
+        MV:evaluate alval:fn(_heapstart)
+[mman] MSH:evalL afeat
+[mman] ASYN:to_senv_lval ...
+[mman] ASYN:is not location ...
+[mman] ASYN:(4)_heapstart in penv
+[mman] MSH:after to_senv_lval:sv_4 in penv
+[mman] MSH:evalL_feat
+[mman] MSH:find location of sv_4 on stack ...
+[mman] MSH:location of 4 is 5...
+[mman] MSH:evalL_atom...
+[mman] MSH:atom Chd or Chk, eval is feature...
+[mman] MV:evalL is Some()
+[mman] --------- 
+        MV:evaluate alval:__hli
+[mman] ASYN:to_senv_lval ...
+[mman] ASYN:is not location ...
+[mman] ASYN:(1)__hole in penv
+[mman] MSH:after to_senv_lval:sv_1 in penv
+[mman] MV:evalL is Some()
+[mman] --------- 
+        evaluate aexp:__hli
+[mman] MSH:evalE_lval, ALval ...
+[mman] MSH:evalE_lval lv: __hli...
+[mman] MSH:evalE_lval AVar:(3)__hli
+[mman] MSH:evalE_svid...svid 3
+[mman] MSH:evalE_svid, no need to look in stack...
+[mman] evalE is Some()
+[mman] --------- 
+        evaluate aexp:(__hli + 65360)
+[mman] MSH:evalE_lval, ALval ...
+[mman] MSH:evalE_lval lv: __hli...
+[mman] MSH:evalE_lval AVar:(3)__hli
+[mman] MSH:evalE_svid...svid 3
+[mman] MSH:evalE_svid, no need to look in stack...
+[mman] MSH:evalE_lval, ACst ...
+[mman] MSH:after evalE is Some ...
+[mman] ASYN:get_saddr_lval...Some
+[mman] evalE is None
+[mman] MV:after evaluation of loction:
+[mman] MV: do_assign_one sv_1:=sv_3
+[mman] failure: Unexpected exception.
+                Please submit bug report (Ref. "Invalid_argument("List.iter2")").
+[kernel] Current source was: /Users/yuezhuang/Documents/projects/mem copy/bench/la/lamalloc.c:167
+         The full backtrace is:
+         Raised at file "src/kernel_services/plugin_entry_points/log.ml", line 583, characters 30-31
+         Called from file "src/kernel_services/plugin_entry_points/log.ml", line 577, characters 9-16
+         Re-raised at file "src/kernel_services/plugin_entry_points/log.ml", line 580, characters 15-16
+         Called from file "queue.ml", line 134, characters 6-20
+         Called from file "src/kernel_internals/runtime/boot.ml", line 37, characters 4-20
+         Called from file "src/kernel_services/cmdline_parameters/cmdline.ml", line 787, characters 2-9
+         Called from file "src/kernel_services/cmdline_parameters/cmdline.ml", line 817, characters 18-64
+         Called from file "src/kernel_services/cmdline_parameters/cmdline.ml", line 228, characters 4-8
+         
+         Plug-in mman aborted: internal error.
+         Please report as 'crash' at http://bts.frama-c.com/.
+         Your Frama-C version is Aluminium-20160501.
+         Note that a version and a backtrace alone often do not contain enough
+         information to understand the bug. Guidelines for reporting bugs are at:
+         http://bts.frama-c.com/dokuwiki/doku.php?id=mantis:frama-c:bug_reporting_guidelines

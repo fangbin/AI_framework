@@ -686,7 +686,7 @@ module Model = struct
     
     match r with
     | None -> (* error while evaluating the constraint *)
-       let _ = Mman_options.Self.debug ~level:1 "MV:afte guard is NONE.@."
+       let _ = Mman_options.Self.debug ~level:1 "MV:after guard is NONE.@."
         in 
         None (* propagate the error *)
     
@@ -695,17 +695,37 @@ module Model = struct
           (* the evaluation - complete or not - return bottom *)
           None
         else
-          (if vf1_vfn = [] then (* no need to unfold *)
-             (if nc1_ncn = [] then (* no constraints on data *)
+          (
+            let _ = Mman_options.Self.debug ~level:1 "MV:no need to unfold...@."
+                   in 
+
+            if vf1_vfn = [] 
+            then (* no need to unfold *)
+             (
+              if nc1_ncn = [] 
+              then (* no constraints on data *)
+              
                 Some(ModelMap.singleton nesh dw)
               else
+                let _ = Mman_options.Self.debug ~level:1 "MV:no constraints on data...@."
+                   in 
                 let ndw = MDW.guard dw nc1_ncn in
-                (if MDW.is_bottom ndw then None
-                 else Some(ModelMap.singleton nesh ndw)
+                (
+(*MDW.dummy_bot*)
+                  if MDW.is_bottom ndw 
+                  then 
+                    let _ = Mman_options.Self.debug ~level:1 "MV:dw is Bot...@."
+                     in 
+                     Some(ModelMap.singleton nesh MDW.dummy_bot)
+                  else 
+                     Some(ModelMap.singleton nesh ndw)
                 )
              )
 
            else (* shall unfold for each left value in vf1_vfn *)
+            let _ = Mman_options.Self.debug ~level:1 "MV:shall unfold...@."
+                   in 
+
              let nm = unfold_one esh dw vf1_vfn in
              (* apply again the guard on each value of the set nm, shall succeed *)
              meet_exp_set eid c1_cn nm
@@ -871,10 +891,8 @@ module Model = struct
                 lexp
         ;
     
-      let _ = Mman_options.Self.debug ~level:1 "after evaluation of loction: @." 
+      let _ = Mman_options.Self.debug ~level:1 "MV:after evaluation of loction: @." 
                             in 
-         
-   
 
       match esh.mem with
       | Top | Bot -> 
@@ -959,7 +977,7 @@ module Model = struct
                let _ = 
                 List.iter2 
                 ( fun lv le ->
-                     Mman_options.Self.debug ~level:1 " %a:=%a@."
+                     Mman_options.Self.debug ~level:1 "MV: do_assign_one %a:=%a@."
                            Mman_asyn.pp_alval (lv) Mman_asyn.pp_aexp (le) 
                 )
                 !nllv 
@@ -969,7 +987,7 @@ module Model = struct
 
               if (!vf) = [] then (* do not unfold *)
                 (* the assignment may be done *)
-                let _ = Mman_options.Self.debug ~level:1 " do mutate@."  in 
+                let _ = Mman_options.Self.debug ~level:1 "MV:do mutate@."  in 
                 let nm = ref (ModelMap.empty) in
                 begin
                   List.iter2
@@ -1197,7 +1215,11 @@ module Model = struct
        )
       llv
       ;
+      
       (* new shape value *) 
+
+      
+
       let meminfo = Mman_emls.new_mem !st !mls !atmp in 
       let nshapev = Mman_emls.new_msh sei meminfo in  
       let _ = Mman_options.Self.debug ~level:1 "old value  %a@."
@@ -1270,11 +1292,12 @@ let init_globals (eid:MEV.t) (av1_avn: Mman_asyn.alval list) (sv1_fn:Mman_asyn.a
     let _ = Mman_options.Self.feedback "MV:do_assign@." in
     let vinit = Model.do_assign vall (v1_vn) (e1_en) in
     
-    let _ = Mman_options.Self.debug ~level:1 "MV:assign_done, value: %a @." 
+    let _ = Mman_options.Self.debug ~level:1 "MV:assign_done, \n value: %a @." 
           (Model.pretty_code_intern Type.Basic) vinit   
         in 
 
-    let v = Model.meet_exp vinit c1_cn in
+    let v = Model.meet_exp vinit c1_cn in 
+ 
     begin
       global_state := v;
       v
