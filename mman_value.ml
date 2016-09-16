@@ -853,13 +853,14 @@ module Model = struct
                       let rlv, rvf = MSH.evalL lv esh in 
                       match rlv with
                       | None ->  
-                            let _ = Mman_options.Self.debug ~level:1 "MV:evalL is None @." 
+                            let _ = Mman_options.Self.debug ~level:1 "MV:after evalL is None @." 
                             in 
                             r := false; 
 
                       | Some(lv') ->
                             begin
-                              let _ = Mman_options.Self.debug ~level:1 "MV:evalL is Some() @." 
+                              let _ = Mman_options.Self.debug ~level:1 "MV:after evalL is (%a) @." 
+                                   Mman_asyn.pp_alval  lv'
                               in 
                                nllv := lv' :: (!nllv);
                                vf := rvf @ (!vf)
@@ -876,11 +877,12 @@ module Model = struct
                       let re, rvf = MSH.evalE e esh in
                        match re with
                        | None ->  
-                            let _ = Mman_options.Self.debug ~level:1 " evalE is None @." in 
+                            let _ = Mman_options.Self.debug ~level:1 "MV:after evalE is None @." in 
                             l := false;            
                        | Some(e') ->
                            begin
-                            let _ = Mman_options.Self.debug ~level:1 " evalE is Some() @." 
+                            let _ = Mman_options.Self.debug ~level:1 "MV:after evalE is (%a) @."
+                                  Mman_asyn.pp_aexp e'
                             in 
                              nlexp := (e') :: (!nlexp);
                              vf := rvf @ (!vf)

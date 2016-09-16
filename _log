@@ -247,7 +247,7 @@
 [mman] MSH:location of 4 is 5...
 [mman] MSH:evalL_atom...
 [mman] MSH:atom Chd or Chk, eval is feature...
-[mman] MV:evalL is Some()
+[mman] MV:after evalL is (fn(sv_5))
 [mman] --------- 
         MV:evaluate alval:csz(_heapstart)
 [mman] MSH:evalL afeat
@@ -260,7 +260,7 @@
 [mman] MSH:location of 4 is 5...
 [mman] MSH:evalL_atom...
 [mman] MSH:atom Chd or Chk, eval is feature...
-[mman] MV:evalL is Some()
+[mman] MV:after evalL is (csz(sv_5))
 [mman] --------- 
         MV:evaluate alval:fn(_heapend)
 [mman] MSH:evalL afeat
@@ -273,7 +273,7 @@
 [mman] MSH:location of 5 is 8...
 [mman] MSH:evalL_atom...
 [mman] MSH:atom Chd or Chk, eval is feature...
-[mman] MV:evalL is Some()
+[mman] MV:after evalL is (fn(sv_8))
 [mman] --------- 
         MV:evaluate alval:csz(_heapend)
 [mman] MSH:evalL afeat
@@ -286,34 +286,34 @@
 [mman] MSH:location of 5 is 8...
 [mman] MSH:evalL_atom...
 [mman] MSH:atom Chd or Chk, eval is feature...
-[mman] MV:evalL is Some()
+[mman] MV:after evalL is (csz(sv_8))
 [mman] --------- 
         MV:evaluate alval:memleft
 [mman] ASYN:to_senv_lval ...
 [mman] ASYN:is not location ...
 [mman] ASYN:(6)memleft in penv
 [mman] MSH:after to_senv_lval:sv_6 in penv
-[mman] MV:evalL is Some()
+[mman] MV:after evalL is (sv_6)
 [mman] --------- 
         evaluate aexp:0
 [mman] MSH:evalE_lval, ACst ...
-[mman] evalE is Some()
+[mman] MV:after evalE is (0)
 [mman] --------- 
         evaluate aexp:0
 [mman] MSH:evalE_lval, ACst ...
-[mman] evalE is Some()
+[mman] MV:after evalE is (0)
 [mman] --------- 
         evaluate aexp:0
 [mman] MSH:evalE_lval, ACst ...
-[mman] evalE is Some()
+[mman] MV:after evalE is (0)
 [mman] --------- 
         evaluate aexp:0
 [mman] MSH:evalE_lval, ACst ...
-[mman] evalE is Some()
+[mman] MV:after evalE is (0)
 [mman] --------- 
         evaluate aexp:0
 [mman] MSH:evalE_lval, ACst ...
-[mman] evalE is Some()
+[mman] MV:after evalE is (0)
 [mman] MV:after evaluation of loction:
 [mman] MV: do_assign_one sv_6:=0
 [mman] MV: do_assign_one csz(sv_8):=0
@@ -559,14 +559,14 @@
 [mman] MSH:location of 4 is 5...
 [mman] MSH:evalL_atom...
 [mman] MSH:atom Chd or Chk, eval is feature...
-[mman] MV:evalL is Some()
+[mman] MV:after evalL is (fn(sv_5))
 [mman] --------- 
         MV:evaluate alval:__hli
 [mman] ASYN:to_senv_lval ...
 [mman] ASYN:is not location ...
 [mman] ASYN:(1)__hole in penv
 [mman] MSH:after to_senv_lval:sv_1 in penv
-[mman] MV:evalL is Some()
+[mman] MV:after evalL is (sv_1)
 [mman] --------- 
         evaluate aexp:__hli
 [mman] MSH:evalE_lval, ALval ...
@@ -574,7 +574,7 @@
 [mman] MSH:evalE_lval AVar:(3)__hli
 [mman] MSH:evalE_svid...svid 3
 [mman] MSH:evalE_svid, no need to look in stack...
-[mman] evalE is Some()
+[mman] MV:after evalE is (sv_3)
 [mman] --------- 
         evaluate aexp:(__hli + 65360)
 [mman] MSH:evalE_lval, ALval ...
@@ -585,7 +585,7 @@
 [mman] MSH:evalE_lval, ACst ...
 [mman] MSH:after evalE is Some ...
 [mman] ASYN:get_saddr_lval...Some
-[mman] evalE is None
+[mman] MV:after evalE is None
 [mman] MV:after evaluation of loction:
 [mman] MV: do_assign_one different length
 [mman] MV:do mutate
