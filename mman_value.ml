@@ -937,7 +937,7 @@ module Model = struct
                                 Some (!nm)
                               end 
 
-                          | AFeat (fk, lv) ->  
+                          | AFeat (_fk, lv) ->  
                                 begin 
                                   match lv with
                                       | AVar vi  ->  
@@ -1022,7 +1022,7 @@ module Model = struct
                           else
                             List.iter
                               (
-                                fun (nsh, vl, cl) -> 
+                                fun (nsh, _vl, _cl) -> 
                                  let _ = Mman_options.Self.debug ~level:1 "MV:after mutation, eshape value:%a @." 
                                         MSH.pretty nsh
                                   in 
@@ -1071,7 +1071,7 @@ module Model = struct
         in 
       let peid = d.eid in  (* *)
       let le = List.length llv in 
-      let ls = List.length v1_vn in 
+      let _ls = List.length v1_vn in 
       let nsvars = ref [] in 
       List.iter 
       (
@@ -1105,7 +1105,7 @@ module Model = struct
       let mls = ref [] in  
 
       List.iteri
-      ( fun i lv ->
+      ( fun _i lv ->
                Mman_options.Self.debug ~level:1 "MV:globally allocated vars: %a @."
                    Mman_asyn.pp_alval (lv);
          match lv with
@@ -1118,22 +1118,18 @@ module Model = struct
 
 
                   let svinfo = MEV.senv_getvar seid  (Mman_svar.sv_mk_var vi) in
-                  let svid = Mman_svar.Svar.id svinfo in
+                  let _svid = Mman_svar.Svar.id svinfo in
                     nsvars := !nsvars @[(svinfo)];
 
                   let psvinfo = MEV.penv_getvar peid  (Mman_svar.sv_mk_var vi) in
-                  let psvid = Mman_svar.Svar.id psvinfo in
+                  let _psvid = Mman_svar.Svar.id psvinfo in
 
                   let _ = Mman_options.Self.debug ~level:1 "MV:new svar created:%a@."
                             Mman_svar.Svar.pretty svinfo
-                    in 
-
-                  (*let new_loc = Mman_svar.sv_mk_loc vi.vid in *)
-
-
+                    in ()
 
                   (* create new feature svar *)
-                  for j = i*le to ((i+1)*le -1) do 
+                  (*for j = i*le to ((i+1)*le -1) do 
                     let ft = List.nth v1_vn j in 
                         match ft with
                         | AFeat(fk, lv') -> 
@@ -1150,12 +1146,7 @@ module Model = struct
                                       Mman_svar.Svar.pretty newsv
                                      
                         | _ -> () 
-                  done;
-
-                  
-
-
-
+                  done;*)
                end 
           |_ -> ()
       )
@@ -1164,11 +1155,55 @@ module Model = struct
 
       
       (* initial symbolic env *)
-      let sei, ls = Mman_env.senv_addsvar seid !nsvars in 
+      let sei, _ls = Mman_env.senv_addsvar seid !nsvars in 
       sei;
       let _ = (Mman_options.Self.debug ~level:1 "new senv: %a @."
                  MEV.senv_print (MEV.senv_get sei)) 
       in
+
+
+      List.iteri
+      ( fun i lv ->
+               Mman_options.Self.debug ~level:1 "MV:globally allocated vars: %a @."
+                   Mman_asyn.pp_alval (lv);
+         match lv with
+          | AVar vi ->  
+               begin  
+
+                  let svinfo = MEV.senv_getvar sei  (Mman_svar.sv_mk_var vi) in
+                  let svid = Mman_svar.Svar.id svinfo in
+
+                  (* create new feature svar *)
+                  for j = i*le to ((i+1)*le -1) do 
+                    let ft = List.nth v1_vn j in 
+                        match ft with
+                        | AFeat(fk, _lv') -> 
+                              Mman_options.Self.debug ~level:1  "MV:creating new svar for feature : %s" 
+                                      (Mman_dabs.get_fname fk);
+
+                            (*let fkinfo = MEV.senv_getvar seid (Mman_svar.sv_mk_feat (Some(svid)) fk) in 
+                            let svfkid = Mman_svar.Svar.id fkinfo in *)
+
+                            let newsv = Mman_svar.sv_mk_feat (Some(svid)) fk in 
+                                nsvars := !nsvars @[(newsv)];
+
+                            Mman_options.Self.debug ~level:1 "MV:new feature svar created:%a@."
+                                      Mman_svar.Svar.pretty newsv
+                                     
+                        | _ -> () 
+                  done;
+                end 
+          |_ -> ()
+      )
+      llv 
+      ;
+      let sei, _ls = Mman_env.senv_addsvar seid !nsvars in 
+      sei;
+      let _ = (Mman_options.Self.debug ~level:1 "new senv: %a @."
+                 MEV.senv_print (MEV.senv_get sei)) 
+      in
+
+
 
        List.iteri
         ( fun i lv ->
@@ -1211,11 +1246,11 @@ module Model = struct
                   for j = i*le to ((i+1)*le -1) do 
                     let ft = List.nth v1_vn j in 
                         match ft with
-                        | AFeat(fk, lv') -> 
+                        | AFeat(fk, _lv') -> 
                               Mman_options.Self.debug ~level:1  "get svfeat(%s) of symbolic pv." 
                                       (Mman_dabs.get_fname fk);
-                              let svinfo = MEV.senv_getvar seid (Mman_svar.sv_mk_feat (Some(ssvid)) fk) in  
-                              let ssvid = Mman_svar.Svar.id ssvinfo in 
+                              let _svinfo = MEV.senv_getvar seid (Mman_svar.sv_mk_feat (Some(ssvid)) fk) in  
+                              let _ssvid = Mman_svar.Svar.id ssvinfo in 
                               fkl := !fkl @ [(fk,Mman_svar.sv_mk_null.id)]; 
                         | _-> ()
                   done 
@@ -1233,9 +1268,6 @@ module Model = struct
       ;
       
       (* new shape value *) 
-
-      
-
       let meminfo = Mman_emls.new_mem !st !mls !atmp in 
       let nshapev = Mman_emls.new_msh sei meminfo in  
       let _ = Mman_options.Self.debug ~level:1 "old value  %a@."

@@ -136,7 +136,7 @@ and init_global vi ii =
         init_gexp := !init_gexp @ [aei]
       end
   
-  | Cil_types.Static, Some(Cil_types.CompoundInit(ty,ls)) -> 
+  | Cil_types.Static, Some(Cil_types.CompoundInit(_ty,ls)) -> 
       (* TODO:deal with struct init *)
       let _ = Mman_options.Self.feedback "init_global: struct init@." in 
       begin
@@ -148,7 +148,7 @@ and init_global vi ii =
                   begin
                     match ofs with
                     | Field(fi,_) -> 
-                      let al, ex = Mman_asyn.transform_field2exp vi fi in 
+                      let al, _ex = Mman_asyn.transform_field2exp vi fi in 
                         init_glv  := !init_glv  @ [al];
                         
                         init_structs_fi := !init_structs_fi @ [al];
@@ -593,6 +593,9 @@ let res_states = Cil_datatype.Stmt.Hashtbl.create 7
 *)
 let compute_fun_aux stack s kf_callee init_callee
   : MV.Model.t =
+  
+  let _ = Mman_options.Self.debug ~level:1
+              "compute_fun_aux....@." in 
   (* start of callee is at its first statement *)
   let stmt_init = (Kernel_function.find_first_stmt kf_callee) in
   let eid_init = (Mman_env.penv_of_stmt stmt_init) in
@@ -638,6 +641,8 @@ let compute_fun_aux stack s kf_callee init_callee
           let init = new_state (* TODO: special treatment for loops? *)
         end
         in
+        let _ = Mman_options.Self.debug ~level:1
+              "compute_fun_aux...dataflow...@." in 
         let fenv = Dataflows.function_env kf_callee in
         let module Fenv = (val fenv: Dataflows.FUNCTION_ENV) in
         let module Init2 = Compute(Init) in
@@ -677,6 +682,8 @@ let compute_fun_aux stack s kf_callee init_callee
                "Return value not found@.";
              bot_ret)
         in
+        let _ = Mman_options.Self.debug ~level:1
+              "compute_fun_aux done....@." in 
         state_ret
       end
     end

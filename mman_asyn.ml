@@ -93,7 +93,9 @@ let copy_aexp ae = ae
 let rec pp_aexp fmt ae =
   match ae with
   | ACst i -> Format.fprintf fmt "%d" (Integer.to_int i)
+  
   | ALval lv -> pp_alval fmt lv
+  
   | AUnOp(op, ae') ->
       (match op with
        | ANeg -> Format.fprintf fmt "- %a" pp_aexp ae'
@@ -1048,7 +1050,7 @@ let transform_assign (lv: Cil_types.lval) (exp: Cil_types.exp)
   in
   let ae2 = transform_exp_aux exp in
   let ae = replace_hole (* in *) ae1  (* by *) ae2 in
-  let _ = (Mman_options.Self.debug ~level:1 "\tto: %a:=%a@."
+  let _ = (Mman_options.Self.debug ~level:1 "\tASYN: to: %a:=%a@."
              pp_alval alv pp_aexp ae)
   in
   [alv], [ae]
@@ -1194,18 +1196,18 @@ let transform_sbrk
     | Some(v) ->
         let alv1, ae1 = transform_lval2var_syn v in
         let _ = (Mman_options.Self.debug ~level:1
-                   "transform_sbrk: %a:=%a[sbrk(%a)]@."
+                   "ASYN:transform_sbrk: %a:=%a[sbrk(%a)]@."
                    pp_alval alv1 pp_aexp ae1 pp_aexp ae_sz)
         in
         let ae1f = replace_hole (* in *) ae1 (* by *) aex_hli in
-        let _ = (Mman_options.Self.debug ~level:1 "\tto: %a:=%a@."
+        let _ = (Mman_options.Self.debug ~level:1 "\tASYN:to: %a:=%a@."
                    pp_alval alv1 pp_aexp ae1f)
         in
         [alv1], [ae1f]
     )
   in
   let ae2f = ABinOp(AAdd, aex_hli, ae_sz) in
-  let _ = (Mman_options.Self.debug ~level:1 "\tto: %a:=%a@."
+  let _ = (Mman_options.Self.debug ~level:1 "\tASYN:to: %a:=%a@."
              pp_alval alv_hli pp_aexp ae2f)
   in
   let avl = alv1l@[alv_hli] in

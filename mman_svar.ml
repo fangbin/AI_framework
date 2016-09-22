@@ -164,28 +164,7 @@ let sv_compare sv1 sv2 =
           (Mman_dabs.featurekind2int fk1)
           (Mman_dabs.featurekind2int fk2)
  
-let sv_equal sv1 sv2 =
-  if sv1.typ <> sv2.typ then false
-  else
-    match sv1.kind, sv2.kind with
-    | Null, Null | Hole, Hole | Hli, Hli | Hst, Hst -> true
-    | PVar vi1, PVar vi2 ->
-        Cil_datatype.Varinfo.equal !vi1 !vi2
-    | Loc svi1, Loc svi2 ->
-        svi1 = svi2
-    | SAddr, SAddr ->
-        let cmp = sv1.id - sv2.id in
-        cmp = 0
-        
-    | Word svi1, Word svi2 ->
-        svi1 = svi2
 
-    | Feature(None, fk1), Feature(None, fk2) -> fk1 = fk2
-
-    | Feature(Some(svi1),fk1), Feature(Some(svi2),fk2) ->
-        (svi1 = svi2) && (fk1 = fk2)
-
-    | _, _ -> false
 
 
 let sv_getref sv =
@@ -211,8 +190,8 @@ let sv_tostring (sv:svarinfo) =
   | Hst -> sv_hst_name
 
   | PVar vi ->
-      (if (!vi).vformal then "f"^(string_of_int (!vi).vid)^"_"
-       else "")^(!vi).vname
+      if (!vi).vformal then "f"^(string_of_int (!vi).vid)^"_"
+       else (!vi).vname
                   
   | SAddr ->
       "__a"^(string_of_int sv.id)
@@ -222,7 +201,7 @@ let sv_tostring (sv:svarinfo) =
 
   | Feature(Some(vid), fk) ->
       let fname = (Mman_dabs.get_fname fk) in
-      "c"^(string_of_int vid)^"__"^fname (* TODO: change in better way *)
+      "c"^(string_of_int vid)^""^fname (* TODO: change in better way *)
       
   | Loc vid ->
       "__l"^(string_of_int vid)
@@ -230,9 +209,94 @@ let sv_tostring (sv:svarinfo) =
   | Word vid ->
       "__w"^(string_of_int vid)
       
+
+
+
+
 let sv_print fmt sv =
   let str = sv_tostring sv in
   Format.fprintf fmt "(%d)%s" sv.id str
+
+
+
+let sv_equal sv1 sv2 =
+ 
+   
+  if sv1.typ <> sv2.typ 
+  then 
+    match sv1.kind, sv2.kind with
+         | Hli, Hli -> true 
+
+         | Hli , PVar vi  ->  
+            if ( (!vi).vname == "__hli") then true  
+            else  false
+
+         | PVar vi , Hli ->  
+            if ( (!vi).vname == "__hli") then true  
+            else  false
+         
+         | _, _ -> false 
+  else
+    match sv1.kind, sv2.kind with
+    | Hli, Hli | Null, Null | Hole, Hole | Hst, Hst -> 
+        (*let _ =  Mman_options.Self.debug ~level:1 "SVAR:sv_equal null,null| hli,hli| ... @."  
+            in *)
+        true
+
+    | PVar vi1, PVar vi2 ->
+        
+        (*let _ =  Mman_options.Self.debug ~level:1 "SVAR:sv_equal Pvar... @."  
+            in*)
+            if ( String.compare (!vi1).vname  "__hli" == 0 ) && 
+               ( String.compare (!vi2).vname  "__hli" == 0 )
+            then 
+                    
+                    true 
+            else 
+              Cil_datatype.Varinfo.equal !vi1 !vi2
+           
+
+    | Loc svi1, Loc svi2 ->
+         
+        svi1 = svi2
+    
+    | SAddr, SAddr ->
+         
+        let cmp = sv1.id - sv2.id in
+        cmp = 0
+        
+    | Word svi1, Word svi2 ->
+         
+        svi1 = svi2
+
+    | Feature(None, fk1), Feature(None, fk2) -> 
+        (*let _ =  Mman_options.Self.debug ~level:1 "SVAR:sv_equal Feature... @."  
+            in*)
+        fk1 = fk2
+
+    | Feature(Some(svi1),fk1), Feature(Some(svi2),fk2) ->
+        (svi1 = svi2) && (fk1 = fk2)
+
+    | Hli , PVar vi  ->  
+            
+           if ( String.compare (!vi).vname "__hli" ==0 ) 
+           then true  
+           else  false
+
+
+    | PVar vi , Hli ->  
+           if ( String.compare (!vi).vname  "__hli" == 0) then 
+           true  
+           else  false
+
+    | _ , _ -> 
+             
+          false 
+
+
+
+
+
  
 let svid_null = 0
 
@@ -245,6 +309,13 @@ let sv_mk_null =
 let svid_hole = 1
 
 let sv_mk_hole =
+  { id = svid_hole;
+    kind = Hole;
+    typ = SVOth
+  }
+
+
+let sv_mk_feat =
   { id = svid_hole;
     kind = Hole;
     typ = SVOth
@@ -368,7 +439,7 @@ let sv_add_pvar vinfo svid =
            svl := !svl @  [(!lid, sv_mk_loc ~svid:(!lid) svid)]
          end
       );
-      (Mman_options.Self.debug ~level:2
+      (Mman_options.Self.debug ~level:1
          "Add '%a' of type %a (aka %a)@."
          Printer.pp_varinfo vinfo
          Printer.pp_typ vinfo.vtype

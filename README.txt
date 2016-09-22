@@ -31,11 +31,11 @@ or with debug information from frama-c
 Registered as a plugin of frama-c :
 frama-c -mman
 
-run.sh 
+run sh 
 
 #if the mman plugin is registered in frama-c list 
 > make
 > make install
-> frama-c -mman -debug 2 ../mem\ copy/bench/la/lamain.c
+> frama-c -mman -debug 2 ../mem\ copy/bench/la/lamain.c  
 
 
