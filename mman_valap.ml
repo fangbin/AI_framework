@@ -118,16 +118,24 @@ let env_map = ref EnvAPMap.empty
 let env2apron (eid: Mman_env.t) 
   : Apron.Environment.t 
   =
+    let _ = Mman_options.Self.debug ~level:2
+          "DW:env2apron "
+        in 
     try
       let apei = EnvAPMap.find eid !env_map in
+       let _ = Mman_options.Self.debug ~level:2
+                "DW:env2apron found..."
+            in 
       Vector.get apronenvs apei
     with Not_found ->    
+      let _ = Mman_options.Self.debug ~level:2
+                "DW:env2apron Not_found!!!"
+            in 
       let svl = 
             if eid != -1 
             then (env_vars eid) 
             else [] 
         in
-
       let avl = List.map
           (
             fun  (_i,sv) -> 
@@ -135,7 +143,6 @@ let env2apron (eid: Mman_env.t)
           )
           svl
       in
-    
       
 
       let ap_env = Apron.Environment.make
@@ -348,10 +355,14 @@ module Model = struct
   (* Polka.strict PolkaGrid.t Apron.Abstract1.t *)
       
   let to_apron v =
+    let _ = Mman_options.Self.debug ~level:2 "DW:to_apron..."
+          in
     Polka.Abstract1.of_polka_strict v 
   (* PolkaGrid.Abstract1.of_polkagrid v *)
       
   let of_apron v =
+    let _ = Mman_options.Self.debug ~level:2 "DW:of_apron..."
+          in
     Polka.Abstract1.to_polka_strict v
       
   type value = {
@@ -882,11 +893,13 @@ module Model = struct
 
   let change_env (d: t) (eiold: Mman_env.t) (einew: Mman_env.t) 
     =
-    
     let _ = Mman_options.Self.debug ~level:1
                  "DW:change_env...@."
         in 
-
+    let _ = Mman_options.Self.debug ~level:2
+                 "DW: eiold:%d, einew: %d@."
+                 eiold einew 
+       in 
     if eiold == einew
     then
       copy_intern d
@@ -905,7 +918,9 @@ module Model = struct
                             false
                         )
         }
-      
+  
+
+
   let change_env_with (d: t) (einew: Mman_env.t) =
     if d.eid == einew
     then
