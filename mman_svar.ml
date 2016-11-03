@@ -31,11 +31,11 @@ open Mman_dabs
 (* ********************************************************************** *)
 
 type svtyp = 
-    SVInt   (* int *)
-  | SVAddr  (* pointer of type != cty *)
-  | SVChunk (* pointer of type == cty *)
-  | SVWord  (* sequence of chunks *)
-  | SVOth   (* internal use only *)
+    SVInt           (* int *)
+  | SVPtr of svtyp  (* typed pointer, where svtyp is int, void, chk, ptr *)
+  | SVChunk         (* type cty *)
+  | SVWord          (* sequence of chunks *)
+  | SVOth           (* internal use only *)
 
 type svid = int
   
@@ -44,8 +44,8 @@ type svkind =
   | (* a program variable *)
     PVar of Cil_types.varinfo ref
         
-  | (* a symbolic address *)
-    SAddr 
+  | (* a symbolic variable (integer or location) *)
+    SVar
         
   | (* a symbolic feature variable 
      * Feat(None,fkind) is a global feature
@@ -93,25 +93,26 @@ type svarinfo = {
 (* {2 Operations} *)
 (* ********************************************************************** *)
 
-let sv_compare_type sv1 sv2 =
-  match sv1.typ, sv2.typ with
-  | SVInt, SVInt | SVAddr, SVAddr | SVChunk, SVChunk | SVWord, SVWord
+let rec sv_compare_type ty1 ty2 =
+  match ty1, ty2 with
+  | SVInt, SVInt | SVChunk, SVChunk | SVWord, SVWord
   | SVOth, SVOth  -> 0
+  | SVPtr t1, SVPtr t2 -> sv_compare_type t1 t2
   | SVInt, _ -> -1
-  | SVAddr, SVInt -> 1
-  | SVAddr, _ -> -1
-  | SVChunk, SVInt | SVChunk, SVAddr -> 1
+  | SVPtr _, SVInt -> 1
+  | SVPtr _, _ -> -1
+  | SVChunk, SVInt | SVChunk, SVPtr _ -> 1
   | SVChunk, _ -> -1
-  | SVWord, SVInt | SVWord, SVAddr | SVWord, SVChunk -> 1
+  | SVWord, SVInt | SVWord, SVPtr _ | SVWord, SVChunk -> 1
   | SVWord, _ -> -1
   | SVOth, _ -> 1
 
 let sv_compare sv1 sv2 =
-  (* let cmp_typ = sv_compare_type sv1 sv2 in
+  (* let cmp_typ = sv_compare_type sv1.typ sv2.typ in
   if cmp_typ != 0 then cmp_typ
      else *)
   match sv1.kind, sv2.kind with
-  (* order used Null < Hole < Hli < Hsta < Pvar < Loc < (SAddr < Feature) < Word *)
+  (* order used Null < Hole < Hli < Hsta < Pvar < Loc < (SVar < Feature) < Word *)
   | Null, Null -> 0
   | Null, _ -> -1
   | _, Null -> 1
@@ -141,11 +142,11 @@ let sv_compare sv1 sv2 =
   | Loc _, _ -> -1
   | _, Loc _ -> 1
 
-  | SAddr, SAddr -> sv1.id - sv2.id 
-  | SAddr, _ -> -1
-  | _, SAddr -> 1
+  | SVar, SVar -> sv1.id - sv2.id 
+  | SVar, _ -> -1
+  | _, SVar -> 1
 
-  (* push words before featurs because they are associatd with SAddr *)
+  (* push words before features because they are associated with SVar *)
   | Word svid1, Word svid2 -> svid1 - svid2
   | Word _, _ -> -1
   | _, Word _ -> 1
@@ -164,7 +165,28 @@ let sv_compare sv1 sv2 =
           (Mman_dabs.featurekind2int fk1)
           (Mman_dabs.featurekind2int fk2)
  
+let sv_equal sv1 sv2 =
+  if sv1.typ <> sv2.typ then false
+  else
+    match sv1.kind, sv2.kind with
+    | Null, Null | Hole, Hole | Hli, Hli | Hst, Hst -> true
+    | PVar vi1, PVar vi2 ->
+        Cil_datatype.Varinfo.equal !vi1 !vi2
+    | Loc svi1, Loc svi2 ->
+        svi1 = svi2
+    | SVar, SVar ->
+        let cmp = sv1.id - sv2.id in
+        cmp = 0
+        
+    | Word svi1, Word svi2 ->
+        svi1 = svi2
 
+    | Feature(None, fk1), Feature(None, fk2) -> fk1 = fk2
+
+    | Feature(Some(svi1),fk1), Feature(Some(svi2),fk2) ->
+        (svi1 = svi2) && (fk1 = fk2)
+
+    | _, _ -> false
 
 
 let sv_getref sv =
@@ -190,18 +212,18 @@ let sv_tostring (sv:svarinfo) =
   | Hst -> sv_hst_name
 
   | PVar vi ->
-      if (!vi).vformal then "f"^(string_of_int (!vi).vid)^"_"
-       else (!vi).vname
+      (if (!vi).vformal then "f"^(string_of_int (!vi).vid)^"_"
+       else "")^(!vi).vname
                   
-  | SAddr ->
-      "__a"^(string_of_int sv.id)
+  | SVar ->
+      "__s"^(string_of_int sv.id)
             
   | Feature(None, fk) ->
       "__"^(Mman_dabs.get_fname fk)
 
   | Feature(Some(vid), fk) ->
       let fname = (Mman_dabs.get_fname fk) in
-      "c"^(string_of_int vid)^""^fname (* TODO: change in better way *)
+      "c"^(string_of_int vid)^"__"^fname (* TODO: change in better way *)
       
   | Loc vid ->
       "__l"^(string_of_int vid)
@@ -209,101 +231,16 @@ let sv_tostring (sv:svarinfo) =
   | Word vid ->
       "__w"^(string_of_int vid)
       
-
-
-
-
 let sv_print fmt sv =
   let str = sv_tostring sv in
   Format.fprintf fmt "(%d)%s" sv.id str
-
-
-
-let sv_equal sv1 sv2 =
- 
-   
-  if sv1.typ <> sv2.typ 
-  then 
-    match sv1.kind, sv2.kind with
-         | Hli, Hli -> true 
-
-         | Hli , PVar vi  ->  
-            if ( (!vi).vname == "__hli") then true  
-            else  false
-
-         | PVar vi , Hli ->  
-            if ( (!vi).vname == "__hli") then true  
-            else  false
-         
-         | _, _ -> false 
-  else
-    match sv1.kind, sv2.kind with
-    | Hli, Hli | Null, Null | Hole, Hole | Hst, Hst -> 
-        (*let _ =  Mman_options.Self.debug ~level:1 "SVAR:sv_equal null,null| hli,hli| ... @."  
-            in *)
-        true
-
-    | PVar vi1, PVar vi2 ->
-        
-        (*let _ =  Mman_options.Self.debug ~level:1 "SVAR:sv_equal Pvar... @."  
-            in*)
-            if ( String.compare (!vi1).vname  "__hli" == 0 ) && 
-               ( String.compare (!vi2).vname  "__hli" == 0 )
-            then 
-                    
-                    true 
-            else 
-              Cil_datatype.Varinfo.equal !vi1 !vi2
-           
-
-    | Loc svi1, Loc svi2 ->
-         
-        svi1 = svi2
-    
-    | SAddr, SAddr ->
-         
-        let cmp = sv1.id - sv2.id in
-        cmp = 0
-        
-    | Word svi1, Word svi2 ->
-         
-        svi1 = svi2
-
-    | Feature(None, fk1), Feature(None, fk2) -> 
-        (*let _ =  Mman_options.Self.debug ~level:1 "SVAR:sv_equal Feature... @."  
-            in*)
-        fk1 = fk2
-
-    | Feature(Some(svi1),fk1), Feature(Some(svi2),fk2) ->
-        (svi1 = svi2) && (fk1 = fk2)
-
-    | Hli , PVar vi  ->  
-            
-           if ( String.compare (!vi).vname "__hli" ==0 ) 
-           then true  
-           else  false
-
-
-    | PVar vi , Hli ->  
-           if ( String.compare (!vi).vname  "__hli" == 0) then 
-           true  
-           else  false
-
-    | _ , _ -> 
-             
-          false 
-
-
-
-
-
  
 let svid_null = 0
 
 let sv_mk_null =
   { id = svid_null;
     kind = Null;
-    typ = SVAddr
+    typ = SVPtr(SVInt)
   }
 
 let svid_hole = 1
@@ -314,19 +251,12 @@ let sv_mk_hole =
     typ = SVOth
   }
 
-
-let sv_mk_feat =
-  { id = svid_hole;
-    kind = Hole;
-    typ = SVOth
-  }
-
 let svid_hli = 2
 
 let sv_mk_hli =
   { id = svid_hli;
     kind = Hli;
-    typ = SVAddr
+    typ = SVPtr(SVInt)
   }
 
 let svid_hst = 3
@@ -334,7 +264,7 @@ let svid_hst = 3
 let sv_mk_hst =
   { id = svid_hst;
     kind = Hst;
-    typ = SVAddr
+    typ = SVPtr(SVChunk)
   }
 
 module Svar = struct
@@ -369,9 +299,14 @@ let svtype vinfo =
       !(Mman_dabs.dabs).cty vinfo.Cil_types.vtype in
   match vinfo.vtype with
   | TInt _ -> SVInt
-  | TPtr _ -> (if isChunk then SVChunk else SVAddr)
+  | TPtr _ -> (if Mman_dabs.is_chunk_ptr vinfo.Cil_types.vtype
+                then SVPtr(SVChunk)
+                else SVPtr(SVInt))
+  | TComp _ -> (if Mman_dabs.is_chunk_struct vinfo.Cil_types.vtype
+                 then SVChunk
+                 else SVOth)
   | _ -> SVOth
-    
+     
 (**
  * Create a new symbolic variable of identifier svid for
  * the program variable vinfo. 
@@ -387,16 +322,16 @@ let sv_mk_var ?(svid=0) vinfo =
     typ = (svtype vinfo)
   }
 
-let sv_mk_saddr ?(svid=0) aty =
+let sv_mk_svar ?(svid=0) aty =
   { id = svid;
-    kind = SAddr;
+    kind = SVar;
     typ = aty
   }
   
-let sv_mk_loc ?(svid=0) vid =
+let sv_mk_loc ?(svid=0) vid ty =
   { id = svid;
     kind = Loc(vid);
-    typ = SVAddr (* TODO: depends of the type of vinfo *)
+    typ = SVPtr ty 
   }
   
 let sv_mk_feat ?(svid=0) optvid fk =
@@ -422,6 +357,22 @@ let sv_mk_gghost () =
    (svid_hli, sv_mk_hli);
    (svid_hst, sv_mk_hst)]
 
+ let sv_add_feat svid start_id =
+   let lid = ref start_id in
+   let svl = ref [] in
+   begin
+     List.iter (fun fk ->
+         begin
+           (Mman_options.Self.debug ~level:2 "Add feature '%s' for 'id:%d'@."
+              (get_fname fk) svid);
+           lid := !lid + 1;
+           svl := !svl @ [(!lid, sv_mk_feat ~svid:(!lid) (Some(svid)) fk)]
+         end)        
+       (get_chunk_features ());
+     !lid, !svl
+   end
+   
+
 let sv_add_pvar vinfo svid =
   let lid = ref svid in (* next index used *)
   let svl = ref [] in (* list of variables *)
@@ -436,10 +387,20 @@ let sv_add_pvar vinfo svid =
       (if vinfo.vaddrof then
          begin
            lid := !lid + 1;
-           svl := !svl @  [(!lid, sv_mk_loc ~svid:(!lid) svid)]
-         end
-      );
-      (Mman_options.Self.debug ~level:1
+           svl := !svl @ [(!lid, sv_mk_loc ~svid:(!lid) svid (svtype vinfo))]
+          end
+       );
+       (* if type of variable is chunk, add features *)
+       (if is_chunk_struct vinfo.Cil_types.vtype then
+          let lidf, svfl = sv_add_feat svid !lid in
+          begin
+            lid := lidf;
+            svl := !svl @ svfl
+          end
+       );
+
+      (* TODO: if chunk variable, add features *)
+      (Mman_options.Self.debug ~level:2
          "Add '%a' of type %a (aka %a)@."
          Printer.pp_varinfo vinfo
          Printer.pp_typ vinfo.vtype
@@ -455,5 +416,5 @@ let sv_add_pvar vinfo svid =
 
 let isPtrType (t: svtyp) =
   match t with
-  | SVAddr | SVChunk -> true
+  | SVPtr _ -> true
   | _ -> false

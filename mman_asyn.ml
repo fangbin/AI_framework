@@ -58,6 +58,7 @@ and abinop =
   | ADiv
   | AMod
     
+
 (** Abstract boolean expressions = constraints *)
 type aconstr =
   | ATrue | AFalse
@@ -70,6 +71,7 @@ and acmpop =
   | ADISEQ
   | AEQMOD of int
       
+
 (************************************************************************ *)
 (** {1 Basic operations } *)
 (************************************************************************ *)
@@ -93,9 +95,7 @@ let copy_aexp ae = ae
 let rec pp_aexp fmt ae =
   match ae with
   | ACst i -> Format.fprintf fmt "%d" (Integer.to_int i)
-  
   | ALval lv -> pp_alval fmt lv
-  
   | AUnOp(op, ae') ->
       (match op with
        | ANeg -> Format.fprintf fmt "- %a" pp_aexp ae'
@@ -214,7 +214,7 @@ module CtxAexp = struct
         let internal_pretty_code _ fmt ce = pretty fmt ce
         let mem_project = Datatype.never_any_project
       end)
-  end
+end
 
 (**
  * Module and global var for memoization of transformations from
@@ -400,7 +400,7 @@ let transform_castE ae alg_cast alg_exp =
  * The returned variable is the variable used for the feature.
 *)
 let transform_feature2exp
-  (vi:Cil_types.varinfo) (fi:Cil_types.fieldinfo) (feat:int)
+    (vi:Cil_types.varinfo) (fi:Cil_types.fieldinfo) (feat:int)
   : alval * aexp =
   let fk = (Mman_dabs.int2featurekind feat) in
   let lvar, fterm = Mman_dabs.get_feature_term
@@ -581,14 +581,13 @@ let rec replace_hole ae aer =
  * Memorize results in finfo2apron.
 *)
 let transform_field2exp
-  (vi:Cil_types.varinfo)
-  (fi:Cil_types.fieldinfo)
+    (vi:Cil_types.varinfo)
+    (fi:Cil_types.fieldinfo)
   : alval * aexp
   =
   try
     let lvo,e = Cil_datatype.Fieldinfo.Map.find fi (!finfo2aexp) in
-    (
-     match lvo with
+    (match lvo with
      | None -> raise (Error "Feature variable not memorized")
      | Some(lv) ->
          (* replace in e all occurrences of the base of lv by vi *)
@@ -749,10 +748,19 @@ let transform_lval2var_syn (lv:Cil_types.lval)
       in
       AVar(vi),
       ALval(AVar(hvi))
+        
   | Var(vi), Cil_types.Field(fi,Cil_types.NoOffset) ->
-        (* vi.fi *)
+      if Mman_options.OptSynAbstraction.get() then
+        (* vi.fi is replaced by the hole in the definition of the feature *)
         transform_fdef2exp vi fi
-
+      else
+        let hvi = Cil.makeGlobalVar ~source:false ~temp:true
+            Mman_svar.sv_hole_name
+            fi.ftype
+        in
+        AFld(AVar(vi), fi),
+        ALval(AVar(hvi)) (* TODO: clarify difference between var ptr and var struct *)
+          
   | Mem(e'), Cil_types.Field(fi,Cil_types.NoOffset) ->
       (match e'.enode with
        | Lval(Var(vi),Cil_types.NoOffset) ->
@@ -776,8 +784,7 @@ let transform_lval2var_syn (lv:Cil_types.lval)
  * Transform Cil left value into
  * an abstract expression using feature variables.
 *)
-let transform_lval2exp (vi:Cil_types.varinfo) (off:Cil_types.offset) 
-  =
+let transform_lval2exp (vi:Cil_types.varinfo) (off:Cil_types.offset) =
   match off with
   | Cil_types.NoOffset ->
       (* simple variable *)
@@ -808,16 +815,13 @@ let transform_lval2exp (vi:Cil_types.varinfo) (off:Cil_types.offset)
  * Transform Cil expressions into contexts SYNTACTICALLY
  * Memoize results in exp2aexp
 *)
-let rec transform_exp_aux (exp: Cil_types.exp) 
-  : aexp
-  =
+let rec transform_exp_aux
+    (exp: Cil_types.exp) =
   try
     Mman_options.Self.debug ~level:2 "transform expression: %a@."
       Printer.pp_exp exp;
-    Mman_options.Self.feedback "Exp:%a@." 
-      Cil_datatype.Exp.pretty exp;
     let _, ae = Cil_datatype.Exp.Map.find exp (!exp2aexp) in
-    ae; 
+    ae
   with Not_found ->
     let ae =
       match exp.enode with
@@ -989,7 +993,6 @@ let rec transform_exp_aux (exp: Cil_types.exp)
                      LAnd, LOr *)
                raise (Not_dealt "Binary expression")
           )
-     
       | CastE(ty,e1) ->
           let ae1 = transform_exp_aux e1 in
           let algty = Cil.bytesAlignOf ty in
@@ -998,28 +1001,10 @@ let rec transform_exp_aux (exp: Cil_types.exp)
                        else algty) in
           transform_castE ae1 algty alge1
 
-      | AddrOf(lv) ->
-          let al, _ae = transform_lval2var_syn lv in 
-          AAddrOf(al) 
-      
-      | StartOf(lv) -> (* TODO:to check *)
-          let al, _ae = transform_lval2var_syn lv in 
-          AAddrOf(al)    
-
-      | SizeOfE _ -> 
-          raise (Not_dealt "Expression: SizeOfE") 
-
-      | Info _ ->
-          raise (Not_dealt "Expression: Info") 
-
-      | AlignOfE _ ->
-          raise (Not_dealt "Expression: AlignOfE")
-
-      | SizeOfStr _ ->
-          raise (Not_dealt "Expression: SizeOfStr")
-
-
-
+      | _ -> (* SizeOfE _, SizeOfString _, AlignOfE _,
+                AddrOf _, StartOf _, Info _ 
+             *)
+          raise (Not_dealt "Expression")
     in
     begin
       exp2aexp := Cil_datatype.Exp.Map.add exp (None,ae) !exp2aexp;
@@ -1050,7 +1035,7 @@ let transform_assign (lv: Cil_types.lval) (exp: Cil_types.exp)
   in
   let ae2 = transform_exp_aux exp in
   let ae = replace_hole (* in *) ae1  (* by *) ae2 in
-  let _ = (Mman_options.Self.debug ~level:1 "\tASYN: to: %a:=%a@."
+  let _ = (Mman_options.Self.debug ~level:1 "\tto: %a:=%a@."
              pp_alval alv pp_aexp ae)
   in
   [alv], [ae]
@@ -1149,6 +1134,7 @@ let rec coerce_var (vi: Cil_types.varinfo) (vtyp: Cil_types.typ)
   | TPtr(_, _) ->
       let aevar = ALval(AVar(vi)) in
         [(ACmp(ASUPEQ, aevar, ACst(Integer.zero)))]
+        (* TODO: introduce alignment wrt base type *)
 
   | _ -> []
 
@@ -1172,7 +1158,7 @@ and bounds_of_typ ikind =
  * - a pre-condition 
 *)
 let transform_sbrk
-  (lv: Cil_types.lval option) (argl:Cil_types.exp list)
+    (lv: Cil_types.lval option) (argl:Cil_types.exp list)
   : alval list * aexp list * aconstr list
   =
   let ae_sz = match argl with
@@ -1196,18 +1182,18 @@ let transform_sbrk
     | Some(v) ->
         let alv1, ae1 = transform_lval2var_syn v in
         let _ = (Mman_options.Self.debug ~level:1
-                   "ASYN:transform_sbrk: %a:=%a[sbrk(%a)]@."
+                   "transform_sbrk: %a:=%a[sbrk(%a)]@."
                    pp_alval alv1 pp_aexp ae1 pp_aexp ae_sz)
         in
         let ae1f = replace_hole (* in *) ae1 (* by *) aex_hli in
-        let _ = (Mman_options.Self.debug ~level:1 "\tASYN:to: %a:=%a@."
+        let _ = (Mman_options.Self.debug ~level:1 "\tto: %a:=%a@."
                    pp_alval alv1 pp_aexp ae1f)
         in
         [alv1], [ae1f]
     )
   in
   let ae2f = ABinOp(AAdd, aex_hli, ae_sz) in
-  let _ = (Mman_options.Self.debug ~level:1 "\tASYN:to: %a:=%a@."
+  let _ = (Mman_options.Self.debug ~level:1 "\tto: %a:=%a@."
              pp_alval alv_hli pp_aexp ae2f)
   in
   let avl = alv1l@[alv_hli] in
@@ -1226,8 +1212,13 @@ let init_globals ()
   let e1_en = ref [] in
   let c1_cn = ref [] in
   let init_global vi ii =
-    match vi.vstorage, ii.init with
-    | Cil_types.Static, Some(Cil_types.SingleInit(ei)) ->
+    (** see condition for collecting globals in penvs_init_globals@mman_env.ml *)
+    if (vi.vstorage == Cil_types.Static) ||
+       (Mman_dabs.is_chunk_struct vi.Cil_types.vtype) ||
+       (Mman_dabs.is_chunk_ptr vi.Cil_types.vtype)
+    then
+    match ii.init with
+    | Some(Cil_types.SingleInit(ei)) ->
         (* assert: the initialisation expression cannot use contexts *)
         let aei = transform_exp ei in
         let lvi = AVar(vi) in
@@ -1235,8 +1226,34 @@ let init_globals ()
           v1_vn := !v1_vn @ [lvi];
           e1_en := !e1_en @ [aei]
         end
-    | Cil_types.Static, Some(_) -> () (* TODO:deal with struct init *)
-    | Cil_types.Static, None ->
+    | Some(Cil_types.CompoundInit(sty,ls)) ->
+        (* deal with struct init if it is of type chunk *)
+        if Mman_dabs.is_chunk_struct sty
+        then
+          begin
+            (* mark location of vi to be allocated *)
+            (* init_galloc := !init_galloc @ [Mman_asyn.AVar(vi)]; *)
+            (* iterate over fields initialized to obtain initialisation of features *)
+            (List.iter
+               (fun (ofs, fii) ->
+                  match fii with
+                  | Cil_types.SingleInit(ei) ->
+                      begin
+                        match ofs with
+                        | Field(fi,_) ->
+                            let al, _ex = transform_field2exp vi fi in
+                            let aex = transform_exp ei in
+                            v1_vn := !v1_vn @ [al];
+                            e1_en := !e1_en @ [aex];
+                        | _ -> ()
+                      end
+                  | _ -> ()
+               )
+               ls)
+          end
+    (* else, nothing to do *)
+          
+    | None ->
         (* depend on the type *)
         let vty = vi.vtype in
         if (Cil.isUnsignedInteger vty) ||
@@ -1247,7 +1264,6 @@ let init_globals ()
           c1_cn := !c1_cn @ [ACmp(ASUPEQ, ALval(lvi), aexp_zero)]
         else
           ()
-    | _ ->  ()
   in
   (* Iterate over globals *)
   let _ = Globals.Vars.iter_in_file_order init_global  in
@@ -1260,8 +1276,13 @@ let init_globals ()
   let hst_eq_hli = ACmp(AEQ, ABinOp(ASub, ALval(AVar(vi_hli)),
                                     ALval(AVar(vi_hst))), aexp_zero) in 
   let _ = (c1_cn := !c1_cn @ [hli_ge_0; hst_eq_hli]) in
-  !v1_vn, !e1_en, !c1_cn
-
+  begin
+    (Mman_options.Self.debug ~level:1 "Global inits: %a := %a\nmeet %a@."
+       (fun fmt lv -> (List.iter (fun vi -> pp_alval fmt vi) lv)) !v1_vn
+       (fun fmt le -> (List.iter (fun ei -> pp_aexp fmt ei) le)) !e1_en
+       (fun fmt lc -> (List.iter (fun ei -> pp_aconstr fmt ei) lc)) !c1_cn);
+    !v1_vn, !e1_en, !c1_cn
+  end
 
 (************************************************************************ *)
 (** {1 Reduction to a symbolic environment} *)
@@ -1300,38 +1321,26 @@ and to_senv_lval (sei: Mman_env.t) (lv: alval) (isLoc: bool)
   =
   match lv with
   | AVar(vi) ->
-      let _ = Mman_options.Self.debug ~level:1 "ASYN:to_senv_lval ... @." 
-        in
-
-      let svi = Mman_env.penv_getvar sei (Mman_svar.sv_mk_var vi) in
-      
-      let svil = 
-        if isLoc 
-          then
-          let _ = Mman_options.Self.debug ~level:1 "ASYN:is location... @." 
-            in
-          Mman_env.senv_getvar sei (Mman_svar.sv_mk_loc (Mman_svar.Svar.id svi))
+      let svi = Mman_env.senv_getvar sei (Mman_svar.sv_mk_var vi) in
+      let svil = if isLoc then
+          Mman_env.senv_getvar sei
+            (Mman_svar.sv_mk_loc (Mman_svar.Svar.id svi) (Mman_svar.svtype vi))
         else
-          let _ = Mman_options.Self.debug ~level:1 "ASYN:is not location ... @." 
-            in
           svi
       in
-      let _ = Mman_options.Self.debug ~level:1 "ASYN:%a in penv @."
-                            Mman_svar.Svar.pretty svil
-                    in 
       let isptr = Cil.isPointerType vi.vtype in
       ASVar(Mman_svar.Svar.id svil), (if isLoc then true else isptr)
-
 
   | ASVar(svid) ->
       let svi = Mman_env.senv_getvinfo sei svid in
       let svil = if isLoc then
-          Mman_env.senv_getvar sei (Mman_svar.sv_mk_loc (Mman_svar.Svar.id svi))
+          Mman_env.senv_getvar sei
+            (Mman_svar.sv_mk_loc (Mman_svar.Svar.id svi) (svi.Mman_svar.typ))
         else
           svi
       in
       let isptr = (match svi.Mman_svar.typ with
-          | Mman_svar.SVAddr | Mman_svar.SVChunk -> true
+          | Mman_svar.SVPtr _ -> true
           | _ -> false)
       in
       ASVar(Mman_svar.Svar.id svil), (if isLoc then true else isptr)
@@ -1389,10 +1398,10 @@ let split_lval (sei: Mman_env.t) (ae: aexp)
         in
            (Mman_env.senv_getvinfo sei svid), 
            (* Some fk, *) Some svi,
-	   None
+     None
        | AFld(ASVar(svid), fi) ->
            (Mman_env.senv_getvinfo sei svid), 
-	   None, 
+     None, 
            Some fi
        | _ -> raise (Not_dealt "Composed left value")
       )
@@ -1424,31 +1433,13 @@ let rec get_saddr (ae: aexp)
       else
         None
   | ALval(alv) ->
-
       get_saddr_lval alv
 
-  | _ -> 
-      let _ =  Mman_options.Self.debug ~level:1 "ASYN:get_saddr...None@."  
-          in 
-
-      None (* shall be a reduced expression *)
+  | _ -> None (* shall be a reduced expression *)
 
 and get_saddr_lval (lv: alval)
   : Mman_svar.svid option
   =
   match lv with
-  | ASVar(svi) -> 
-           let _ =  Mman_options.Self.debug ~level:1 "ASYN:get_saddr_lval...Some@."  
-          in 
-          Some(svi)
-  | _ ->   
-        let _ =  Mman_options.Self.debug ~level:1 "ASYN:get_saddr_lval...None@."  
-          in  
-          None
-
-
-
-
-
-
-
+  | ASVar(svi) -> Some(svi)
+  | _ -> None

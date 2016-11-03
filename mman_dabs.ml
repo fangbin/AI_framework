@@ -199,6 +199,23 @@ let get_chunk_features () : feature_kind list =
     !rs
   end
   
+
+ let is_chunk_struct (ty: Cil_types.typ) : bool =
+   if !dabs.cty == Cil.voidType
+   then false
+   else (* it is already unrolled *)
+     match !dabs.cty with
+     | TPtr(TComp (_,_,_) as sty,_) ->
+         (Cil_datatype.Typ.equal sty ty)
+     | _ -> false
+     
+ let is_chunk_ptr (ty: Cil_types.typ) : bool =
+   if !dabs.cty == Cil.voidType
+   then false
+   else Cil_datatype.Typ.equal !dabs.cty ty
+ 
+ 
+
 (* ********************************************************************** *)
 (** {2 Mapping of fields to features} *)
 (* ********************************************************************** *)
@@ -507,19 +524,20 @@ let read_da_list_fld (kind:feature_kind) (lf:logic_info) =
     Mman_options.Self.feedback "feature '%s': ok@." fname
   end
   
-(** Read the annotation for feature {cdat} and
+(** Read the annotation for feature {cdt} and
  *  set {dabs}, if correct
 *)
+(** TODO: change to have a constant *)
 let read_da_cdat (lf:logic_info) =
   (* Name already checked *)
   let cdt = match lf.l_body with
     | LBterm t ->
         if (Logic_utils.constFoldTermToInt t) != None
         then
-          Mman_options.Self.fatal "feature 'cdat': definition can not be constant@."
+          Mman_options.Self.fatal "feature 'cdt': definition can not be constant@."
         else
           t
-    | _ -> Mman_options.Self.fatal "feature 'cdat': definition not a term@."
+    | _ -> Mman_options.Self.fatal "feature 'cdt': definition not a term@."
   in
   (* Typecheck to : cty -> void* *)
   if (not(is_fun_cty "cdat" lf)) ||

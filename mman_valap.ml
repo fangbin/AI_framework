@@ -118,19 +118,13 @@ let env_map = ref EnvAPMap.empty
 let env2apron (eid: Mman_env.t) 
   : Apron.Environment.t 
   =
-    let _ = Mman_options.Self.debug ~level:2
+    (*let _ = Mman_options.Self.debug ~level:2
           "DW:env2apron "
-        in 
+        in *)
     try
       let apei = EnvAPMap.find eid !env_map in
-       let _ = Mman_options.Self.debug ~level:2
-                "DW:env2apron found..."
-            in 
       Vector.get apronenvs apei
     with Not_found ->    
-      let _ = Mman_options.Self.debug ~level:2
-                "DW:env2apron Not_found!!!"
-            in 
       let svl = 
             if eid != -1 
             then (env_vars eid) 
@@ -206,8 +200,9 @@ let to_var (sei: Mman_env.t) (lv: Mman_asyn.alval)
   | Mman_asyn.AMem(vi) ->
       let svi = env_getvar sei (Mman_svar.sv_mk_var vi) in
       let lsvi = env_getvar sei (Mman_svar.sv_mk_loc
-                                             (Mman_svar.Svar.id svi)) in
+                                   (Mman_svar.Svar.id svi) (Mman_svar.svtype vi)) in
       Apron.Var.of_string (Mman_svar.sv_tostring lsvi)
+
 
   | Mman_asyn.AFeat(fk, Mman_asyn.AVar(vi)) -> 
       
@@ -278,7 +273,7 @@ let rec to_texpr (sei: Mman_env.t) (ae: Mman_asyn.aexp)
       | Mman_asyn.AVar(vi) ->
           let svi = env_getvar sei (Mman_svar.sv_mk_var vi) in
           let lsvi = env_getvar sei (Mman_svar.sv_mk_loc
-                                                 (Mman_svar.Svar.id svi)) in
+                                       (Mman_svar.Svar.id svi) (Mman_svar.svtype vi)) in
           Apron.Texpr1.var apenv
             (Apron.Var.of_string (Mman_svar.sv_tostring lsvi))
 
@@ -355,14 +350,10 @@ module Model = struct
   (* Polka.strict PolkaGrid.t Apron.Abstract1.t *)
       
   let to_apron v =
-    let _ = Mman_options.Self.debug ~level:2 "DW:to_apron..."
-          in
     Polka.Abstract1.of_polka_strict v 
   (* PolkaGrid.Abstract1.of_polkagrid v *)
       
   let of_apron v =
-    let _ = Mman_options.Self.debug ~level:2 "DW:of_apron..."
-          in
     Polka.Abstract1.to_polka_strict v
       
   type value = {
@@ -512,11 +503,22 @@ module Model = struct
     
   (* from With_Intersects *)
   let intersects (d0: t) (d1: t) = 
-    { eid=d0.eid;
-      vap=of_apron (Apron.Abstract1.meet man_apron
-                      (to_apron d0.vap) (to_apron d1.vap));
-    }
-    
+    let _ = Mman_options.Self.debug ~level:2 "DW:intersects..."
+          in
+    let m = Apron.Abstract1.meet man_apron
+                      (to_apron d0.vap) (to_apron d1.vap) 
+                    in                    
+    let v =  
+      { eid=d0.eid;
+        vap=of_apron (m);
+      }
+    in 
+    let _ = Mman_options.Self.debug ~level:2 "DW:after meet:\n %a"
+          (pretty_code_intern Type.Basic) v
+    in 
+    v 
+
+
   (** Additional methods from Apron.Abstract1 interface *)
   let size (d: t) = 
     env_size d.eid
@@ -617,7 +619,7 @@ module Model = struct
     (* TODO: assert (env2apron sei) = Apron.Abstract1.env (to_apron d.vap) *)
     
 
-    let _ = Mman_options.Self.debug ~level:1 "DW:meet_exp....(sei:%d)@."
+    let _ = Mman_options.Self.debug ~level:1 "DW: meet_exp....(sei:%d)@."
               sei 
           in
     let apenv = Apron.Abstract1.env (to_apron d.vap) in
@@ -651,9 +653,9 @@ module Model = struct
   let do_init (d: t) (llv: Mman_asyn.alval list) (lexp: Mman_asyn.aexp list) (v1_vn:Mman_asyn.alval list)
     :Mman_env.t
     = 
-
+      env d 
     (* initilize struct variables and their fields *)
-    begin 
+    (* begin 
           let nsvars = ref [] in 
           let pnsvars = ref [] in 
             
@@ -661,8 +663,8 @@ module Model = struct
           let le = List.length llv in 
 
             (* initialize the symbolic environment *)
-          let seid = Mman_env.senvs_init eid in 
-          
+          (*let seid = Mman_env.penvs_init eid in *)
+          let seid = eid in 
           let _ = (Mman_options.Self.debug ~level:1 "DW:do_init penv_%d: %a @."
                   eid Mman_env.penv_print (Mman_env.penv_get eid)) 
           in
@@ -789,7 +791,7 @@ module Model = struct
 
   
     end  
-    
+    *)
 
 
 
@@ -804,7 +806,7 @@ module Model = struct
      let _ = 
         List.iter2 
         ( fun lv le ->
-             Mman_options.Self.debug ~level:1 "DW:do_assigns: %a:=%a@."
+             Mman_options.Self.debug ~level:1 "DW:do_assign: %a:=%a@."
                    Mman_asyn.pp_alval (lv) Mman_asyn.pp_aexp (le)
                 
         )
@@ -828,7 +830,7 @@ module Model = struct
     in
     let ape1_apen = List.map (fun ei -> to_texpr eid ei) lexp 
     in
-
+(*
     let _ = 
         List.iter2
           (
@@ -840,7 +842,7 @@ module Model = struct
           ape1_apen
     in 
     let _ = Mman_options.Self.debug ~level:1 "DW:of_apron...@." in 
-
+*)
     let at = (Apron.Abstract1.assign_texpr_array 
                 man_apron
                 (to_apron d.vap)
@@ -853,7 +855,10 @@ module Model = struct
     in
 
     begin
-      (Mman_options.Self.debug ~level:1 "DW:to value %a@." Apron.Abstract1.print res);
+       Mman_options.Self.debug ~level:1 "DW: after do_assign \n %a@."
+                  (pretty_code_intern Type.Basic) ({eid=d.eid; vap=res});
+      (*(Mman_options.Self.debug ~level:1 "DW:to value %a@." 
+          Apron.Abstract1.print res);*)
       {eid=d.eid; vap=res}
     end
     
@@ -897,8 +902,8 @@ module Model = struct
                  "DW:change_env...@."
         in 
     let _ = Mman_options.Self.debug ~level:2
-                 "DW: eiold:%d, einew: %d@."
-                 eiold einew 
+                 "DW:eid:%d, eiold:%d, einew: %d@."
+                 d.eid eiold einew 
        in 
     if eiold == einew
     then
@@ -909,14 +914,17 @@ module Model = struct
                  d.eid eiold;
                (*assert (d.eid == eiold)) *)in
       let ap_einew = env2apron einew in
-      { eid = einew;
-        vap = of_apron (
-                          Apron.Abstract1.change_environment 
+      let newenv = Apron.Abstract1.change_environment 
                             man_apron
                             (to_apron d.vap)
                             ap_einew 
-                            false
-                        )
+                            false 
+                          in 
+      let _ = Mman_options.Self.debug ~level:2
+                 "DW: emvironment changed" 
+       in                    
+      { eid = einew;
+        vap = of_apron ( newenv )
         }
   
 
@@ -1009,6 +1017,8 @@ let init_globals (eid: Mman_env.t)
       then !global_state
       else
       (* Do assign *)
+      
+      (*
       let _ = Mman_options.Self.feedback "DW: do_init@." in
       
       let _ = (Mman_options.Self.debug ~level:1 "DW: penv: %a @."
@@ -1021,8 +1031,9 @@ let init_globals (eid: Mman_env.t)
       let _ = Mman_options.Self.feedback "DW:  peid : %d@." 
              peid 
         in
+      *)
 
-      let vinit = Model.do_assign (Model.top_of peid) (v1_vn) (e1_en) in
+      let vinit = Model.do_assign (Model.top_of eid) (v1_vn) (e1_en) in
       let _ = Mman_options.Self.feedback "DW: do assign done @." in
       let _ = Mman_options.Self.feedback "DW: do meet exp@." in
       let _ = 
@@ -1032,7 +1043,7 @@ let init_globals (eid: Mman_env.t)
               Mman_asyn.pp_aconstr (List.hd c1_cn)
           ) c1_cn 
           in  
-      let v = Model.meet_exp peid vinit c1_cn in
+      let v = Model.meet_exp eid vinit c1_cn in
       begin
         let _ = ( Mman_options.Self.debug ~level:1 "DW: after meep \n %a@."
                   (Model.pretty_code_intern Type.Basic) v)

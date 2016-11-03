@@ -21,7 +21,7 @@
 (**************************************************************************)
 
 (** This module includes utilities for the program environment.
-  A program environement is the set of isymbolic locations in 
+  A program environement is the set of symbolic locations in 
   the program stack and heap. 
   Recall that a program variable is a label for a location in the
   program stack (including the base frame for global variables).
@@ -29,7 +29,6 @@
 
 open Cil_types
 open Mman_svar
-(** Symbolic variables represent locations in the program memory *)
 
 (* ********************************************************************** *)
 (* {1 Types} *)
@@ -118,10 +117,9 @@ let pp_vidmap fmt (m: vidmap) =
     Format.fprintf fmt "\n{";
     VidMap.iter
       (fun i svi -> 
-           Format.fprintf fmt " %d> %a%s"
-             i
+           Format.fprintf fmt "\t%a%s"
              Mman_svar.Svar.pretty svi
-             (if i mod 10 = 9 then ";\n" else ";")
+             (if i mod 5 = 4 then ";\n" else ";")
       )
       m;
     Format.fprintf fmt "}"
@@ -140,10 +138,9 @@ let equal_vidmap m1 m2 =
  * Get the max key 
 *)
 let max_key_vidmap (m: vidmap) =
-  if (VidMap.is_empty m) 
-  then 0 
-  else 
-  fst (VidMap.max_binding m)
+  if (VidMap.is_empty m)
+  then 0
+  else fst (VidMap.max_binding m)
     
 (**
  * Copy a map
@@ -151,10 +148,9 @@ let max_key_vidmap (m: vidmap) =
 let copy_vidmap (m: vidmap)
   : vidmap
   =
-  if (VidMap.is_empty m) then 
-  m 
-  else 
-  fst (VidMap.partition (fun _ _ -> true) m)
+  if (VidMap.is_empty m)
+  then m
+  else fst (VidMap.partition (fun _ _ -> true) m)
     
 (**
  * Searches the value in the codomain of m
@@ -162,35 +158,9 @@ let copy_vidmap (m: vidmap)
 let comem_vidmap (m: vidmap) (sv: Mman_svar.Svar.t)
   : Mman_svar.Svar.t
   =
-       (*begin
-         let res = ref [] in 
-          VidMap.iter 
-          (
-                fun _i sv'->
-                if (Mman_svar.Svar.equal sv sv') 
-                then res := !res @ [(sv')] 
-          )
-          m 
-          ;
-          
-          if (List.length !res ==0 ) 
-          then res := !res @[(Mman_svar.sv_mk_hole)]  
-           ;
-          (List.hd !res)  
-       end*)
-
-
   let svmap =
-    VidMap.filter 
-    (
-        fun _i sv' -> 
-            (*let _ = Mman_options.Self.debug ~level:1 "ENV:comem_vidmap %a ... %a@." 
-                  Mman_svar.Svar.pretty (sv')  Mman_svar.Svar.pretty (sv) 
-                  in *)
-            Mman_svar.Svar.equal sv sv' 
-    ) 
-    m
-  in 
+    VidMap.filter (fun _i sv' -> Mman_svar.Svar.equal sv sv') m
+  in
   if VidMap.is_empty svmap then
     raise Not_found
   else let svlist = VidMap.bindings svmap in
@@ -198,11 +168,7 @@ let comem_vidmap (m: vidmap) (sv: Mman_svar.Svar.t)
       if List.length svlist > 1 then
         (Mman_options.Self.debug ~level:1 "Internal invariant on vidmap broken")
     in
-    
     snd (List.hd svlist)
-
-
-
 
 (**
  * Builds a map from the list of pairs.
@@ -227,7 +193,7 @@ let penv_equal e1 e2 =
   equal_vidmap e1.pvars e2.pvars
   
 let penv_print fmt (e: penvinfo) =
-  Format.fprintf fmt "penv_%d = (%d,@.[%d]%a)"
+  Format.fprintf fmt "penv_%d = (%d,[%d] %a )"
     e.pe_id
     e.pe_ucnt
     (VidMap.cardinal e.pvars)
@@ -324,18 +290,10 @@ let penv_size (eid: int)
 let penv_getvar (eid: int) (sv: Mman_svar.Svar.t)
   : Mman_svar.Svar.t
   =
-  let e = penv_get eid in
   try
-    
-
-   (*) let _ = (Mman_options.Self.debug ~level:1 "ENV:find sv %a in \n penv: %a @."
-                   Mman_svar.Svar.pretty sv  penv_print (e) ) 
-          in
-     *)
+    let e = penv_get eid in
     comem_vidmap e.pvars sv
-  with Not_found -> 
- 
-      Mman_svar.sv_mk_hole
+  with Not_found -> Mman_svar.sv_mk_hole
 
 (**
  * Find the variable information with index svid
@@ -348,6 +306,7 @@ let penv_getvinfo (eid: int) (svid: int)
     VidMap.find svid e.pvars
   with Not_found -> Mman_svar.sv_mk_hole
                       
+
 let penv_getvtyp ei svid =
   let svi = penv_getvinfo ei svid in
   
@@ -355,6 +314,34 @@ let penv_getvtyp ei svid =
           Mman_svar.Svar.pretty svi
         in *)
   svi.Mman_svar.typ
+
+
+
+(* get the features of a chunk *)
+let penv_get_feats svid eid 
+:(Mman_dabs.feature_kind * Mman_svar.Svar.t) list 
+= 
+let featl = ref [] in 
+let e = penv_get eid in 
+begin
+  VidMap.iter
+      (fun i svi -> 
+           match svi.Mman_svar.kind with
+              | Feature(Some(optvid), fk) -> 
+                    if optvid == svid then 
+                      let _ = Mman_options.Self.debug ~level:2 "ENV:its feature (%d,%s)@."
+                              optvid (Mman_dabs.get_fname fk) 
+                      in
+                      featl := !featl @[(fk,svi)] 
+              |_->()
+      )
+    e.pvars
+    ;
+    !featl 
+end
+
+
+
 
 (* ********************************************************************** *)
 (* {4 Operations on global environments } *)
@@ -375,8 +362,6 @@ let penv_find pe =
     else
       !ri
   end
-
-
 
 (**
  * Add the environment @p e and return its unique identifier 
@@ -416,7 +401,7 @@ let penv_copy ei =
 let penv_unify ei ej
   : int * int array * int array
   =
-  let _ = (Mman_options.Self.feedback "ENV:unify penvs %d, %d@." ei ej) in
+  let _ = (Mman_options.Self.feedback "Unify penvs %d, %d@." ei ej) in
   let mapi = ref (Array.init (penv_size ei) (fun i -> i)) in
   let mapj = ref (Array.init (penv_size ej) (fun i -> i)) in
   if ei == ej then
@@ -477,8 +462,8 @@ let penv_unify ei ej
         ssv2;
       let npe = { pe_id = (-1); pe_ucnt = 0; pvars = !ssv } in
       let npeid = penv_add npe in
-      let _ = (Mman_options.Self.debug ~level:1 "ENV:unified \n %a@."
-                 penv_print (penv_get npeid)) in
+      (*let _ = (Mman_options.Self.debug ~level:2 "unified %a@."
+                 penv_print (penv_get npeid)) in*)
       npeid, !mapi, !mapj
     end
     
@@ -496,8 +481,7 @@ let penv_size ei =
 *)
 let pretty_penvs fmt i =
   Vector.iteri (fun j e ->
-      Format.fprintf fmt "(%d) pe_%d -> %a@."
-        i j
+      Format.fprintf fmt "%a@."
         PEnv.pretty e)
     penvs
 
@@ -525,7 +509,7 @@ let pretty_stmt2penv fmt i =
 
 (**
  * Initialise the program environments with the program variables 
- * for each statement
+ * for each statement 
 *)
 let penvs_init_globals () =
   if Vector.size penvs >= 1 then
@@ -537,17 +521,11 @@ let penvs_init_globals () =
   begin
     Vector.clear penvs;
     Globals.Vars.iter_in_file_order
-      (fun vinfo _ -> 
-          let isChunk =
-              Cil_datatype.Typ.equal
-              !(Mman_dabs.dabs).cty vinfo.Cil_types.vtype in
-          
-          if (vinfo.vstorage == Cil_types.Static)  ||
-             ((vinfo.vstorage != Cil_types.Static) && (isChunk)) 
-
-          then
-
-
+      (fun vinfo _ ->
+         if (vinfo.vstorage == Cil_types.Static) ||
+            (Mman_dabs.is_chunk_struct vinfo.Cil_types.vtype) ||
+            (Mman_dabs.is_chunk_ptr vinfo.Cil_types.vtype)
+         then
           (* adds vinfo program variable and 
            * its location on stack, if used in the program *)
           let lastid, svl = sv_add_pvar vinfo !svid in
@@ -579,43 +557,25 @@ let rec penvs_init_gfun () =
 
 and penvs_init_from_kfun kf =
   (* copy the global vars *)
-  let _ = Mman_options.Self.debug ~level:1 "Initialize penv for '%a'@."
+  let _ = Mman_options.Self.debug ~level:2 "Initialize penv for '%a'@."
       Kernel_function.pretty kf in
   let lvars = ref (copy_vidmap (Vector.get penvs 0).pvars) in
   let svid = ref (1 + (max_key_vidmap (Vector.get penvs 0).pvars)) in
- 
-
   (* copy the formals, if any *)
-  let _ = List.iter 
-      (
-        fun vi ->
-        let idn, lv = sv_add_pvar vi !svid in
-          begin
-            svid := idn + 1; (* normally increments svid, no address taken on formals *)
-            List.iter 
-              (
-                fun (id, svi) -> 
-                    lvars := VidMap.add id svi !lvars
-              )
-              lv
-      end
-      ) 
-      (Kernel_function.get_formals kf)
+  let _ = List.iter (fun vi ->
+      let idn, lv = sv_add_pvar vi !svid in
+      begin
+        svid := idn + 1; (* normally increments svid, no address taken on formals *)
+        List.iter (fun (id, svi) -> lvars := VidMap.add id svi !lvars) lv
+      end) (Kernel_function.get_formals kf)
   in
   (* copy the locals (including the return __retres) *)
-  let _ = List.iter 
-      (
-        fun vi ->
-          let idn, lv = sv_add_pvar vi !svid in
-            begin
-              svid := idn + 1; (* address may be taken on locals *)
-              List.iter 
-                (
-                  fun (id, svi) -> 
-                      lvars := VidMap.add id svi !lvars
-                ) lv
-            end
-      ) (Kernel_function.get_locals kf)
+  let _ = List.iter (fun vi ->
+      let idn, lv = sv_add_pvar vi !svid in
+      begin
+        svid := idn + 1; (* address may be taken on locals *)
+        List.iter (fun (id, svi) -> lvars := VidMap.add id svi !lvars) lv
+      end) (Kernel_function.get_locals kf)
   in
   (* build the environment of this function *)
   let kfenv = { pe_id = peid_new ();
@@ -636,57 +596,6 @@ and penvs_init_from_kfun kf =
      with Kernel_function.No_Definition | Not_found -> []
     )
 
-
-
-
-
-let penv_addsvar (eid: t) (svl: Mman_svar.Svar.t list)
-  : t * (Mman_svar.Svar.t list)
-  =
-  let pe = penv_get eid in
- 
-  let maxkey = max_key_vidmap pe.pvars in
-  let _ = Mman_options.Self.debug ~level:1 "adding global svars..." 
-      in 
-  let pvars = ref (copy_vidmap pe.pvars) in
-  let rkey = ref (maxkey + 1) in
-    let nsvl = 
-      List.map 
-      (
-          fun svi -> 
-            (
-              let force_add = 
-                  fun sv ->
-                      let nsv = { sv with Mman_svar.id = !rkey } in
-                        begin
-                          pvars := VidMap.add !rkey nsv !pvars;
-                          rkey := !rkey + 1;
-                          nsv
-                        end
-                      in
-                   match svi.Mman_svar.kind with
-                   | Mman_svar.SAddr -> force_add svi
-                   | _ ->
-                       try
-                         let _ = comem_vidmap pe.pvars svi
-                         in begin
-                           (Mman_options.Self.failure "Existing symbolic variable");
-                           Mman_svar.sv_mk_hole
-                         end
-                       with Not_found -> force_add svi
-          )
-      )
-      svl
-  in
-  let _ = Mman_options.Self.debug ~level:1 "global svars added " 
-      in 
-  let new_env = { pe with pvars = !pvars } in 
-  (*new_env.pe_id, nsvl*)
-  (penv_add { pe with pvars = !pvars }), nsvl
-  
-
-
-
 (**
  * Initialise the environment tables 
  * Shall be called once.
@@ -701,11 +610,9 @@ let penvs_init () =
     (* print computed mappings *)
     Mman_options.Self.debug ~level:1 "stmt2penvs:\n%a@."
       pretty_stmt2penv 1 ; 
-    Mman_options.Self.debug ~level:1 "ENVS:\n%a@."
+    Mman_options.Self.debug ~level:1 "envs:\n%a@."
       pretty_penvs 1  
   end
-
-
 
 
 (* ********************************************************************** *)
@@ -724,7 +631,7 @@ let senv_equal e1 e2 =
   (equal_vidmap e1.svars e2.svars) 
     
 let senv_print fmt (e: senvinfo) =
-  Format.fprintf fmt "senv_%d = @(%d,penv_%d,@.[%d]%a@)"
+  Format.fprintf fmt "senv_%d = @(%d,penv_%d,@.[%d] %a @)"
     e.se_id
     e.se_ucnt
     e.peid
@@ -773,11 +680,6 @@ module SEnvMap = FCMap.Make(Datatype.Int)
     
 let senvs : senvinfo SEnvMap.t ref = ref SEnvMap.empty
 
-
-
-
-
-
 (* ********************************************************************** *)
 (* {6 Getters and setters of senvinfo } *)
 (* ********************************************************************** *)
@@ -798,7 +700,6 @@ let seid_new () = (SEnvMap.cardinal (!senvs))
  * Get environment at position ei                                                
 *)
 let senv_get eid =
-   
   SEnvMap.find eid (!senvs)
 
 (**
@@ -837,26 +738,13 @@ let senv_vars ei =
   let se = senv_get ei in 
   (penv_vars se.peid)@(VidMap.bindings se.svars)
     
-
-
-let senv_vars_2 (ei: int) 
-  : (int * Mman_svar.Svar.t) list
-  =
-  let _ = Mman_options.Self.debug ~level:1 "ENV:senv_vars_2.... @." 
-      in 
-  let e = senv_get ei in
-  VidMap.bindings e.svars
-
 (** 
  * Find a variable in the given environment
 *)
 let senv_getvar (eid: int) (sv: Mman_svar.Svar.t)
   : Mman_svar.Svar.t
   =
-  (* *) 
   let se = senv_get eid in
-
-   
   try
     comem_vidmap se.svars sv
   with Not_found ->
@@ -879,11 +767,6 @@ let senv_getvinfo (eid: int) (svid: int)
  *)
 let senv_getvtyp ei svid =
   let svi = senv_getvinfo ei svid in
-  
-
-  let _ = Mman_options.Self.debug ~level:1 "ENV:senv_getvtyp, vi:%a@."
-          Mman_svar.Svar.pretty svi
-        in 
   svi.Mman_svar.typ
 
 (**
@@ -895,43 +778,31 @@ let senv_addsvar (eid: t) (svl: Mman_svar.Svar.t list)
   : t * (Mman_svar.Svar.t list)
   =
   let se = senv_get eid in
- 
-
   let maxkey = max_key_vidmap se.svars in
-  let _ = Mman_options.Self.debug ~level:1 "adding global svars..." 
-      in 
   let svars = ref (copy_vidmap se.svars) in
   let rkey = ref (maxkey + 1) in
-    let nsvl = 
-      List.map 
-      (
-          fun svi -> 
-            (
-              let force_add = 
-                  fun sv ->
-                      let nsv = { sv with Mman_svar.id = !rkey } in
-                        begin
-                          svars := VidMap.add !rkey nsv !svars;
-                          rkey := !rkey + 1;
-                          nsv
-                        end
-                      in
-                   match svi.Mman_svar.kind with
-                   | Mman_svar.SAddr -> force_add svi
-                   | _ ->
-                       try
-                         let _ = comem_vidmap se.svars svi
-                         in begin
-                           (Mman_options.Self.failure "Existing symbolic variable");
-                           Mman_svar.sv_mk_hole
-                         end
-                       with Not_found -> force_add svi
-          )
-      )
+  let nsvl = List.map (fun svi ->
+      (let force_add = fun sv ->
+          let nsv = { sv with Mman_svar.id = !rkey } in
+          begin
+            svars := VidMap.add !rkey nsv !svars;
+            rkey := !rkey + 1;
+            nsv
+          end
+       in
+       match svi.Mman_svar.kind with
+       | Mman_svar.SVar -> force_add svi
+       | _ ->
+           try
+             let _ = comem_vidmap se.svars svi
+             in begin
+               (Mman_options.Self.failure "Existing symbolic variable");
+               Mman_svar.sv_mk_hole
+             end
+           with Not_found -> force_add svi
+      ))
       svl
   in
-  let _ = Mman_options.Self.debug ~level:1 "global svars added " 
-      in 
   (senv_add { se with svars = !svars }), nsvl
   
 
@@ -964,44 +835,8 @@ let senvs_init (peid:int)
 
     end
 
- 
 
- (* initialise the symbolic environment *)
-(*let senvs_init (peid:int) 
-    : t 
-    = 
-    begin
-      let penv = penv_get peid in 
-      Mman_options.Self.debug ~level:1 "initialise symbolic environment" ; 
-      let seid = seid_new () in 
-      (*let psvars = penv_vars peid in *)
-      let senvnew = 
-          { se_id = seid;
-            se_ucnt = 0;
-            peid = peid;
-            svars = VidMap.empty } 
-      in 
-      let _ = Mman_options.Self.debug ~level:1 "create symbolic environment" 
-      in 
-       
-      senvs := SEnvMap.add seid senvnew (!senvs);
-       
-      let svil = ref [] in 
-      VidMap.iter
-       ( fun k sv -> 
-          svil := !svil @[(sv)];
 
-      )
-      penv.pvars
-      ;
-
-      let sei, ls = senv_addsvar seid Mman_svar.Svar.reprs  in 
-      let sei2, ls2 = senv_addsvar sei !svil in 
-      sei2
-
-    end
-
-*)
 (* ********************************************************************** *)
 (* {7 Operations on symbolic environments } *)
 (* ********************************************************************** *)
@@ -1084,7 +919,7 @@ let pretty_senvs fmt =
  * Compute a mapping between two symbolic environments using
  * the stacks mapping program variables to heap locations.
  * The mapping contains only locations in heap, i.e., 
- * symbolic variables not in domain of the stack.
+ * symbolic variables not in the domain of the stack.
 *)
 let senv_embed (ei0: t) (s0: envmap) (ei1: t) (s1: envmap)
   : envmap 
@@ -1104,7 +939,7 @@ let senv_embed (ei0: t) (s0: envmap) (ei1: t) (s1: envmap)
         EnvMap.iter (fun pv l0 ->
             (let l1 = EnvMap.find pv s1 in
              if (l0 >= pesz) && (l1 >= pesz)
-	        (* both program variables are
+          (* both program variables are
                    mapped to locations in heap *)
              then (
                 if (not (EnvMap.mem l0 !hmap01))
@@ -1118,9 +953,9 @@ let senv_embed (ei0: t) (s0: envmap) (ei1: t) (s1: envmap)
              ) 
              else if l0 == l1 
              then (* may be true only if both are global locations *)
-	       ()
+         ()
              else
-	       raise Not_found
+         raise Not_found
             )
           )
           s0
@@ -1130,7 +965,7 @@ let senv_embed (ei0: t) (s0: envmap) (ei1: t) (s1: envmap)
             (let sv1 = (match sv0.kind with
                  | Loc(rid0) ->
                      let rid1 = EnvMap.find rid0 !hmap01 in
-                     senv_getvar ei1 (Mman_svar.sv_mk_loc rid1)
+                     senv_getvar ei1 (Mman_svar.sv_mk_loc rid1 sv0.typ)
                  | Feature(Some(rid0), fk) ->
                      let rid1 = EnvMap.find rid0 !hmap01 in
                      senv_getvar ei1 (Mman_svar.sv_mk_feat (Some(rid1)) fk)

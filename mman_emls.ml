@@ -30,7 +30,8 @@
 open Mman_dabs
 open Mman_svar 
 open Mman_asyn
-    
+open Mman_env
+
 module MEV = Mman_env
 
 (**************************************************************************)
@@ -511,7 +512,7 @@ let senv_add_saddr_1 (seid: MEV.t)
   : (MEV.t * Mman_svar.svid)
   =
   let nseid, nvl = Mman_env.senv_addsvar seid
-      [(Mman_svar.sv_mk_saddr ~svid:0 Mman_svar.SVAddr)]
+      [(Mman_svar.sv_mk_svar ~svid:0 (SVPtr(SVChunk)))]
   in
   let nvi =
     (match nvl with
@@ -1445,7 +1446,7 @@ and mutate_meminfo (seid: MEV.t) (g: meminfo)
       begin
         (* pre-condition 2a): location in stack *)
         (* TODO: i.e., not a feature ?? what about DA_CDAT ? *)
-        if (svR.Mman_svar.kind == Mman_svar.SAddr) then
+        if (svR.Mman_svar.kind == Mman_svar.SVar) then
           (* change the stack *)
           [(some_of seid (mutate_stack seid g sviL sviR), [], [])]
         else

@@ -1062,44 +1062,105 @@ module Model = struct
         
     end
 
-  (* Create values to store globally allocated variables, eg struct {} v; *)
-  let do_alloc (d:t) (llv: Mman_asyn.alval list) (v1_vn: Mman_asyn.alval list) 
+  (* initialize eshape value *)
+  let eshape_init (d:t)  
     :value 
     = 
-    begin 
-      let _ =  Mman_options.Self.debug ~level:1 "-------------------do_alloc-------------------@."
+    let _ =  Mman_options.Self.debug ~level:1 "-------------------initialize eshape-------------------@."
         in 
+    begin 
       let peid = d.eid in  (* *)
-      let le = List.length llv in 
-      let _ls = List.length v1_vn in 
-      let nsvars = ref [] in 
-      List.iter 
-      (
-        fun lv -> 
-        Mman_options.Self.debug ~level:1 "MV:struct global vars: %a @."
-                   Mman_asyn.pp_alval (lv);
-      )
-      llv
-      ;  
-      List.iter 
-      (
-        fun lv -> 
-        Mman_options.Self.debug ~level:1 "MV:struct fields functions: %a @."
-                   Mman_asyn.pp_alval (lv);
-      )
-      v1_vn
-      ;
+      let penv = MEV.penv_get peid in 
 
-      let _ = (Mman_options.Self.debug ~level:1 "MV:penv: %a@."
+      let pvars = penv.pvars in (* program variables list *)
+
+
+      let _ = (Mman_options.Self.debug ~level:2 "MV:penv: %a@."
                  MEV.penv_print (MEV.penv_get peid)) 
       in
       (* initialize the symbolic environment *)
       let seid =   Mman_env.senvs_init peid in 
-      let _ = (Mman_options.Self.debug ~level:1 "MV:senv: %a @."
+      let _ = (Mman_options.Self.debug ~level:2 "MV:senv: %a @."
                  MEV.senv_print (MEV.senv_get seid)) 
       in
 
+      let st  = ref MEV.EnvMap.empty in (* mapping from pvar to symbolic loction *)
+      let atmp = ref MEV.EnvMap.empty in (* atoms of struct variables *)
+      let mls = ref [] in  (* the list of symbolic address variables *)
+      let nsvars = ref [] in (* new symbolic vars *)
 
+   
+      MEV.VidMap.iter
+          ( fun i svi  -> 
+              (*let _ = Mman_options.Self.debug ~level:2 "MV:penv: %a @."
+                 Mman_svar.Svar.pretty svi in *)
+              match svi.Mman_svar.kind with
+              | PVar(vif)  -> 
+                    begin
+                      if Mman_dabs.is_chunk_struct !vif.Cil_types.vtype then    
+                            (
+                              Mman_options.Self.debug ~level:2 "MV:penv: %a is a chunk @."
+                                  Mman_svar.Svar.pretty svi ;
+                              let fkls = MEV.penv_get_feats svi.id peid in 
+                              (* create a shape element (chd) for chunk *)
+                              let fkl = ref [] in 
+                              List.iter
+                                (
+                                  fun (fki,svi) ->
+                                      fkl := !fkl @ [(fki,Mman_svar.sv_mk_hole.id)]; 
+                                )
+                                fkls
+                                ;
+                              (* create a symbolic var in senv *)
+                              let _ = Mman_options.Self.debug ~level:2 "get pv in sven @." in 
+                              let sv_info = MEV.senv_getvar seid  (Mman_svar.sv_mk_var !vif) in
+                              let sv_id = Mman_svar.Svar.id sv_info in 
+                                    st := MEV.EnvMap.add svi.id sv_id !st;
+                                    mls := !mls @[sv_id];
+                                    nsvars := !nsvars@[sv_info];
+
+
+                              let new_chd = Mman_emls.new_Chd sv_id !fkl in 
+                              atmp := MEV.EnvMap.add sv_id new_chd !atmp;
+                            )
+                      
+                    end
+              |_ ->()
+          )
+      pvars
+      ;
+
+      let sei, _ls = Mman_env.senv_addsvar seid !nsvars in 
+      sei;
+      let _ = (Mman_options.Self.debug ~level:1 "new senv: %a @."
+                 MEV.senv_print (MEV.senv_get sei)) 
+      in
+        (* new shape value *) 
+      let meminfo = Mman_emls.new_mem !st !mls !atmp in 
+      let nshapev = Mman_emls.new_msh sei meminfo in  
+      
+      let _ = Mman_options.Self.debug ~level:1 "old value  %a@."
+                   (pretty_code_intern Type.Basic) d
+      in  
+      let nvalue = 
+      {   
+          eid = seid; 
+          (*set = ModelMap.add nshapev MDW.dummy_bot !mres;*)
+          set = Some(ModelMap.singleton nshapev MDW.dummy_bot)
+      }
+      in 
+      let _ = Mman_options.Self.debug ~level:1 "new value:\n  %a@."
+                   (pretty_code_intern Type.Basic) nvalue 
+          in 
+
+      let _ =  Mman_options.Self.debug ~level:1 "-------------------eshape initialized-------------------@."
+        in 
+      nvalue  
+       
+    end 
+
+
+  (*
       let st  = ref MEV.EnvMap.empty in (* mapping from pvar to symbolic loction *)
       let atmp = ref MEV.EnvMap.empty in (* atoms of struct variables *)
       let mls = ref [] in  
@@ -1288,7 +1349,7 @@ module Model = struct
       nvalue    
 
     end         
-
+*)
 
 
   (** Project out the list of variables.
@@ -1333,12 +1394,19 @@ let init_globals (eid:MEV.t) (av1_avn: Mman_asyn.alval list) (sv1_fn:Mman_asyn.a
     if (eid = (Model.env !global_state))
     then !global_state
     else
-    (* Do assign *)
-    let _ = Mman_options.Self.feedback "MV:do_alloc@." in
+    
+    (* let _ = Mman_options.Self.feedback "MV:do_alloc@." in
     let vall = Model.do_alloc (Model.top_of eid) (av1_avn) sv1_fn in
     
     let _ = Mman_options.Self.feedback "MV:do_assign@." in
     let vinit = Model.do_assign vall (v1_vn) (e1_en) in
+    
+    *)
+
+    (* Do assign *)
+
+    let v0 = Model.eshape_init (Model.top_of eid) in 
+    let vinit = Model.do_assign v0 (v1_vn) (e1_en) in
     
     let _ = Mman_options.Self.debug ~level:1 "MV:assign_done, \n value: %a @." 
           (Model.pretty_code_intern Type.Basic) vinit   
