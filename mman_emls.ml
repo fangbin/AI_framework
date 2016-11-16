@@ -51,7 +51,7 @@ module MEV = Mman_env
            | chd(a)[Ha]   a chunk header at address a and features Ha
                             may be abstracted to blk(a,a+sizeof(cty))
            | chk(a)[Ha]   a chunk defined by chd(a)[Ha] * blk(b,c)
-                            with b=a+sizeof(cty) /\ c-a=csz(a)
+with b=a+sizeof(cty) /\ c-a=csz(a)
            | cls(a,b)[Wa] a chunk list defined by chk(a)[Ha]*cls(d,b)[Wd]
                             with d=a+csz(a) /\ Wa=[a].Wd /\ cff(a)=cpf(d)
 
@@ -68,7 +68,7 @@ type atominfo =
   | Chd of svid * (feature_kind * svid) list
   | Chk of svid * (feature_kind * svid) list
   | Cls of svid * svid * svid
- (* | Fck of svid * (feature_kind * svid) list
+  (*| Fck of svid * (feature_kind * svid) list
   | Fls of svid * svid * svid*)
            
 type meminfo =
@@ -110,7 +110,7 @@ type valinfo =
 let pretty_featlist fmt (sei: MEV.t) fl =
   List.iter
     (fun (fk,ai) ->
-       let ainfo = MEV.penv_getvinfo sei ai in
+       let ainfo = MEV.senv_getvinfo sei ai in
        let fname = Mman_dabs.get_fname fk in
        Format.fprintf fmt "%s:%a,"
          fname
@@ -135,7 +135,7 @@ let pretty_atominfo fmt (sei: MEV.t) (at: atominfo) =
       begin
         Format.fprintf fmt "chd(%a)[" Mman_svar.Svar.pretty ainfo;
         pretty_featlist fmt sei fl;
-        Format.fprintf fmt "]"
+        Format.fprintf fmt "] "
       end
 
   | Chk(ai,fl) ->
@@ -158,35 +158,32 @@ let pretty_atominfo fmt (sei: MEV.t) (at: atominfo) =
 
 let pretty_stack fmt (sei: MEV.t) (s: MEV.envmap) =
   begin
-    
+    Format.fprintf fmt "stack: \n ";
     (MEV.VidMap.iter
        (fun vi ai ->
           begin  
-          MEV.pretty_senvs;
-           
+          MEV.pretty_senvs;           
+          let peid = (MEV.senv_get sei).peid in 
 
-          let vinfo = MEV.penv_getvinfo sei vi in
-
-                    let ainfo = MEV.senv_getvinfo sei ai in
-          Format.fprintf fmt "%a |-> %a, "
+          let vinfo = MEV.penv_getvinfo peid vi in
+          let ainfo = MEV.senv_getvinfo sei ai in
+          Format.fprintf fmt "%a |-> %a,\n "
             Mman_svar.Svar.pretty vinfo
             Mman_svar.Svar.pretty ainfo
           end 
        )
        s
     );
-
-  
     Format.fprintf fmt "@."
   end
   
 let pretty_intern_meminfo fmt (sei: MEV.t) (mi: meminfo) =
   begin
-    (* print stack *)
+    (* print stack *) 
     pretty_stack fmt sei mi.stack;
     
     (* print heap list *)
-    Format.fprintf fmt "[";
+    Format.fprintf fmt "heap list \n[";
     (List.iter
        (fun ai ->
           let ainfo = MEV.senv_getvinfo sei ai in
@@ -198,11 +195,12 @@ let pretty_intern_meminfo fmt (sei: MEV.t) (mi: meminfo) =
     Format.fprintf fmt "]@.";
 
     (* print atoms *)
+    Format.fprintf fmt "atoms:@.";
     (MEV.EnvMap.iter
        (fun _vi at ->
           begin
             pretty_atominfo fmt sei at;
-            Format.fprintf fmt " * "
+            Format.fprintf fmt " * \n "
           end
        )
        mi.atoms
@@ -211,18 +209,30 @@ let pretty_intern_meminfo fmt (sei: MEV.t) (mi: meminfo) =
   end
   
 let pretty_code_meminfo fmt (sei: MEV.t) (mi: meminfo) =
-  begin
-
-
+  begin 
     (* print stack *)
     pretty_stack fmt sei mi.stack;
+    
+    (* print heap list *)
+    Format.fprintf fmt "heap list \n[";
+    (List.iter
+       (fun ai ->
+          let ainfo = MEV.senv_getvinfo sei ai in
+          Format.fprintf fmt "%a::"
+            Mman_svar.Svar.pretty ainfo
+       )
+       mi.mls
+    );
+    Format.fprintf fmt "]@.";
+
     (* print SL formula *)
+    Format.fprintf fmt "atoms:@.";
     (List.iter
        (fun ai ->
           let at = MEV.EnvMap.find ai mi.atoms in
           begin
             pretty_atominfo fmt sei at;
-            Format.fprintf fmt " * "
+            Format.fprintf fmt " * \n"
           end
        )
        mi.mls
@@ -237,7 +247,6 @@ let pretty_intern_memval fmt (sei: MEV.t) (d: memval) =
   | S(mi) -> pretty_intern_meminfo fmt sei mi
 
 let pretty_code_memval fmt (sei: MEV.t) (d: memval) =
-
   match d with
   | Bot -> Format.fprintf fmt "bottom"
   | Top -> Format.fprintf fmt "top"
@@ -261,9 +270,8 @@ let pretty_code_intern (p_caller:Type.precedence) fmt (d: valinfo) =
   in
   Type.par p_caller Type.Call fmt pp
 
-let pretty_code fmt (d: valinfo) =
-  begin
-     
+let pretty_code fmt (d: valinfo) = 
+  begin 
     pretty_code_memval fmt d.seid d.mem;
     Format.fprintf fmt ",@."
   end
@@ -276,7 +284,6 @@ let pretty_diff fmt (d0: valinfo) (d1: valinfo) =
     pretty_code_intern Type.Basic fmt d1;
     Format.fprintf fmt ")"
   end
-
 
 (**
  * Test of basic values
@@ -293,7 +300,6 @@ let is_top (d: valinfo) =
 
 
 (** Loose ordering of two values.
-   
    This function is mainly used to order shape graphs using
    their number of edges. Thus, the relation is not an order relation
    wrt equality, i.e., is_leq(d0,d1) && is_leq(d1,d0) =/=> is_eq(d0,d1)
@@ -310,7 +316,6 @@ let is_leq (d0: valinfo) (d1: valinfo)
       (List.length g0.mls) <= (List.length g1.mls)
 
 (** Ordering of values.
-  
   @return 1  if d0 > d1
           -1 if d0 < d1
           0  if graphs are homeomorphic by the computed mapping
@@ -319,7 +324,7 @@ let is_leq (d0: valinfo) (d1: valinfo)
 *)
 let rec compare_intern (d0: valinfo) (d1: valinfo)
   : int * MEV.envmap
-  =
+  = 
   let emptymap = Mman_env.EnvMap.empty in
   match d0.mem, d1.mem with
   | Bot, _ | _, Top -> 1, emptymap
@@ -338,7 +343,7 @@ let rec compare_intern (d0: valinfo) (d1: valinfo)
 
 and embed_mem (sei0: MEV.t) (g0: meminfo) (sei1: MEV.t) (g1: meminfo)
   : int * MEV.envmap
-  =
+  = 
   (* same environment size, see homeomorphism *)
   let emptymap = Mman_env.EnvMap.empty in
   let cmplst = (List.length g0.mls) - (List.length g1.mls) in
@@ -453,7 +458,6 @@ and hash_mem (g: meminfo)
   (MEV.EnvMap.cardinal g.stack) * 17 +
   (List.length g.mls) * 13 
 
-
 (** Copy a value. *)
 let copy_intern (d: valinfo)  =
   { seid = d.seid; mem = d.mem }
@@ -549,24 +553,24 @@ let rec mls_insert_after (mls: Mman_svar.svid list) (id: Mman_svar.svid)
 let rec evalL (lv: Mman_asyn.alval) (d: t)
   : (Mman_asyn.alval option) * (Mman_asyn.alval list)
   =
+  let _ = Mman_options.Self.debug ~level:1 "MSH:evalL(%a) ..... @."
+          Mman_asyn.pp_alval lv 
+                      in 
   let seid = d.seid in
   match d.mem with
   | Bot | Top -> None, [] (* interpreted as error *)
 
   | S(g) ->
       (match lv with
-       | AVar(_vi) ->
+       | AVar(vi) ->
            (* as a left value, a program variable is always defined *)
-           (* returns the corresponding symbolic variable *)
-           
+           (* returns the corresponding symbolic variable *)           
            (* find the correspoding symbolic variable in or *)
+           (*let _ = Mman_options.Self.debug ~level:1 "MSH:evalL,AVar, lv:%a... @."
+                   Mman_asyn.pp_alval lv 
+                      in *)
 
-           let alv, _ = Mman_asyn.to_senv_lval seid lv false in
-
-           let _ = Mman_options.Self.debug ~level:1 "MSH:after to_senv_lval:%a in penv @."
-                   Mman_asyn.pp_alval (alv) in 
-
-          
+           let alv, _ = Mman_asyn.to_senv_lval seid lv false in 
            Some(alv), []
 
        | AMem(vi) ->
@@ -575,7 +579,7 @@ let rec evalL (lv: Mman_asyn.alval) (d: t)
               - v is initialized to a location in the heap
               and is the content (offset 0) of this location 
            *)
-           let svi = Mman_env.senv_getvar seid (Mman_svar.sv_mk_var vi) in
+           let svi = Mman_env.penv_getvar seid (Mman_svar.sv_mk_var vi) in
            let svid = (Mman_svar.Svar.id svi) in
            if not(Mman_svar.isPtrType (Mman_env.senv_getvtyp seid svid))
            then (* type checking should do this check *)
@@ -592,12 +596,12 @@ let rec evalL (lv: Mman_asyn.alval) (d: t)
        | ASVar svid ->
            (* may be a data location or a feature location *)
            (* if it is a feature, it shall be available in the graph *)
-           let svif = Mman_env.senv_getvinfo seid svid in
+     
+           let svif = Mman_env.penv_getvinfo seid svid in
            (
             match svif.Mman_svar.kind with
             | Mman_svar.Feature(Some(svid),fk) ->
                 (* check that the feature may be assign in the graph *)
-                 
                 evalL_feat seid svid fk g
             | _ ->
                 (* otherwise, nothing to change *)
@@ -607,7 +611,8 @@ let rec evalL (lv: Mman_asyn.alval) (d: t)
        | AFeat(fk,al) ->
            (* evaluate first the location at al *)
            begin
-            let _ = Mman_options.Self.debug ~level:1 "MSH:evalL afeat @."
+            let _ = Mman_options.Self.debug ~level:1 "MSH:evalL afeat(fk, %a) @."
+                    Mman_asyn.pp_alval al 
                       in 
 
              let r, vf = evalL al d in
@@ -638,11 +643,7 @@ let rec evalL (lv: Mman_asyn.alval) (d: t)
 and evalL_feat (seid: MEV.t)
   (svid: Mman_svar.svid) (fk: Mman_dabs.feature_kind) g
   : (Mman_asyn.alval option) * (Mman_asyn.alval list)
-  =
-   let _ = Mman_options.Self.debug ~level:1 "MSH:evalL_feat @."
-                      in 
-
-
+  = 
   (* if it is a location in stack, get the location in heap *)
   let psz, _ = (MEV.senv_size seid) in
   if (svid <= Mman_svar.svid_hole) 
@@ -664,22 +665,11 @@ and evalL_feat (seid: MEV.t)
     evalL_atom svid fk at
   else if (svid < psz)
   then
-    (
-    let _ = Mman_options.Self.debug ~level:1
-               "MSH:find location of sv_%d on stack ...@."
-                  svid 
-            in 
-
-   
+    ( 
     (* it is a location on stack, check its atom at the location given 
        by the stack *)
     begin 
-
-         
-          let slid = MEV.EnvMap.find svid g.stack in
-
-        
-
+          let slid = MEV.EnvMap.find svid g.stack in        
           if (slid == 0)
           then 
               begin 
@@ -688,12 +678,11 @@ and evalL_feat (seid: MEV.t)
                 None, [] (* not an allocated location *)
               end 
           else 
-                let _ = Mman_options.Self.debug ~level:1
+                (*let _ = Mman_options.Self.debug ~level:1
                          "MSH:location of %d is %d...@."
                             svid slid 
-                      in 
-                let at = try MEV.EnvMap.find slid g.atoms with Not_found -> Emp in
-                 
+                      in *)
+                let at = try MEV.EnvMap.find slid g.atoms with Not_found -> Emp in                 
                 evalL_atom slid fk at
               
       end 
@@ -707,28 +696,19 @@ and evalL_feat (seid: MEV.t)
 and evalL_atom 
   (svid: Mman_svar.svid) (fk: Mman_dabs.feature_kind) (at: atominfo)
   : (Mman_asyn.alval option) * (Mman_asyn.alval list)
-  =
-  let _ =  Mman_options.Self.debug ~level:1 "MSH:evalL_atom...@." 
-              in  
-
+  = 
   match at with
   | Emp | Blk (_,_) -> None, [] (* error *)
   
   | Chd(a, fl) | Chk (a, fl) ->
       (
-        if a != svid then
-           
-           
+        if a != svid then           
          let _ = Mman_options.Self.failure "Bad mapping of atoms@." in
-
          None, []
        else
-         try
-           let _ =  Mman_options.Self.debug ~level:1 "MSH:atom Chd or Chk, eval is feature... @." 
-              in 
+         try 
            let _ = List.assoc fk fl in
            Some(AFeat(fk, ASVar(svid))), []
-         
 
          with Not_found ->
            let _ = Mman_options.Self.failure "Bad feature for atoms@." in
@@ -737,7 +717,6 @@ and evalL_atom
   | Cls _ ->
       let lv = AFeat(fk, ASVar(svid)) in
       Some(lv), [lv]
-
 
 
 (**************************************************************************)
@@ -761,19 +740,16 @@ let rec evalE (exp: Mman_asyn.aexp) (d: t)
       begin
         match exp with
         | ACst(it) -> (* finally evaluated in the data part *)
-            let _ =  Mman_options.Self.debug ~level:1 "MSH:evalE_lval, ACst ... @." 
-                    in  
+            (*let _ =  Mman_options.Self.debug ~level:1 "MSH:evalE_lval, ACst ... @." 
+                    in  *)
             Some (ACst it), []
 
         | ALval(al) -> (* evaluate to a value -- may be location *)
-            let _ =  Mman_options.Self.debug ~level:1 "MSH:evalE_lval, ALval ... @." 
-                    in  
-
             evalE_lval al d
 
         | AAddrOf (al) -> (* evaluate to a location *)
-            let _ =  Mman_options.Self.debug ~level:1 "MSH:evalE_lval, AAddrOf ... @." 
-                    in             
+            (*let _ =  Mman_options.Self.debug ~level:1 "MSH:evalE_lval, AAddrOf ... @." 
+                    in *)            
             evalE_lval al d
 
         | AUnOp (op, ex) ->
@@ -785,6 +761,8 @@ let rec evalE (exp: Mman_asyn.aexp) (d: t)
                | Some(e1) ->
                    Some (AUnOp (op, e1)), []
             )
+        | ASbrk (e) -> 
+                Some (ASbrk(e)),[]
 
         | ABinOp (bop , ex1 , ex2) ->
             let r1, vf1 = evalE ex1 d in
@@ -797,16 +775,10 @@ let rec evalE (exp: Mman_asyn.aexp) (d: t)
               (
 
                 match r1, r2 with
-               | None, _ | _, None -> 
-                  let _ =  Mman_options.Self.debug ~level:1 "MSH:after evalE is None ... @." 
-                    in 
+               | None, _ | _, None ->  
                     None, []
                
-               | Some(e1), Some(e2) ->
-                   let _ =  Mman_options.Self.debug ~level:1 "MSH:after evalE is Some ... @." 
-                    in 
-
-
+               | Some(e1), Some(e2) -> 
                    (* if ptr arithmetics on e1 which is not a block, unfold *)
                    let osvi = Mman_asyn.get_saddr e1 in
                    (match osvi, bop with
@@ -834,7 +806,6 @@ let rec evalE (exp: Mman_asyn.aexp) (d: t)
               )
       end
 
-
 (** Evaluate the left value to a symbolic variable giving 
     its value.
 *)
@@ -847,36 +818,22 @@ and evalE_lval (lv: Mman_asyn.alval) (d: t)
   | S(g) ->
       begin
         match lv with
-        | AVar vi ->
-
-            let _ = Mman_options.Self.debug ~level:1 "MSH:evalE_lval lv: %a... @."
-                        Mman_asyn.pp_alval (lv);
-                    in        
+        | AVar vi ->  
             (* as a value, a program variable is defined when initialized *)
             (* get the corresponding symbolic variable and,
-               if pointer type, search in the stack *)
-            
-
+               if pointer type, search in the stack *)            
             let svi = 
               if (String.compare (vi.vname ) "__hli" == 0)
               then   
                   Mman_env.senv_getvar seid (Mman_svar.sv_mk_hli) 
               else 
+                    
                   Mman_env.senv_getvar seid (Mman_svar.sv_mk_var vi) 
-            in
-
-            let _ = Mman_options.Self.debug ~level:1 "MSH:evalE_lval AVar:%a@."
-                            Mman_svar.Svar.pretty svi
-                    in 
-
-            let svid = (Mman_svar.Svar.id svi) in
+            in 
+            let svid = (Mman_svar.Svar.id svi) in          
             evalE_svid svid seid g
               
-        | ASVar svid ->
-
-            let _ =  Mman_options.Self.debug ~level:1 "MSH:evalE_lval, ASVar ... @." 
-                    in  
-
+        | ASVar svid -> 
             (* if it is a program variable, get its value in stack *)
             evalE_svid svid seid g
 
@@ -908,16 +865,9 @@ and evalE_lval (lv: Mman_asyn.alval) (d: t)
 
 and evalE_svid (svid: Mman_svar.svid) (seid: MEV.t) (g: meminfo)
   : (Mman_asyn.aexp option) * (Mman_asyn.alval list)
-  =
-  let _ =  Mman_options.Self.debug ~level:1 "MSH:evalE_svid...svid %d @."
-            svid  
-        in 
-
+  =  
   let psz, _ = MEV.senv_size seid 
         in
- 
-
-
   if svid == Mman_svar.svid_null
   then
     Some(ACst(Integer.zero)), []
@@ -927,16 +877,11 @@ and evalE_svid (svid: Mman_svar.svid) (seid: MEV.t) (g: meminfo)
        || (svid >= psz)
   then
     (* no need to look in stack *)
-    let _ =  Mman_options.Self.debug ~level:1 "MSH:evalE_svid, no need to look in stack... @."  
-        in 
     Some(ALval(ASVar svid)), [] 
   else
     (* TODO: and if it is DA_CDAT ? *)
     (* inspect the stack *)
-    (try
-
-       let _ =  Mman_options.Self.debug ~level:1 "MSH:evalE_svid, inspect the stack... @."  
-        in 
+    (try 
        let svpto = MEV.EnvMap.find svid g.stack in
        if svpto == Mman_svar.svid_null
        then Some(ACst(Integer.zero)), []
@@ -1005,7 +950,6 @@ and evalE_atom
       let lv = AFeat(fk, ASVar(svid)) in
       Some(ALval(lv)), [lv]
 
-
 (**************************************************************************)
 (** {2 Meet with a guard} *)
 (**************************************************************************)
@@ -1021,14 +965,6 @@ let rec guard (d: t) (c1_cn: Mman_asyn.aconstr list)
   =
   let _ =  Mman_options.Self.debug ~level:1 "MSH:do guard... @." 
               in 
-  let _ = 
-    List.iter 
-        (fun ac -> 
-              Mman_options.Self.debug ~level:1 "MSH:constraints:%a @." 
-                   Mman_asyn.pp_aconstr ac;
-        )
-        c1_cn
-    in 
   let seid = env d in
   if is_bottom d then
     Some(d, c1_cn), []
@@ -1045,25 +981,24 @@ let rec guard (d: t) (c1_cn: Mman_asyn.aconstr list)
            if is_bottom !nd then
              ci
            else
-             let odi, lvi = guard_one !nd ci in
-            
+             let odi, lvi = guard_one !nd ci in            
              match odi with
              | None ->
                  begin
-                  let _ =  Mman_options.Self.debug ~level:1 "MSH:guard_one return is None...@." 
+                   let _ =  Mman_options.Self.debug ~level:1 "MSH:guard_one return is None...@." 
                     in 
                    nd := bottom_of seid;
                    ci
                  end
+
              | Some(ndi, nci) ->
                  begin
-                  let _ =  Mman_options.Self.debug ~level:1 "MSH:guard_one return constraint:%a @." 
+                   let _ =  Mman_options.Self.debug ~level:1 "MSH:guard_one return constraint:%a @." 
                         Mman_asyn.pp_aconstr nci 
                       in 
-                   let _ = Mman_options.Self.debug ~level:1 "MSH:guard_one return value:%a @." 
+                   (*let _ = Mman_options.Self.debug ~level:1 "MSH:guard_one return value:%a @." 
                         pretty ndi
-                      in 
-
+                      in*) 
                    nd := ndi;
                    nlv := lvi @ (!nlv);
                    nci
@@ -1084,27 +1019,24 @@ and guard_one (d: t) (ci: Mman_asyn.aconstr)
   : (t * Mman_asyn.aconstr) option * (Mman_asyn.alval list)
   =
   let _ =  Mman_options.Self.debug ~level:1 "MSH:do guard_one... @." 
-              in 
-  let _ =  Mman_options.Self.debug ~level:1 "MSH:constraint:%a @." 
-           Mman_asyn.pp_aconstr ci 
-    in 
+  in  
   let seid = env d in
   match d.mem with
   | Bot ->
       Some(d, ci), []
+  
   | Top ->
       Some(d, ci), [] (* TODO *)
+  
   | S(_) ->
       (
-
         match ci with
        | Mman_asyn.ATrue -> Some(d, ci), []
        | Mman_asyn.AFalse -> Some((bottom_of seid), ci), []
-       | Mman_asyn.ACmp(op, aeL, aeR) ->
-           
-           let _ =  Mman_options.Self.debug ~level:1 "MSH:evalE:%a op %a @." 
+       | Mman_asyn.ACmp(op, aeL, aeR) ->           
+           (*let _ =  Mman_options.Self.debug ~level:1 "MSH:evalE:%a op %a @." 
                  Mman_asyn.pp_aexp (aeL) Mman_asyn.pp_aexp (aeR) 
-           in 
+           in *)
            (* evaluate expressions of ci using the shape *)
            let oeLn, lvL = evalE aeL d in
            let oeRn, lvR = evalE aeR d in
@@ -1114,42 +1046,23 @@ and guard_one (d: t) (ci: Mman_asyn.aconstr)
            else
              (
               match oeLn, oeRn with
-              | None, _ | _, None -> 
-
-                let _ =  Mman_options.Self.debug ~level:1 "MSH:after evalE is None... @." 
-                in 
-                None, []
+              | None, _ | _, None ->  None, []            
               
               | Some(aeLn), Some(aeRn) ->
                   (* both expressions contains only 
                      constants, locations, operators *)
                   (* the shape part deal only with 
-                     comparison between locations *)
-                  let _ =  Mman_options.Self.debug ~level:1 "MSH:after evalE:%a op %a @." 
-                         Mman_asyn.pp_aexp (aeLn) Mman_asyn.pp_aexp (aeRn) 
-                  in 
-
-                  let _ =  Mman_options.Self.debug ~level:1 "MSH:evalE, no unfolding needed.... @."  
-                  in 
-
-
+                     comparison between locations *)  
                   let svL = Mman_asyn.get_saddr aeLn in
                   let svR = Mman_asyn.get_saddr aeRn in
-                  let aci = Mman_asyn.ACmp(op, aeLn, aeRn) in
-
-                  let _ =  Mman_options.Self.debug ~level:1 "MSH:%a @." 
-                           Mman_asyn.pp_aconstr aci 
-                          in 
+                  let aci = Mman_asyn.ACmp(op, aeLn, aeRn) in 
                   (match svL, svR with
                    | None, _ | _, None ->
                        (* not a constraint on locations *)
                        Some(d, aci), []
                    
                    | Some(sviL), Some(sviR) ->
-                       (* a constraint on locations, only comparison accepted *)
-                       let _ =  Mman_options.Self.debug ~level:1 "MSH: a constraint on locations, only comparison accepted...@."  
-                          in 
-
+                       (* a constraint on locations, only comparison accepted *)                     
                        (match op with
                         | Mman_asyn.AEQ ->
                             guard_eq d sviL sviR aci, []
@@ -1210,18 +1123,15 @@ and guard_geq (d: t) (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
   (oc: Mman_asyn.aconstr)
   : (t * Mman_asyn.aconstr) option
   =
-
-  let _ =  Mman_options.Self.debug ~level:1 "MSH:guard_geq...@."  
-                          in 
+  (*let _ =  Mman_options.Self.debug ~level:1 "MSH:guard_geq...@."  
+                          in*) 
   match d.mem with
   | Bot | Top -> Some(d, Mman_asyn.AFalse)
   
 
   | S(g) ->
-
-      let _ =  Mman_options.Self.debug ~level:1 "MSH:guard_geq, Some g ...@."  
-               in 
-
+      (*let _ =  Mman_options.Self.debug ~level:1 "MSH:guard_geq, Some g ...@."  
+               in *)
       if sviL == sviR then
         (* already equal locations *)
         (* nothing to propagate on data *)
@@ -1328,7 +1238,6 @@ and guard_neq (d: t) (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
              Some (d, oc) (* nothing can be done here, go to data part *)
         )
          
-
 (** Compute a memory layout from the constraints.
     Return also the constraints to be applied to the data part.
 *)
@@ -1362,49 +1271,69 @@ and remove_atom (svi: Mman_svar.svid) (g: meminfo)
 let rec mutate (lv: Mman_asyn.alval) (e: Mman_asyn.aexp) (d: t)
   : (t * (Mman_svar.svid list) * (Mman_asyn.aconstr list)) list
   =
-  let _ = Mman_options.Self.debug ~level:1 "MSH:old eshape value:%a @." 
+  (*let _ = Mman_options.Self.debug ~level:1 "MSH:old eshape value:%a @." 
     pretty d 
-  in 
-
-
+  in *)
   let seid = (env d) in
   let psz, _ = MEV.senv_size seid in
-  let _ = Mman_options.Self.debug ~level:1 "left alval:%a @." 
-                            Mman_asyn.pp_alval  lv 
-                          in 
+  (*let _ = Mman_options.Self.debug ~level:1 "MSH:mutate %a := %a @." 
+          Mman_asyn.pp_alval  (lv)  Mman_asyn.pp_aexp (e)
+  in*) 
   (* check that the left value is a program variable of pointer type *)
   let sviL = 
     (
       match lv with
       | Mman_asyn.ASVar(svi) -> svi
       | Mman_asyn.AFeat(fk, lv') -> 
-              begin
+              begin 
+                let fki = ref (-1) in 
+                  begin 
                   match lv' with
-                  | Mman_asyn.ASVar(vi) -> vi
-                  | _ -> Mman_svar.svid_null
-              end
-      | _ -> Mman_svar.svid_null
+                  | Mman_asyn.ASVar(vi) ->                        
+                             (let se = senv_get seid in 
+                             let peid = se.peid in 
+                             let pe = penv_get peid in  
+                                      VidMap.iter
+                                          (fun i svi -> 
+                                               match svi.Mman_svar.kind with
+                                                  | Feature(Some(optvid), fk) -> 
+                                                        if optvid == vi then 
+                                                           fki := i
+                                                        else ()        
+                                                  |_-> ()
+                                          )
+                                        pe.pvars
+                              ;    
+                             if (!fki == (-1)) then (* cant find in penv, search in senv *)
+                              let se = senv_get seid in  
+                                      VidMap.iter
+                                          (fun i svi -> 
+                                               match svi.Mman_svar.kind with
+                                                  | Feature(Some(optvid), fk) -> 
+                                                        if optvid == vi then 
+                                                           fki := i
+                                                        else ()        
+                                                  |_-> ()
+                                          )
+                                        se.svars
+                              )
+                  | _ -> fki:= Mman_svar.svid_null
+                end 
+                ;
+                !fki  
+              end 
+      |_ -> Mman_svar.svid_null          
     )
-  in
-
-  let _ = Mman_options.Self.debug ~level:1 "MSH:left value svi:%d ...@."  
-      sviL
   in 
-
   let svinfoL = Mman_env.senv_getvinfo seid sviL in
-
-  let _ = Mman_options.Self.debug ~level:1 "MSH:svinfoL:%a@."
+  (*let _ = Mman_options.Self.debug ~level:2 "MSH:svinfoL:%a@."
                             Mman_svar.Svar.pretty svinfoL
-                    in 
-  
-
+                    in *)
   (*if (sviL == Mman_svar.svid_null) ||
      (sviL >= psz) ||
      (svinfoL.typ != SVAddr)*)
 
-  if (sviL == Mman_svar.svid_null) ||
-     (sviL >= psz)  
-
+  if (sviL == Mman_svar.svid_null) 
   then
     (let _ = Mman_options.Self.failure "Unexpected left value@."
      in
@@ -1413,45 +1342,178 @@ let rec mutate (lv: Mman_asyn.alval) (e: Mman_asyn.aexp) (d: t)
   else
     (match d.mem with
      | Bot -> [(d, [], [])]
+     
      | Top ->
          let ng = empty_meminfo in
          mutate_meminfo seid ng sviL e
-     | S(g) ->
-          let rs = mutate_meminfo seid g sviL e in 
-          if rs == [] then [(d, [], [])]
-          else rs 
 
+     | S(g) ->
+          begin
+            (*match lv with
+            | Mman_asyn.AFeat(fk, lv')  -> 
+                mutate_feat seid g sviL fk e  
+            | _ ->  *)
+                let rs = mutate_meminfo seid g sviL e in 
+                if rs == [] 
+                then [(d, [], [])]
+                else rs 
+          end 
     )
     
+and mutate_feat (seid: MEV.t) (g: meminfo)
+    (sviL: Mman_svar.svid) (fk:Mman_dabs.feature_kind) 
+    (e: Mman_asyn.aexp) 
+    : (t * (Mman_svar.svid list) * (Mman_asyn.aconstr list)) list
+    =
+    let _ = Mman_options.Self.debug ~level:2 "MSH:mutate_feat.....@."
+     in 
+    begin 
+      (* get the left value *)
+      let sv_R =
+          match e with
+          | ACst i ->  
+              let sv = Mman_env.senv_getvinfo seid sviL in               
+              if (Integer.is_zero i) then 
+                match sv.typ with
+                | SVPtr(_) -> Mman_svar.svid_hole
+                | SVChunk ->  Mman_svar.svid_null 
+                       
+              else 
+                  Mman_svar.svid_hole  
+          
+          | ALval(ASVar(sviR)) ->
+                sviR  
+
+
+
+          |_ -> Mman_svar.svid_hole 
+        in   
+
+      let at = try MEV.EnvMap.find sviL g.atoms with Not_found -> Emp in       
+      let n_at = (* update atom *) 
+          match at with
+          | Emp | Blk (_,_) -> Emp (* error *)
+          
+          | Chd(a, fl) ->          
+              if a != sviL then             
+                 let _ = Mman_options.Self.failure "Bad mapping of atoms@." in
+                 Emp
+               else if a == sviL then
+                 begin
+                    (* update feature list *)             
+                    let fkl = ref [] in                     
+                      List.iter 
+                      (
+                        fun (fki, svi) ->
+                          if fki == fk then
+                              let _ = Mman_options.Self.debug ~level:2 "MSH:update %s of chd.....@."
+                                 (Mman_dabs.get_fname (fk))
+                                in 
+                              (fkl := !fkl @[(fki,sv_R)];)
+                          else if fki != fk then
+                              (fkl := !fkl @[(fki,svi)];)
+                      )
+                      fl
+                      ;
+                    Chd(a, !fkl)               
+                 end
+               else Emp
+
+          | Chk (a, fl)->
+                if a != sviL then
+                    let _ = Mman_options.Self.failure "Bad mapping of atoms@." in
+                    Emp
+                else if a == sviL then
+                begin 
+                    (* update feature list *) 
+                    let fkl = ref [] in                     
+                    List.iter 
+                    (
+                      fun (fki, svi) ->
+                       if fki == fk then 
+                         let _ = Mman_options.Self.debug ~level:2 "MSH:update chk.....@."
+                        in
+                          fkl := !fkl @[(fk,sv_R)] 
+                       else if fki != fk then 
+                          fkl := !fkl @[(fki,svi)]
+                    )
+                    fl 
+                    ;
+                    Chk(a,!fkl)
+                end 
+              else Emp
+          | Cls _ ->  Emp
+        in 
+
+      let n_atoms = ref MEV.EnvMap.empty in  
+        MEV.EnvMap.iter
+         (fun vi at ->
+            begin
+                if vi == sviL then  
+                    n_atoms := MEV.EnvMap.add sviL n_at !n_atoms 
+                else if vi != sviL then  
+                    n_atoms := MEV.EnvMap.add vi at !n_atoms 
+            end
+         )
+         g.atoms
+      ; 
+      let n_meminfo = 
+           { stack = g.stack;
+             mls = g.mls;
+             atoms = !n_atoms}
+       in   
+       [(some_of seid (n_meminfo), [], [])]
+    end 
+
 and mutate_meminfo (seid: MEV.t) (g: meminfo)
   (sviL: Mman_svar.svid) (e: Mman_asyn.aexp) 
   : (t * (Mman_svar.svid list) * (Mman_asyn.aconstr list)) list
   =
-  let _ = Mman_options.Self.debug ~level:1 "MSH:mutate_meminfo...@."  
-  in 
-
-
-  let _ = 
-           Mman_options.Self.debug ~level:1 "MSH:aexp:%a@."
-           Mman_asyn.pp_aexp (e)
-  in 
+  (*let _ = Mman_options.Self.debug ~level:2 "MSH:mutate_meminfo......@." in *)
   match e with
-  | ACst i -> 
-
-        []
-
+  | ACst i ->  
+        (*let _ = Mman_options.Self.debug ~level:2 "MSH:mutate_meminfo, AST......@." in *)
+        let sv = Mman_env.senv_getvinfo seid sviL in 
+        if (Integer.is_zero i) then 
+          match sv.typ with
+          | SVPtr(_) ->           
+              (* if the type of sviL is pointer p , e is 0 =>  p := NULL *)          
+              [(some_of seid (mutate_stack seid g sv.id Mman_svar.svid_null),[],[])]
+          | _ -> 
+                begin 
+                  match sv.kind with
+                  | Feature(_,_) -> 
+                                let _ = Mman_options.Self.debug ~level:2 
+                                "MSH:mutate_meminfo, Feature......@." in 
+                                []
+                  | _ -> 
+                         let _ = Mman_options.Self.debug ~level:2 
+                                "MSH:mutate_meminfo, SVChunk, none ......@." in 
+                         []
+               end 
+        else [] 
 
   | ALval(ASVar(sviR)) ->
+      let _ = Mman_options.Self.debug ~level:2 "MSH:mutate_meminfo, location in stack...@." in 
       let svR = Mman_env.senv_getvinfo seid sviR in
+      let _ = Mman_options.Self.debug ~level:2 "MSH: svR: %a@." 
+              Mman_svar.Svar.pretty svR 
+            in 
       begin
         (* pre-condition 2a): location in stack *)
         (* TODO: i.e., not a feature ?? what about DA_CDAT ? *)
-        if (svR.Mman_svar.kind == Mman_svar.SVar) then
+        if (svR.Mman_svar.kind == Mman_svar.SVar) then 
           (* change the stack *)
           [(some_of seid (mutate_stack seid g sviL sviR), [], [])]
-        else
-          let _ = Mman_options.Self.failure "Undefined address@."
-          in []
+        else if (svR.Mman_svar.kind == Mman_svar.Hli) 
+        then 
+          let _ = Mman_options.Self.feedback " := Hli @."
+          in 
+          [(some_of seid (mutate_stack seid g sviL Mman_svar.svid_hli), [], [])]
+        else 
+            match svR.Mman_svar.kind with
+            | Feature(_,_) -> [(some_of seid (mutate_stack seid g sviL sviR), [], [])]
+            | _ ->  []  
       end
       
   | ABinOp(AAdd, ALval(ASVar(bl)), eoff) ->
@@ -1510,6 +1572,23 @@ and mutate_meminfo (seid: MEV.t) (g: meminfo)
           ]
       end
 
+  | ASbrk e ->  
+        begin  
+          match e with 
+          | ACst sz ->  
+                      if (Integer.is_zero sz) then 
+                          (* Todo: sviL := _hli*)
+                            mutate_hli_assgin seid g sviL e
+                      else if (Integer.gt sz Integer.zero ) 
+                      then 
+                            mutate_hli_init seid g sviL e
+                      else if (Integer.lt sz Integer.zero ) 
+                      then 
+                            [] 
+                      else []
+          |_-> [] 
+        end 
+  
   | _ ->
       let _ = Mman_options.Self.failure "Unsupported assign@."
       in []
@@ -1518,6 +1597,7 @@ and mutate_stack (_seid: MEV.t) (g: meminfo)
   (sviL: Mman_svar.svid) (sviR: Mman_svar.svid)
   : meminfo 
   =
+  let _ = Mman_options.Self.debug ~level:2 "MSH:mutate_stack@." in 
   { stack = MEV.EnvMap.add sviL sviR g.stack;
     mls = g.mls;
     atoms = g.atoms }
@@ -1525,34 +1605,97 @@ and mutate_stack (_seid: MEV.t) (g: meminfo)
 and mutate_hli (seid: MEV.t) (g: meminfo)
   : (t * (Mman_svar.svid list) * (Mman_asyn.aconstr list)) list
   =
-  let hli = Mman_svar.svid_hli in
-  (* create a new address *)
-  let nseid, nvi = senv_add_saddr_1 seid in
+  let hli = Mman_svar.svid_hli in  
+  (* create a new address *)  
+  let nseid, nvi = senv_add_saddr_1 seid in  
   (* change the stack elements pointing to hli to point to nvi *)
   let nstack = (MEV.EnvMap.map (fun d -> (if d = hli then nvi else d)) g.stack)
   in 
   (* add a block starting from this location until hli *)
   (* and add it in the memory list *)
   let ng = { stack = nstack;
-             mls = g.mls;
+             mls = g.mls @[nvi];
              atoms = (MEV.EnvMap.add
                         nvi (Blk(nvi,Mman_svar.svid_hli))
                         g.atoms
                      )
            }
+  
   in
   (* generate constraint nvi = hli updated by the assignment in data *)
   let nc = ACmp(AEQ, ALval(ASVar(nvi)), ALval(ASVar(Mman_svar.svid_hli)))
   in
   [((some_of nseid ng), [nvi], [nc])]
 
+and mutate_hli_init (seid: MEV.t) (g: meminfo)
+  (sviL: Mman_svar.svid) (eoff: Mman_asyn.aexp)
+  : (t * (Mman_svar.svid list) * (Mman_asyn.aconstr list)) list
+  =
+    begin 
+      let hli = Mman_svar.svid_hli in    
+      (* create a new address *)  
+      let nseid, nvi = senv_add_saddr_1 seid in 
+      (* change the stack elements pointing to hli to point to sviL *)
+      let nstack = (MEV.EnvMap.map (fun d -> (if d = hli then sviL else d)) g.stack)
+      in 
+      let nnstack = MEV.EnvMap.add sviL sviL nstack in 
+
+      (* create features of sviL *)
+      let fk_svl = ref [] in
+       begin
+         List.iter (fun fk ->
+             begin
+               (Mman_options.Self.debug ~level:2 "MSH:Add feature '%s' for 'id:%d'@."
+                  (get_fname fk) sviL);
+               fk_svl := !fk_svl @ [(Mman_svar.sv_mk_feat ~svid:0 (Some(sviL)) fk)]
+             end)        
+           (get_chunk_features ())
+       end 
+      ;
+
+      let _ = (Mman_options.Self.debug ~level:2 "MSH:penv1: %a @."
+                MEV.penv_print (MEV.penv_get (MEV.senv_get nseid).peid ) )
+      in
+      let sei, svl = MEV.senv_addsvar nseid !fk_svl in 
+
+      let _ = (Mman_options.Self.debug ~level:2 "MSH:senv2: %a @."
+                 MEV.senv_print (MEV.senv_get sei)) 
+      in
+       (* get the features list of svil *)
+      let fkls = MEV.senv_get_feats sviL sei in
+      
+      
+      let n_Chd = Chd(sviL, fkls) in 
+      let n_Blk = Blk(nvi, Mman_svar.svid_hli) in 
+      let n_at = MEV.EnvMap.add sviL n_Chd g.atoms in 
+      let nn_at = MEV.EnvMap.add nvi n_Blk n_at in 
+      (* add a block starting from this location until hli *)
+      (* and add it in the memory list *)
+      let ng = { stack = nnstack;
+                 mls = g.mls @ [sviL; nvi];
+                 atoms = nn_at
+               }  
+      in
+      (* generate constraint nvi = hli updated by the assignment in data *)
+      let nc = ACmp(AEQ, ALval(ASVar(nvi)), ALval(ASVar(Mman_svar.svid_hli)))
+      in
+      [((some_of sei ng), [nvi], [nc])]
+    end 
+
+and mutate_hli_assgin (seid: MEV.t) (g: meminfo)
+  (sviL: Mman_svar.svid) (eoff: Mman_asyn.aexp)
+  : (t * (Mman_svar.svid list) * (Mman_asyn.aconstr list)) list
+  =
+  (* generate constraint nvi = hli updated by the assignment in data *)
+  let nc = ACmp(AEQ, ALval(ASVar(sviL)), ALval(ASVar(Mman_svar.svid_hli)))
+  in
+  [((some_of seid g), [], [nc])]
 
 (** Mutate sviL to a location hli + aexp. *)
 and mutate_hli_offset (seid: MEV.t) (g: meminfo)
   (sviL: Mman_svar.svid) (eoff: Mman_asyn.aexp)
   : (t * (Mman_svar.svid list) * (Mman_asyn.aconstr list)) list
-  =
-  let _ = Mman_options.Self.warning "Access outside data segment limit@." in
+  = 
   let hli = Mman_svar.svid_hli in
   (* Two cases: 
      a block starting from hli already exists or
@@ -1562,15 +1705,19 @@ and mutate_hli_offset (seid: MEV.t) (g: meminfo)
   match hliblk with
   | Emp -> (* no block *)
       (* create a new location *)
+      let _ = Mman_options.Self.feedback "MSH:mutate hli offset:create a new location...@." in
       let nseid, nvi = senv_add_saddr_1 seid in
       (* change the stack *)
       let nstack = MEV.EnvMap.add sviL nvi g.stack in
-      (* add the block in atoms *)
-      let natoms = MEV.EnvMap.add hli (Blk(hli, nvi)) g.atoms in
+      (* add the block in atoms *)      
+      let natoms = MEV.EnvMap.add hli (Blk(hli, nvi)) g.atoms in      
       (* constraint defining nvi *)
       let nc = ACmp(AEQ, ALval(ASVar(nvi)), ABinOp(AAdd, ALval(ASVar(hli)),eoff))
       in
-      let ng = { stack = nstack; mls = g.mls; atoms = natoms } in
+      let ng = { stack = nstack; 
+                 mls = g.mls @ [hli]; 
+                atoms = natoms } 
+      in 
       [((some_of nseid ng), [nvi], [nc])]
 
   | Blk(_ai,bi) ->
@@ -1612,8 +1759,6 @@ and mutate_hli_offset (seid: MEV.t) (g: meminfo)
       in
       [(bottom_of seid, [], [])]
       
-  
-  
 (**************************************************************************)
 (** {2 Unfold} *)
 (**************************************************************************)
@@ -1669,26 +1814,20 @@ let unfold (lv: Mman_asyn.alval) (sh:valinfo)
           unfold_feat svi fk sh
     | _ -> []
 
-
-
 (* TODO:*)
 let fold (_p:Mman_asyn.aconstr) (_vl:Mman_svar.svarinfo) (_g:valinfo)
   : valinfo
   = _g 
 
 
-
-
 (**************************************************************************)
 (** {2 Normalize abstract values} *)
 (**************************************************************************)
 
- 
 (* list of predicate and existential vars *)
 let normalize (_sh:valinfo) 
   :( Mman_asyn.aconstr * Mman_svar.svarinfo ) list 
   = []
-
  
 (**************************************************************************)
 (** {2 Add/remove variables} *)
@@ -1718,7 +1857,6 @@ let stack_of (sh:valinfo) (svid: Mman_svar.svid)
       !res 
     end 
 
-
 (**************************************************************************)
 (**  initial shape value *)
 (**************************************************************************)
@@ -1731,7 +1869,6 @@ let new_Blk (sv1:Mman_svar.svid) (sv2:Mman_svar.svid) =
 let new_Chd (sv:Mman_svar.svid) (fkl:(feature_kind * svid) list ) = 
   Chd (sv, fkl)
 
-
 (* new Chk atom *)
 let new_Chk (sv:Mman_svar.svid) (fkl:(feature_kind * svid) list ) = 
   Chk (sv, fkl)
@@ -1739,7 +1876,6 @@ let new_Chk (sv:Mman_svar.svid) (fkl:(feature_kind * svid) list ) =
 (* new Cls atom *)
 let new_Cls (sv1:Mman_svar.svid) (sv2:Mman_svar.svid) (sv3:Mman_svar.svid) = 
   Cls (sv1,sv2,sv3)
-
 
 let new_mem (st:MEV.envmap) (ls:svid list) (at:atominfo MEV.EnvMap.t)
     = 

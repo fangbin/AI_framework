@@ -64,7 +64,7 @@ let run_compute () =
     (* 2b: for malloc *)
     Mman_options.Self.feedback "--------------------------------------------";
     Mman_options.Self.feedback "Analysing 'malloc'";
-   (*Mman_dflap.compute_for_malloc ();*)
+    (*Mman_dflap.compute_for_malloc ();*)
     (*Mman_dflow.compute_for_malloc ();*)
 
     (* 2c: for mfree *)

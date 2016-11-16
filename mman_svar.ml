@@ -166,8 +166,8 @@ let sv_compare sv1 sv2 =
           (Mman_dabs.featurekind2int fk2)
  
 let sv_equal sv1 sv2 =
-  if sv1.typ <> sv2.typ then false
-  else
+  if sv1.typ <> sv2.typ then  false  
+  else 
     match sv1.kind, sv2.kind with
     | Null, Null | Hole, Hole | Hli, Hli | Hst, Hst -> true
     | PVar vi1, PVar vi2 ->
@@ -294,19 +294,20 @@ end
  * Get the class of types from a !{Cil_types.varinfo}
 *)
 let svtype vinfo =
-  let isChunk =
-    Cil_datatype.Typ.equal
-      !(Mman_dabs.dabs).cty vinfo.Cil_types.vtype in
-  match vinfo.vtype with
-  | TInt _ -> SVInt
+  match Cil.unrollTypeDeep vinfo.vtype with 
+  | TInt _ ->   SVInt
+  
   | TPtr _ -> (if Mman_dabs.is_chunk_ptr vinfo.Cil_types.vtype
-                then SVPtr(SVChunk)
-                else SVPtr(SVInt))
-  | TComp _ -> (if Mman_dabs.is_chunk_struct vinfo.Cil_types.vtype
-                 then SVChunk
-                 else SVOth)
-  | _ -> SVOth
-     
+                then   SVPtr(SVChunk)
+                else  
+                       SVPtr(SVInt))
+  | TComp _ -> 
+              (if Mman_dabs.is_chunk_struct vinfo.Cil_types.vtype
+                 then   SVChunk
+                 else   SVOth)
+  | _ ->   SVOth
+
+
 (**
  * Create a new symbolic variable of identifier svid for
  * the program variable vinfo. 
@@ -316,6 +317,7 @@ let svtype vinfo =
  * 
  * Return the last created index and the list of symbolic variables created.
 *)
+
 let sv_mk_var ?(svid=0) vinfo =
   { id = svid;
     kind = PVar(ref vinfo);
@@ -398,8 +400,7 @@ let sv_add_pvar vinfo svid =
             svl := !svl @ svfl
           end
        );
-
-      (* TODO: if chunk variable, add features *)
+ 
       (Mman_options.Self.debug ~level:2
          "Add '%a' of type %a (aka %a)@."
          Printer.pp_varinfo vinfo

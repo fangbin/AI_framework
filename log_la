@@ -210,23 +210,35 @@
        {	(1)__null;	(2)__hole;	(3)__hli;	(4)__hst;
        } @)
 [mman] MV:penv: (4)_heapstart is a chunk
-[mman] ENV:its feature (4,csz)
-[mman] ENV:its feature (4,fn)
-[mman] get pv in sven
+[mman] get pv in senv
 [mman] MV:penv: (7)_heapend is a chunk
-[mman] ENV:its feature (7,csz)
-[mman] ENV:its feature (7,fn)
-[mman] get pv in sven
+[mman] get pv in senv
 [mman] new senv: senv_2 = @(0,penv_3,
        [6] 
        {	(1)__null;	(2)__hole;	(3)__hli;	(4)__hst;
        	(5)_heapstart;	(6)_heapend;} @)
+[mman] MV:penv: (4)_heapstart is a chunk
+[mman] get pv in senv
+[mman] ENV:its feature (4,csz)
+[mman] ENV:its feature (4,fn)
+[mman] MV:penv: (7)_heapend is a chunk
+[mman] get pv in senv
+[mman] ENV:its feature (7,csz)
+[mman] ENV:its feature (7,fn)
+[mman] new senv: senv_3 = @(0,penv_3,
+       [10] 
+       {	(1)__null;	(2)__hole;	(3)__hli;	(4)__hst;
+       	(5)_heapstart;	(6)_heapend;	(7)c4__csz;	(8)c4__fn;	(9)c7__csz;
+       	(10)c7__fn;} @)
 [mman] old value  ({peid:3}Top)
+[mman] DW:env2apron: 
+        eid3 -> [1]
+       [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> _heapend:int 5> _heapstart:int 6> c4__csz:int 7> c4__fn:int 8> c7__csz:int 9> c7__fn:int 10> frhd:int 11> man:int 12> memleft:int 13> p1:int 14> p2:int]
 [mman] new value:
-         ({peid:1}eshape: (4)_heapstart |-> (4)__hst, (7)_heapend |-> (7)_heapend, 
-       chd((4)__hst)[csz:(1)__hole,fn:(1)__hole,] * chd((7)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+         ({peid:3}eshape: (4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
         
-       	 dwords:{eid_-1}bottom 
+       	 dwords:{eid_3}top 
        )
 [mman] -------------------eshape initialized-------------------
 [mman] doing assign
@@ -235,24 +247,360 @@
 [mman] do_assigns: fn(_heapend):=0
 [mman] do_assigns: csz(_heapend):=0
 [mman] do_assigns: memleft:=0
-[mman] on ({peid:1}eshape: (4)_heapstart |-> (4)__hst, (7)_heapend |-> (7)_heapend, 
-       chd((4)__hst)[csz:(1)__hole,fn:(1)__hole,] * chd((7)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+[mman] on ({peid:3}eshape: (4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
         
-       	 dwords:{eid_-1}bottom 
+       	 dwords:{eid_3}top 
        )
-[mman] MV:do_assign_set, exsh:(4)_heapstart |-> (4)__hst, (7)_heapend |-> (7)_heapend, 
-       chd((4)__hst)[csz:(1)__hole,fn:(1)__hole,] * chd((7)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
-[mman] MV:do_assign_set, dw value:{eid_-1}bottom
+[mman] MV:do_assign_set, exsh:(4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+[mman] MV:do_assign_set, dw value:{eid_3}top
 [mman] do_assign_one....
 [mman] --------- 
         MV:evaluate alval:fn(_heapstart)
 [mman] MSH:evalL afeat
-[mman] MSH:after to_senv_lval:sv_5 in penv
+[mman] MSH:after to_senv_lval:sv_4 in senv
 [mman] MSH:evalL_feat
-[mman] MSH:find location of sv_5 on stack ...
+[mman] MSH:find location of sv_4 on stack ...
+[mman] MSH:location of 4 is 5...
+[mman] MSH:evalL_atom...
+[mman] MSH:atom Chd or Chk, eval is feature...
+[mman] MV:after evalL is (fn(sv_5))
+[mman] --------- 
+        MV:evaluate alval:csz(_heapstart)
+[mman] MSH:evalL afeat
+[mman] MSH:after to_senv_lval:sv_4 in senv
+[mman] MSH:evalL_feat
+[mman] MSH:find location of sv_4 on stack ...
+[mman] MSH:location of 4 is 5...
+[mman] MSH:evalL_atom...
+[mman] MSH:atom Chd or Chk, eval is feature...
+[mman] MV:after evalL is (csz(sv_5))
+[mman] --------- 
+        MV:evaluate alval:fn(_heapend)
+[mman] MSH:evalL afeat
+[mman] MSH:after to_senv_lval:sv_7 in senv
+[mman] MSH:evalL_feat
+[mman] MSH:find location of sv_7 on stack ...
+[mman] MSH:location of 7 is 6...
+[mman] MSH:evalL_atom...
+[mman] MSH:atom Chd or Chk, eval is feature...
+[mman] MV:after evalL is (fn(sv_6))
+[mman] --------- 
+        MV:evaluate alval:csz(_heapend)
+[mman] MSH:evalL afeat
+[mman] MSH:after to_senv_lval:sv_7 in senv
+[mman] MSH:evalL_feat
+[mman] MSH:find location of sv_7 on stack ...
+[mman] MSH:location of 7 is 6...
+[mman] MSH:evalL_atom...
+[mman] MSH:atom Chd or Chk, eval is feature...
+[mman] MV:after evalL is (csz(sv_6))
+[mman] --------- 
+        MV:evaluate alval:memleft
+[mman] MSH:after to_senv_lval:sv_11 in senv
+[mman] MV:after evalL is (sv_11)
+[mman] --------- 
+        evaluate aexp:0
+[mman] MSH:evalE_lval, ACst ...
+[mman] MV:after evalE is (0)
+[mman] --------- 
+        evaluate aexp:0
+[mman] MSH:evalE_lval, ACst ...
+[mman] MV:after evalE is (0)
+[mman] --------- 
+        evaluate aexp:0
+[mman] MSH:evalE_lval, ACst ...
+[mman] MV:after evalE is (0)
+[mman] --------- 
+        evaluate aexp:0
+[mman] MSH:evalE_lval, ACst ...
+[mman] MV:after evalE is (0)
+[mman] --------- 
+        evaluate aexp:0
+[mman] MSH:evalE_lval, ACst ...
+[mman] MV:after evalE is (0)
+[mman] MV:after evaluation of loction:
+[mman] MV: do_assign_one sv_11:=0
+[mman] MV: do_assign_one csz(sv_6):=0
+[mman] MV: do_assign_one fn(sv_6):=0
+[mman] MV: do_assign_one csz(sv_5):=0
+[mman] MV: do_assign_one fn(sv_5):=0
+[mman] MV:do mutate
+[mman] MV:eshape mutate
+[mman] MSH:old eshape value:(4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+[mman] left alval:fn(sv_5)
+[mman] MSH:left value svi:5 ...
+[mman] MSH:svinfoL:(5)_heapstart
+[mman] MSH:mutate_meminfo...
+[mman] MSH:aexp:0
+[mman] MV:after mutation, eshape value:(4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+[mman] MV:after mutation, dw value:{eid_3}top
+[mman] MV:eshape mutate
+[mman] MSH:old eshape value:(4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+[mman] left alval:csz(sv_5)
+[mman] MSH:left value svi:5 ...
+[mman] MSH:svinfoL:(5)_heapstart
+[mman] MSH:mutate_meminfo...
+[mman] MSH:aexp:0
+[mman] MV:after mutation, eshape value:(4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+[mman] MV:after mutation, dw value:{eid_3}top
+[mman] MV:eshape mutate
+[mman] MSH:old eshape value:(4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+[mman] left alval:fn(sv_6)
+[mman] MSH:left value svi:6 ...
+[mman] MSH:svinfoL:(6)_heapend
+[mman] MSH:mutate_meminfo...
+[mman] MSH:aexp:0
+[mman] MV:after mutation, eshape value:(4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+[mman] MV:after mutation, dw value:{eid_3}top
+[mman] MV:eshape mutate
+[mman] MSH:old eshape value:(4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+[mman] left alval:csz(sv_6)
+[mman] MSH:left value svi:6 ...
+[mman] MSH:svinfoL:(6)_heapend
+[mman] MSH:mutate_meminfo...
+[mman] MSH:aexp:0
+[mman] MV:after mutation, eshape value:(4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+[mman] MV:after mutation, dw value:{eid_3}top
+[mman] MV:eshape mutate
+[mman] MSH:old eshape value:(4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+[mman] left alval:sv_11
+[mman] MSH:left value svi:11 ...
+[mman] MSH:svinfoL:(11)memleft
+[mman] MSH:mutate_meminfo...
+[mman] MSH:aexp:0
+[mman] MV:after mutation, eshape value:(4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+[mman] MV:after mutation, dw value:{eid_3}top
+[mman] MV:finish mutating, Some
+[mman] MV:after do_assign_one
+[mman] MV:after assign_set is Some()
+[mman] MV:assign_done, 
+        value: ({peid:3}eshape: (4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+        
+       	 dwords:{eid_3}top 
+       )
+[mman] MV:meet_exp....
+[mman] MV:meet_exp_set....
+[mman] MV:meet_exp_set, exsh:(4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+[mman] MV:meet_exp_set, dw value:{eid_3}top
+[mman] MV:meet_exp_one....
+[mman] MSH:do guard...
+[mman] MSH:constraints:__hli>=0
+[mman] MSH:do guard_one...
+[mman] MSH:constraint:__hli>=0
+[mman] MSH:evalE:__hli op 0
+[mman] MSH:evalE_lval, ALval ...
+[mman] MSH:evalE_lval lv: __hli...
+[mman] MSH:evalE_lval AVar:(3)__hli
+[mman] MSH:evalE_svid...svid 3
+[mman] MSH:evalE_svid, no need to look in stack...
+[mman] MSH:evalE_lval, ACst ...
+[mman] MSH:after evalE:sv_3 op 0
+[mman] MSH:evalE, no unfolding needed....
+[mman] MSH:sv_3>=0
+[mman] MSH: a constraint on locations, only comparison accepted...
+[mman] MSH:guard_geq...
+[mman] MSH:guard_geq, Some g ...
+[mman] MSH:guard_one return constraint:sv_3>=0
+[mman] MSH:guard_one return value:(4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+[mman] MV:no need to unfold...
+[mman] MV:no constraints on data...
+[mman] MV:after meet_exp_set is Some()
+[mman] MV:finish meet_exp.
+[mman] MV:meet_exp....
+[mman] MV:meet_exp_set....
+[mman] MV:meet_exp_set, exsh:(4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+[mman] MV:meet_exp_set, dw value:{eid_3}top
+[mman] MV:meet_exp_one....
+[mman] MSH:do guard...
+[mman] MSH:constraints:man>=0
+[mman] MSH:constraints:p1>=0
+[mman] MSH:constraints:p2>=0
+[mman] MSH:do guard_one...
+[mman] MSH:constraint:man>=0
+[mman] MSH:evalE:man op 0
+[mman] MSH:evalE_lval, ALval ...
+[mman] MSH:evalE_lval lv: man...
+[mman] MSH:evalE_lval AVar:(12)man
+[mman] MSH:evalE_svid...svid 12
+[mman] MSH:evalE_svid, inspect the stack...
+[mman] MSH:evalE_lval, ACst ...
+[mman] MSH:after evalE:sv_12 op 0
+[mman] MSH:evalE, no unfolding needed....
+[mman] MSH:sv_12>=0
+[mman] MSH: a constraint on locations, only comparison accepted...
+[mman] MSH:guard_geq...
+[mman] MSH:guard_geq, Some g ...
+[mman] MSH:guard_one return constraint:sv_12>=0
+[mman] MSH:guard_one return value:(4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+[mman] MSH:do guard_one...
+[mman] MSH:constraint:p1>=0
+[mman] MSH:evalE:p1 op 0
+[mman] MSH:evalE_lval, ALval ...
+[mman] MSH:evalE_lval lv: p1...
+[mman] MSH:evalE_lval AVar:(13)p1
+[mman] MSH:evalE_svid...svid 13
+[mman] MSH:evalE_svid, inspect the stack...
+[mman] MSH:evalE_lval, ACst ...
+[mman] MSH:after evalE:sv_13 op 0
+[mman] MSH:evalE, no unfolding needed....
+[mman] MSH:sv_13>=0
+[mman] MSH: a constraint on locations, only comparison accepted...
+[mman] MSH:guard_geq...
+[mman] MSH:guard_geq, Some g ...
+[mman] MSH:guard_one return constraint:sv_13>=0
+[mman] MSH:guard_one return value:(4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+[mman] MSH:do guard_one...
+[mman] MSH:constraint:p2>=0
+[mman] MSH:evalE:p2 op 0
+[mman] MSH:evalE_lval, ALval ...
+[mman] MSH:evalE_lval lv: p2...
+[mman] MSH:evalE_lval AVar:(14)p2
+[mman] MSH:evalE_svid...svid 14
+[mman] MSH:evalE_svid, inspect the stack...
+[mman] MSH:evalE_lval, ACst ...
+[mman] MSH:after evalE:sv_14 op 0
+[mman] MSH:evalE, no unfolding needed....
+[mman] MSH:sv_14>=0
+[mman] MSH: a constraint on locations, only comparison accepted...
+[mman] MSH:guard_geq...
+[mman] MSH:guard_geq, Some g ...
+[mman] MSH:guard_one return constraint:sv_14>=0
+[mman] MSH:guard_one return value:(4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+[mman] MV:no need to unfold...
+[mman] MV:no constraints on data...
+[mman] MV:after meet_exp_set is Some()
+[mman] MV:finish meet_exp.
+[mman] DF:initial_state {peid:3}eshape: (4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+        
+       	 dwords:{eid_3}top
+[mman] transfer_stmt_main sid: 85 on 
+        {peid:3}eshape: (4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+        
+       	 dwords:{eid_3}top 
+       '
+[mman] s.skind: Instr2
+[mman] function called: laInit'
+[mman] do_call: laInit(...)
+[mman] forget __retres,... in {peid:3}eshape: (4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+        
+       	 dwords:{eid_3}top
+[mman] Unify penvs 3, 0
+[mman] MV:meet_exp....
+[mman] MV:meet_exp_set....
+[mman] MV:meet_exp_set, exsh:(4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+[mman] MV:meet_exp_set, dw value:{eid_3}top
+[mman] MV:meet_exp_one....
+[mman] MSH:do guard...
+[mman] MV:no need to unfold...
+[mman] MV:after meet_exp_set is Some()
+[mman] MV:finish meet_exp.
+[mman] compute_fun_aux....
+[mman] compute_fun_aux...dataflow...
+[mman] transfer_stmt_main sid: 77 on 
+        {peid:3}eshape: (4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+        
+       	 dwords:{eid_3}top 
+       '
+[mman] s.skind: Instr2
+[mman] function called: sbrk'
+[mman] transfer_sbrk: /* sid:77 */
+                      _heapstart.ptr = (struct hdr *)sbrk(65360);
+       on {peid:3}eshape: (4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+        
+       	 dwords:{eid_3}top
+[mman] transform expression: 65360
+[mman] transform_lval2var: _heapstart.ptr
+[mman] feature2exph: _heapstart->ptr to fn
+[mman] transform_sbrk: fn(_heapstart):=__hole[sbrk(65360)]
+[mman] to: fn(_heapstart):=__hli
+[mman] to: __hli:=(__hli + 65360)
+[mman] doing assign
+[mman] do_assigns: fn(_heapstart):=__hli
+[mman] do_assigns: __hli:=(__hli + 65360)
+[mman] on ({peid:3}eshape: (4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+        
+       	 dwords:{eid_3}top 
+       )
+[mman] MV:do_assign_set, exsh:(4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+[mman] MV:do_assign_set, dw value:{eid_3}top
+[mman] do_assign_one....
+[mman] --------- 
+        MV:evaluate alval:fn(_heapstart)
+[mman] MSH:evalL afeat
+[mman] MSH:after to_senv_lval:sv_4 in senv
+[mman] MSH:evalL_feat
+[mman] MSH:find location of sv_4 on stack ...
+[mman] MSH:location of 4 is 5...
+[mman] MSH:evalL_atom...
+[mman] MSH:atom Chd or Chk, eval is feature...
+[mman] MV:after evalL is (fn(sv_5))
+[mman] --------- 
+        MV:evaluate alval:__hli
+[mman] MSH:after to_senv_lval:sv_1 in senv
+[mman] MV:after evalL is (sv_1)
+[mman] --------- 
+        evaluate aexp:__hli
+[mman] MSH:evalE_lval, ALval ...
+[mman] MSH:evalE_lval lv: __hli...
+[mman] MSH:evalE_lval AVar:(3)__hli
+[mman] MSH:evalE_svid...svid 3
+[mman] MSH:evalE_svid, no need to look in stack...
+[mman] MV:after evalE is (sv_3)
+[mman] --------- 
+        evaluate aexp:(__hli + 65360)
+[mman] MSH:evalE_lval, ALval ...
+[mman] MSH:evalE_lval lv: __hli...
+[mman] MSH:evalE_lval AVar:(3)__hli
+[mman] MSH:evalE_svid...svid 3
+[mman] MSH:evalE_svid, no need to look in stack...
+[mman] MSH:evalE_lval, ACst ...
+[mman] MSH:after evalE is Some ...
+[mman] MV:after evalE is None
+[mman] MV:after evaluation of loction:
+[mman] MV: do_assign_one different length
+[mman] MV:do mutate
+[mman] MV:eshape mutate
+[mman] MSH:old eshape value:(4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+[mman] left alval:fn(sv_5)
+[mman] MSH:left value svi:5 ...
+[mman] MSH:svinfoL:(5)_heapstart
+[mman] MSH:mutate_meminfo...
+[mman] MSH:aexp:sv_3
+[mman] failure: Undefined address
+[mman] MV:after mutation, eshape value:(4)_heapstart |-> (5)_heapstart, (7)_heapend |-> (6)_heapend, 
+       chd((5)_heapstart)[csz:(1)__hole,fn:(1)__hole,] * chd((6)_heapend)[csz:(1)__hole,fn:(1)__hole,] * emp,
+[mman] MV:after mutation, dw value:{eid_3}top
 [mman] failure: Unexpected exception.
-                Please submit bug report (Ref. "Not_found").
-[kernel] Current source was: /Users/yuezhuang/Documents/projects/mem copy/bench/la/lamain.c:7
+                Please submit bug report (Ref. "Invalid_argument("List.iter2")").
+[kernel] Current source was: /Users/yuezhuang/Documents/projects/mem copy/bench/la/lamalloc.c:187
          The full backtrace is:
          Raised at file "src/kernel_services/plugin_entry_points/log.ml", line 583, characters 30-31
          Called from file "src/kernel_services/plugin_entry_points/log.ml", line 577, characters 9-16

@@ -37,6 +37,7 @@ type aexp =
   | AAddrOf of alval
   | AUnOp of aunop * aexp
   | ABinOp of abinop * aexp * aexp
+  | ASbrk of aexp (* special exp for sbrk function *)
       
 and alval =
   | AVar of varinfo
@@ -120,6 +121,9 @@ let rec pp_aexp fmt ae =
       end
   | AAddrOf lv ->
       Format.fprintf fmt "&%a" pp_alval lv
+
+  | ASbrk e ->
+        Format.fprintf fmt "sbrk(%a)" pp_aexp e
         
 and pp_alval fmt lv =
   match lv with
@@ -293,7 +297,6 @@ let transform_cst (c:Cil_types.constant) : Integer.t =
           Printer.pp_constant c;
         raise (Not_dealt "Constant expression")
       end
-      
 
 (**
  * Utilities: return 0 if !{i} is not a mask and
@@ -623,11 +626,8 @@ let transform_field2exp
  * Return a feature left value fv and an expression with a hole ae
  *   such that fv=e(vi.fi)
 *)
-let transform_feature2exph vi fi fn =
+let transform_feature2exph vi fi fn = 
   let fk = (Mman_dabs.int2featurekind fn) in
-  let _ = Mman_options.Self.debug ~level:1 "feature2exph: %a->%a to %s@."
-      Printer.pp_varinfo vi Printer.pp_field fi (Mman_dabs.get_fname fk)
-  in
   let lvar, fterm = Mman_dabs.get_feature_term (Mman_dabs.int2featurekind fn) in
   (* lvar is the logic variable used as argument of the feature definition *)
   let lvar = match lvar with
@@ -720,7 +720,7 @@ let transform_feature2exph vi fi fn =
  * Return a feature variable and an expression using vi.fi
  *   obtained by replacing vi.fi by a hole.
 *)
-let transform_fdef2exp vi fi =
+let transform_fdef2exp vi fi = 
   let featlst = Mman_dabs.get_field_feature fi in
   let _ = assert (featlst != []) in
   let ae_lst = List.map
@@ -737,7 +737,7 @@ let transform_fdef2exp vi fi =
 let transform_lval2var_syn (lv:Cil_types.lval)
   : alval * aexp
   =
-  let _ = (Mman_options.Self.debug ~level:2 "transform_lval2var: %a@."
+  let _ = (Mman_options.Self.debug ~level:2 "ASY:transform_lval2var: %a@."
              Printer.pp_lval lv) in
   match lv with
   | Var(vi), Cil_types.NoOffset ->
@@ -815,18 +815,19 @@ let transform_lval2exp (vi:Cil_types.varinfo) (off:Cil_types.offset) =
  * Transform Cil expressions into contexts SYNTACTICALLY
  * Memoize results in exp2aexp
 *)
-let rec transform_exp_aux
-    (exp: Cil_types.exp) =
-  try
-    Mman_options.Self.debug ~level:2 "transform expression: %a@."
-      Printer.pp_exp exp;
+let rec transform_exp_aux (exp: Cil_types.exp) 
+ :aexp
+ =
+  try 
     let _, ae = Cil_datatype.Exp.Map.find exp (!exp2aexp) in
     ae
   with Not_found ->
     let ae =
       match exp.enode with
       | Const(c) ->
-          ACst(transform_cst c)
+
+          ACst(transform_cst c)  
+          (*transform_cst c *)
 
       | Lval(Var(vi),off) ->
           transform_lval2exp vi off
@@ -1024,14 +1025,13 @@ let transform_exp (exp: Cil_types.exp) =
 *)
 let transform_assign (lv: Cil_types.lval) (exp: Cil_types.exp)
   : alval list * aexp list
-  =
-  let _ = (Mman_options.Self.debug ~level:1 "transform_assign: %a:=%a@."
-             Printer.pp_lval lv Printer.pp_exp exp)
-  in
+  = 
   (* deals with both pure and syntactic transformation *)
   let alv, ae1 = transform_lval2var_syn lv in
   let _ = (Mman_options.Self.debug ~level:1 "transform_assign: %a:=%a[%a]@."
-             pp_alval alv pp_aexp ae1 Printer.pp_exp exp)
+             pp_alval alv 
+             pp_aexp ae1 
+             Printer.pp_exp exp)
   in
   let ae2 = transform_exp_aux exp in
   let ae = replace_hole (* in *) ae1  (* by *) ae2 in
@@ -1153,11 +1153,66 @@ and bounds_of_typ ikind =
     Mpzf.of_int 0, Mpzf.sub_int size 1, size
                      
 (** 
+ * Transform a call to sbrk into an abstract sbrk
+*)
+let transform_sbrk
+    (lv: Cil_types.lval option) (argl:Cil_types.exp list) 
+  : alval list * aexp list (* aconstr list *)
+  =
+  let ae_sz = match argl with
+    | e::_ -> transform_exp e(* TODO:transform exp *)
+    | _ ->
+        begin
+          Mman_options.Self.warning "Bad number of arguments for 'sbrk', taken 0@.";
+          aexp_zero
+        end
+  in
+  (* szexp shall be positive, otherwise our analysis is not correct *)
+  (* let ac_pre = ACmp(ASUPEQ, ae_sz, aexp_zero) in *)
+  (* do the assignments lv := _hli; _hli := _hli + szexp *)
+  (* let vi_hli = Cil.makeGlobalVar ~source:false ~temp:true
+      Mman_svar.sv_hli_name Cil.voidPtrType
+  in
+  let alv_hli = AVar(vi_hli) in
+  let aex_hli = ALval(alv_hli) in
+  *)
+  let aex_sbrk = ASbrk(ae_sz) in
+  let alv1l, ae1l = (match lv with
+    | None -> [], []
+    | Some(v) ->
+        let alv1, ae1 = transform_lval2var_syn v in
+        let _ = (Mman_options.Self.debug ~level:1
+                   "ASY:transform_sbrk: %a:=%a[sbrk(%a)]@."
+                   pp_alval alv1 
+                   pp_aexp ae1 
+                   pp_aexp ae_sz)
+        in
+        let ae1f = replace_hole (* in *) ae1 (* by *) aex_sbrk in
+        let _ = (Mman_options.Self.debug ~level:1 "\tto: %a:=%a@."
+                   pp_alval alv1 
+                   pp_aexp ae1f)
+        in
+        [alv1], [ae1f]
+    )
+  in
+  (*
+  let ae2f = ABinOp(AAdd, aex_hli, ae_sz) in
+  let _ = (Mman_options.Self.debug ~level:1 "\tto: %a:=%a@."
+             pp_alval alv_hli pp_aexp ae2f)
+  in
+  let avl = alv1l@[alv_hli] in
+  let ael = ae1l@[ae2f] in 
+  avl, ael, [ac_pre]
+  *)
+  alv1l, ae1l
+
+
+(** 
  * Transform a call to sbrk into
  * - a list of assignments
  * - a pre-condition 
 *)
-let transform_sbrk
+let transform_sbrk_dw
     (lv: Cil_types.lval option) (argl:Cil_types.exp list)
   : alval list * aexp list * aconstr list
   =
@@ -1182,7 +1237,7 @@ let transform_sbrk
     | Some(v) ->
         let alv1, ae1 = transform_lval2var_syn v in
         let _ = (Mman_options.Self.debug ~level:1
-                   "transform_sbrk: %a:=%a[sbrk(%a)]@."
+                   "ASY:transform_sbrk: %a:=%a[sbrk(%a)] (MDW)@."
                    pp_alval alv1 pp_aexp ae1 pp_aexp ae_sz)
         in
         let ae1f = replace_hole (* in *) ae1 (* by *) aex_hli in
@@ -1265,24 +1320,34 @@ let init_globals ()
         else
           ()
   in
-  (* Iterate over globals *)
-  let _ = Globals.Vars.iter_in_file_order init_global  in
-  (* add constraint on __hli and __hst *)
-  let vi_hli = Cil.makeGlobalVar ~source:false ~temp:true
-      Mman_svar.sv_hli_name Cil.voidPtrType in
-  let vi_hst = Cil.makeGlobalVar ~source:false ~temp:true
-      Mman_svar.sv_hst_name Cil.voidPtrType in
-  let hli_ge_0 = ACmp(ASUPEQ, ALval(AVar(vi_hli)), aexp_zero) in
-  let hst_eq_hli = ACmp(AEQ, ABinOp(ASub, ALval(AVar(vi_hli)),
-                                    ALval(AVar(vi_hst))), aexp_zero) in 
-  let _ = (c1_cn := !c1_cn @ [hli_ge_0; hst_eq_hli]) in
-  begin
-    (Mman_options.Self.debug ~level:1 "Global inits: %a := %a\nmeet %a@."
-       (fun fmt lv -> (List.iter (fun vi -> pp_alval fmt vi) lv)) !v1_vn
-       (fun fmt le -> (List.iter (fun ei -> pp_aexp fmt ei) le)) !e1_en
-       (fun fmt lc -> (List.iter (fun ei -> pp_aconstr fmt ei) lc)) !c1_cn);
-    !v1_vn, !e1_en, !c1_cn
-  end
+    (* Iterate over globals *)
+    let _ = Globals.Vars.iter_in_file_order init_global  in
+    (* add constraint on __hli and __hst *)
+    
+    (*
+    let vi_hli = Cil.makeGlobalVar ~source:false ~temp:true
+        Mman_svar.sv_hli_name Cil.voidPtrType in
+    let vi_hst = Cil.makeGlobalVar ~source:false ~temp:true
+        Mman_svar.sv_hst_name Cil.voidPtrType in
+    let hli_ge_0 = ACmp(ASUPEQ, 
+      (AVar(vi_hli)), aexp_zero) in
+    let hst_eq_hli = ACmp(AEQ, ABinOp(ASub, ALval(AVar(vi_hli)),
+                                      ALval(AVar(vi_hst))), aexp_zero) in 
+    let _ = (c1_cn := !c1_cn @ [hli_ge_0; hst_eq_hli]) in*)
+
+
+   (* get __hli and __hst from penv *)
+   let hli_ge_0 = ACmp(ASUPEQ, ALval(ASVar(Mman_svar.sv_mk_hli.id)), aexp_zero) in                (* FB *)
+   let hst_eq_hli = ACmp(AEQ, ABinOp(ASub, ALval(ASVar(Mman_svar.sv_mk_hli.id)),
+                                      ALval(ASVar(Mman_svar.sv_mk_hst.id))), aexp_zero) in        (* FB *)
+   let _ = (c1_cn := !c1_cn @ [hli_ge_0; hst_eq_hli]) in
+    begin
+      (Mman_options.Self.debug ~level:1 "Global inits: %a := %a\nmeet %a @."
+         (fun fmt lv -> (List.iter (fun vi -> pp_alval fmt vi) lv)) !v1_vn
+         (fun fmt le -> (List.iter (fun ei -> pp_aexp fmt ei) le)) !e1_en
+         (fun fmt lc -> (List.iter (fun ei -> pp_aconstr fmt ei) lc)) !c1_cn);
+      !v1_vn, !e1_en, !c1_cn
+    end
 
 (************************************************************************ *)
 (** {1 Reduction to a symbolic environment} *)
@@ -1321,7 +1386,9 @@ and to_senv_lval (sei: Mman_env.t) (lv: alval) (isLoc: bool)
   =
   match lv with
   | AVar(vi) ->
+
       let svi = Mman_env.senv_getvar sei (Mman_svar.sv_mk_var vi) in
+      
       let svil = if isLoc then
           Mman_env.senv_getvar sei
             (Mman_svar.sv_mk_loc (Mman_svar.Svar.id svi) (Mman_svar.svtype vi))
