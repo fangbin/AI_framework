@@ -37,6 +37,7 @@ module Mman_state = State_builder.Hashtbl
 let run_compute () =
   begin
     (* Step 0: check and initialise data abstraction *)
+    Mman_options.Self.feedback "check and initialise data abstraction@.";
     Mman_dabs.init (); 
     Mman_options.Self.feedback "--------------------------------------------";
     Mman_options.Self.feedback "Analysed code in full.c@.";

@@ -42,10 +42,13 @@ open Mman_asyn
 let env_getvar (eid: Mman_env.t) (svi: Mman_svar.svarinfo)
   : Mman_svar.svarinfo
   =
-  if Mman_options.OptNumAnalysis.get() then
+   Mman_env.senv_getvar eid svi
+   
+  (*if Mman_options.OptNumAnalysis.get() then
       Mman_env.penv_getvar eid svi
   else
       Mman_env.senv_getvar eid svi
+*)
 
 
 (**                                                                              
@@ -54,20 +57,37 @@ let env_getvar (eid: Mman_env.t) (svi: Mman_svar.svarinfo)
 let env_vars (eid: Mman_env.t)
   : (int * Mman_svar.svarinfo) list
   =
-  if Mman_options.OptNumAnalysis.get() then 
-    Mman_env.penv_vars eid
-  else
-    Mman_env.senv_vars eid
+  let _= Mman_options.Self.debug ~level:1 "DW:env_vars , seid:%d@." eid in 
+    Mman_env.senv_vars eid 
 
+ (* if Mman_options.OptNumAnalysis.get() then 
+    Mman_env.penv_vars eid
+  else 
+    Mman_env.senv_vars eid
+*)
 
 let env_getvinfo (eid: Mman_env.t) (sid: Mman_svar.svid)
   : Mman_svar.svarinfo
   =
+  Mman_env.senv_getvinfo eid sid
+  (*
   if Mman_options.OptNumAnalysis.get() then
-    Mman_env.penv_getvinfo eid sid
+      Mman_env.penv_getvinfo eid sid
   else 
-    Mman_env.senv_getvinfo eid sid
+      Mman_env.senv_getvinfo eid sid
+*)
 
+
+
+
+
+  (*let sv = Mman_env.penv_getvinfo eid sid in 
+  if (sv.id == Mman_svar.svid_hole)
+    then     
+        Mman_env.senv_getvinfo eid sid
+    else 
+        sv
+    *)
 
 let env_size (eid: Mman_env.t)
   : int
@@ -107,37 +127,101 @@ let env_map = ref EnvAPMap.empty
 let env2apron (eid: Mman_env.t) 
   : Apron.Environment.t 
   =
-    (*let _ = Mman_options.Self.debug ~level:2
-          "DW:env2apron "
-        in *)
+    (*let _ = 
+    EnvAPMap.iter 
+    (
+      fun ei apei -> 
+        Mman_options.Self.debug ~level:1 "DW:old apron envs list: %a @."
+        (Apron.Environment.print ~first:"[" ~sep:" " ~last:"]") (Vector.get apronenvs apei)
+    )
+    !env_map in *)
     try
       let apei = EnvAPMap.find eid !env_map in
       Vector.get apronenvs apei
     with Not_found ->    
       let svl = 
             if eid != -1 
-            then (env_vars eid) 
+            (*then (env_vars eid) *)
+            then Mman_env.senv_vars2 eid 
             else [] 
         in
-      let avl = List.map
+      let _ = Mman_options.Self.debug ~level:1
+          "DW:env2apron,seid:%d  env_vars list length: %d@."
+            eid 
+            (List.length svl) 
+            in 
+      let avl = 
+          List.map
           (
-            fun  (_i,sv) -> 
+            fun  sv-> 
                     Apron.Var.of_string (Mman_svar.sv_tostring sv)
           )
           svl
       in
+
       let ap_env = Apron.Environment.make
           (Array.of_list avl) (Array.of_list [])
       in
       let apei = Vector.addi apronenvs ap_env in
       let _ = (env_map := EnvAPMap.add eid apei !env_map) in      
       let _ = Mman_options.Self.debug ~level:1
-          "DW:env2apron: \n eid%d -> [%d]\n%a@."
+          "DW:env2apron: \n seid_%d -> [%d]\n%a@."
           eid apei
           (Apron.Environment.print ~first:"[" ~sep:" " ~last:"]") ap_env
       in
       ap_env
 
+(* update the apron environment corresponding to a value environment *)
+let update_env2apron (eid: Mman_env.t) 
+  = 
+    (
+      let _ = Mman_options.Self.debug ~level:2
+          "DW:update apron mapping, eid:%d..."
+          eid 
+        in 
+      let _ = 
+          EnvAPMap.iter 
+          (
+            fun ei apei -> 
+              Mman_options.Self.debug ~level:1 "DW:old apron envs list: seid_%d->apei_%d \n %a @."
+              ei apei 
+              (Apron.Environment.print ~first:"[" ~sep:" " ~last:"]") (Vector.get apronenvs apei)
+          )
+          !env_map
+        in 
+      (* remove the old apron correponding to eid *)
+       
+      let _ = Mman_options.Self.debug ~level:2
+          "DW:update env_map@."
+        in 
+      let svl = 
+          if eid != -1 
+          then (env_vars eid) 
+          else [] 
+      in
+      let avl = List.map
+          (
+            fun (_i,sv) -> 
+                  Apron.Var.of_string (Mman_svar.sv_tostring sv)
+          )
+          svl
+      in
+      let ap_env = Apron.Environment.make
+          (Array.of_list avl) (Array.of_list [])
+      in
+      (* update the mapping between value env and apron env *)
+      let apei = EnvAPMap.find eid !env_map in
+      Vector.update apronenvs apei ap_env;
+      env_map := EnvAPMap.remove eid !env_map; 
+      env_map := EnvAPMap.add eid apei !env_map;
+      EnvAPMap.iter 
+          (
+            fun ei apei -> 
+              Mman_options.Self.debug ~level:1 "DW:new apron envs list: %a @."
+              (Apron.Environment.print ~first:"[" ~sep:" " ~last:"]") (Vector.get apronenvs apei)
+          )
+          !env_map
+    )
   
 (* ********************************************************************** *)
 (* {2 Translation to Apron syntax} *)
@@ -171,6 +255,9 @@ let to_var (sei: Mman_env.t) (lv: Mman_asyn.alval)
   =
   match lv with
   | Mman_asyn.AVar(vi) ->
+      let _  = Mman_options.Self.debug ~level:1 "Mman_asyn.ASVar(%a)" 
+      Mman_svar.
+      in 
       if vi.vname ==  Mman_svar.sv_hli_name 
       then  
             let svi = Mman_svar.svid_hli in 
@@ -180,6 +267,9 @@ let to_var (sei: Mman_env.t) (lv: Mman_asyn.alval)
             Apron.Var.of_string (Mman_svar.sv_tostring svi)
 
   | Mman_asyn.ASVar(sid) ->
+      let _  = Mman_options.Self.debug ~level:1 "Mman_asyn.ASVar(sid:%d), sei:%d@."
+              sid sei 
+          in
       let svi = env_getvinfo sei sid in
       Apron.Var.of_string (Mman_svar.sv_tostring svi)
         
@@ -190,6 +280,9 @@ let to_var (sei: Mman_env.t) (lv: Mman_asyn.alval)
       Apron.Var.of_string (Mman_svar.sv_tostring lsvi)
 
   | Mman_asyn.AFeat(fk, Mman_asyn.AVar(vi)) -> 
+      (*let _ = Mman_options.Self.debug ~level:1
+          "Mman_asyn.AFeat(fk, Mman_asyn.AVar(vi))@."
+          in*) 
       let svi = env_getvar sei (Mman_svar.sv_mk_var vi) in
       let fsvi = env_getvar sei (Mman_svar.sv_mk_feat
                                              (Some (Mman_svar.Svar.id svi))
@@ -197,8 +290,16 @@ let to_var (sei: Mman_env.t) (lv: Mman_asyn.alval)
       in
       Apron.Var.of_string (Mman_svar.sv_tostring fsvi)
 
-  | Mman_asyn.AFeat(fk, Mman_asyn.ASVar(sid)) -> 
+  | Mman_asyn.AFeat(fk, Mman_asyn.ASVar(sid)) ->
+      (*let _ = Mman_options.Self.debug ~level:1
+          "MDW:Mman_asyn.AFeat(fk, Mman_asyn.ASVar(%d)), seid:%d  @."
+            sid sei 
+          in*)  
       let svi = env_getvinfo sei sid in
+      let _ = Mman_options.Self.debug ~level:1"MDW:%a@."
+            Mman_svar.Svar.pretty svi
+          in  
+
       let fsvi = env_getvar sei (Mman_svar.sv_mk_feat
                                              (Some (Mman_svar.Svar.id svi))
                                              fk)
@@ -247,6 +348,13 @@ let rec to_texpr (sei: Mman_env.t) (ae: Mman_asyn.aexp)
       Apron.Texpr1.cst apenv (Apron.Coeff.s_of_int (Integer.to_int i))
         
   | Mman_asyn.ALval (lv) ->
+      (*let _ = Mman_options.Self.debug ~level:1
+          "MDW:to_texpr, seid:%d  @." sei 
+          in  
+      let _ = (Mman_options.Self.debug ~level:1 "DW:senv: %a @."
+                  Mman_env.senv_print (Mman_env.senv_get sei)) 
+          in*)
+
       let apv = to_var sei lv in
       Apron.Texpr1.var apenv apv
 
@@ -316,8 +424,10 @@ let to_tcons (sei: Mman_env.t) (ac: Mman_asyn.aconstr)
       let apesub = Apron.Texpr1.binop Apron.Texpr1.Sub apeL apeR
           ap_optyp ap_round in
       let apop = to_tcons_typ op in
-      Apron.Tcons1.make apesub apop
-
+      let res = Apron.Tcons1.make apesub apop in 
+      let _ = Mman_options.Self.debug ~level:1
+          "MDW:const:%a@."  Apron.Tcons1.print res
+      in res
         
 (* ********************************************************************** *)
 (* {3 Abstract value} *)
@@ -360,7 +470,9 @@ module Model = struct
   (** Basic functions used in Datatype.S *)
   let pretty_code_intern (p_caller:Type.precedence) fmt (d: value) = 
     let pp fmt = begin
-      Format.fprintf fmt "{eid_%d}" d.eid;
+      Format.fprintf fmt "{seid_%d, peid_%d}" 
+      d.eid 
+      (Mman_env.senv_get d.eid).peid ;
       Apron.Abstract1.print fmt d.vap
     end
     in
@@ -444,7 +556,6 @@ module Model = struct
      vap = Apron.Abstract1.bottom man_apron ap_eid}
 
   let top_of eid =
-
     let ap_eid = env2apron eid in
       { eid = eid;
         vap = Apron.Abstract1.top man_apron ap_eid }
@@ -614,7 +725,8 @@ module Model = struct
   let meet_exp (sei: Mman_env.t) (d: t) (c1_cn: Mman_asyn.aconstr list) =
     (* TODO: assert (env2apron sei) = Apron.Abstract1.env (to_apron d.vap) *)    
     (*let _ = assert ((env2apron sei) == Apron.Abstract1.env (to_apron d.vap)) in *)
-    let _ = Mman_options.Self.debug ~level:1 "MDW:meet_exp......@."
+    let _ = Mman_options.Self.debug ~level:1 "MDW:meet_exp, sei:%d, dw.eid:%d on \n %a ......@."
+        sei d.eid (pretty_code_intern Type.Basic) d
         in
     let apenv = Apron.Abstract1.env (to_apron d.vap) in
     let arr = Apron.Tcons1.array_make apenv (List.length c1_cn) in
@@ -624,10 +736,14 @@ module Model = struct
                )
                c1_cn)
     in 
+    let dw = 
     { eid = d.eid;
       vap = Apron.Abstract1.meet_tcons_array man_apron
             (to_apron d.vap) arr}
-  
+    in 
+    let _ = Mman_options.Self.debug ~level:1 "DW: after meet_exp \n%a @."
+                  (pretty_code_intern Type.Basic) dw in 
+    dw 
 
   let meet_exp_with (sei: Mman_env.t) (d: t) (c1_cn: Mman_asyn.aconstr list) =
     let apenv = Apron.Abstract1.env (to_apron d.vap) in
@@ -647,7 +763,11 @@ module Model = struct
     (*TODO bug Failure("hd") => llv is empty *)
     (*if (List.length llv == 0) then d 
     else *) 
-    let eid = d.eid in
+
+    let eid = d.eid in (* eid is equal to the seid of shape *)
+    let _ = Mman_options.Self.debug ~level:1 "DW:do_assign: eid:%d@."
+          d.eid 
+    in 
     let apv1_apvn = List.map (fun lvi -> to_var eid lvi) llv
     in
     let ape1_apen = List.map (fun ei -> to_texpr eid ei) lexp 
@@ -655,16 +775,28 @@ module Model = struct
     let _ = 
         List.iter2 
         ( fun lv le ->
-             Mman_options.Self.debug ~level:1 "DW:do_assign: %a:=%a @."
+             Mman_options.Self.debug ~level:1 "DW:do_assign: %a:=%a (DW)@."
                    Apron.Var.print (lv) Apron.Texpr1.print(le)
                 
         )
         apv1_apvn 
         ape1_apen 
     in 
+    let ap_einew = env2apron d.eid in
+    let newenv = Apron.Abstract1.change_environment 
+                            man_apron
+                            (to_apron d.vap)
+                            ap_einew 
+                            false 
+                          in 
+    let new_d =              
+      { eid = d.eid;
+        vap = of_apron ( newenv )
+        }
+      in 
     let at = (Apron.Abstract1.assign_texpr_array 
                 man_apron
-                (to_apron d.vap)
+                (to_apron new_d.vap)
                 (Array.of_list apv1_apvn)
                 (Array.of_list ape1_apen)
                 None 
@@ -675,10 +807,10 @@ module Model = struct
 
     begin
        Mman_options.Self.debug ~level:1 "DW: after do_assign \n%a @."
-                  (pretty_code_intern Type.Basic) ({eid=d.eid; vap=res});
+                  (pretty_code_intern Type.Basic) ({eid=new_d.eid; vap=res});
       (*(Mman_options.Self.debug ~level:1 "DW:to value %a@." 
           Apron.Abstract1.print res);*)
-      { eid=d.eid; 
+      { eid=new_d.eid; 
         vap=res}
     end
     
@@ -717,6 +849,7 @@ module Model = struct
 
 
   let change_env (d: t) (eiold: Mman_env.t) (einew: Mman_env.t) 
+    :t 
     =
     let _ = Mman_options.Self.debug ~level:1 "DW:change_env...@." in 
     let _ = Mman_options.Self.debug ~level:2 "DW:eid:%d, eiold:%d, einew: %d@."
@@ -743,7 +876,7 @@ module Model = struct
        in                    
       { eid = einew;
         vap = of_apron ( newenv )
-        }
+      }
   
 
 
@@ -789,16 +922,34 @@ module Model = struct
   let assign (lv:Mman_asyn.alval) (exp:Mman_asyn.aexp) (d:t)
     : t 
     = 
-    let _ = (Mman_options.Self.debug ~level:1 "DW:do_one_assign: %a:=%a,...@."
+    let _ = (Mman_options.Self.debug ~level:1 "DW:do_one_assign: d.eid:%d,peid:%d, %a:=%a,...@."
+              d.eid 
+              (Mman_env.senv_get d.eid).peid
                Mman_asyn.pp_alval (lv) Mman_asyn.pp_aexp (exp);
-             Mman_options.Self.debug ~level:1 "DW:on %a@."
+               Mman_options.Self.debug ~level:1 "DW:on %a@."
                (pretty_code_intern Type.Basic) d)
     in
     let eid = env d in
+
+    let _ = Mman_options.Self.debug ~level:1 "DW: senv:%a"
+      Mman_env.senv_print (Mman_env.senv_get eid) 
+    in 
     let llv = [lv] in 
     let lexp =[exp] in 
     let apv1_apvn = List.map (fun lvi -> to_var eid lvi) llv in
     let ape1_apen = List.map (fun ei -> to_texpr eid ei) lexp in
+
+    let _ = 
+      List.iter2
+        (        
+        fun v e -> 
+          Mman_options.Self.debug ~level:1 "%a:=%a"
+            Apron.Var.print v  
+            Apron.Texpr1.print e 
+          )
+        apv1_apvn
+        ape1_apen
+      in 
     let res = of_apron (Apron.Abstract1.assign_texpr_array man_apron
                           (to_apron d.vap)
                           (Array.of_list apv1_apvn)
@@ -809,8 +960,6 @@ module Model = struct
       (Mman_options.Self.debug ~level:1 "DW:to %a@." Apron.Abstract1.print res);
       {eid = d.eid; vap = res}
     end
-
-
 
 end
 

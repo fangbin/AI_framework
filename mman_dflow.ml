@@ -181,10 +181,15 @@ let set_return_state stmt state =
  * with arguments argl in state.
 *)
 let rec compute_fun_init s kf_caller kf_callee argl state =
+  let _ = Mman_options.Self.feedback "DF:compute_fun_init...@." in
   (* - unify the caller and the callee environments *)
   let eid_caller = Mman_env.penv_of_stmt s in
   let stmt_callee = Kernel_function.find_first_stmt kf_callee in
   let eid_callee = Mman_env.penv_of_stmt stmt_callee in
+  let eid = state.MV.Model.eid in 
+  let _ = Mman_options.Self.feedback "DF:caller_penv:%d, callee_penv:%d, state.eid:%d...@." 
+          eid_caller eid_callee eid 
+  in
   (*     o unconstrain __retres from the caller environment *)
   let call_state_forgot_retres = (* if caller does not return void,
                                     unconstrain __retres in eid_call *)
@@ -194,10 +199,17 @@ let rec compute_fun_init s kf_caller kf_callee argl state =
         [Mman_asyn.AVar(vinfo_retres
                           (Kernel_function.get_return_type kf_caller))]
   in
+
+  let _ = Mman_options.Self.debug ~level:2
+             "DF:call_state_forgot_retres:eid:%d \n%a@."
+             call_state_forgot_retres.eid
+             MV.Model.pretty call_state_forgot_retres
+  in 
+
   (*     o compute the unifying environment *)
   let eid_common, _, _ = Mman_env.penv_unify eid_caller eid_callee in
   let _ = (Mman_options.Self.debug ~level:2
-             "Unified envs eid:%d: %a@."
+             "DF:Unified env eid_common:%d, \n %a@."
              eid_common
              Mman_env.penv_print (Mman_env.penv_get eid_common)
           )
@@ -218,9 +230,9 @@ let rec compute_fun_init s kf_caller kf_callee argl state =
     List.fold_left2
       (fun d fvi ei ->
          let alvi = Mman_asyn.AVar(fvi) in
-         let aei = Mman_asyn.transform_exp ei in
-         (*MV.Model.do_assign d [alvi] [aei] [alvi] [aei]*) (* !! d.sei is not eid_common *)
-         MV.Model.do_assign  call_state_extended [alvi] [aei] [alvi] [aei] 
+         let aei = Mman_asyn.transform_exp ei in      
+         (* MV.Model.do_assign  call_state_extended [alvi] [aei] [alvi] [aei] *)
+         MV.Model.do_assign d [alvi] [aei] [alvi] [aei]        (* !! d.sei is not eid_common *)
       )
       call_state_extended
       kf_fv1_fvn
@@ -234,7 +246,7 @@ let rec compute_fun_init s kf_caller kf_callee argl state =
   let callee_state_without_locals =
     MV.Model.change_env call_state_with_actuals eid_common eid_callee
   in
-  let _ = (Mman_options.Self.debug ~dkey:dflw_dkey ~level:2
+  let _ = (Mman_options.Self.debug ~level:2
              "After project out caller locals: %a@."
              MV.Model.pretty callee_state_without_locals)
   in
@@ -242,8 +254,8 @@ let rec compute_fun_init s kf_caller kf_callee argl state =
   let callee_state_init_stmt =
     set_fun_locals kf_callee eid_callee callee_state_without_locals
   in
-  let _ = (Mman_options.Self.debug ~dkey:dflw_dkey ~level:2
-             "State at first stmt sid:%d: %a@."
+  let _ = (Mman_options.Self.debug  ~level:2
+             "DF:compute_fun_init done. \n State at first stmt sid:%d: %a@."
              stmt_callee.sid
              MV.Model.pretty callee_state_init_stmt)
   in
@@ -264,33 +276,57 @@ and set_fun_locals kf _eid_kf state =
       )
       lv1_lvn
   in
-
   MV.Model.meet_exp (* eid_kf *) state (!c1_cn)
     
 (**
  * Combine the callee return state vret with the caller state
  * vcall and assign lv with __retres
-*)
+ *)
 let compute_fun_ret s lv vcall vret kf_callee =
-  let _ = Mman_options.Self.debug ~level:1 "DF:Combine the callee return state vret with the caller state ... %a @." 
+  let _ = Mman_options.Self.debug ~level:2 "DF:Combine the callee return state vret with the caller state ... @." 
       in
- 
+
+   let _ = Mman_options.Self.debug ~level:2 "DF:vcall: %a @." 
+            MV.Model.pretty vcall
+    in 
+
+  let _ = Mman_options.Self.debug ~level:2 "DF:returned_state: %a @." 
+            MV.Model.pretty vret
+    in 
+
+  (* Attention, eid_caller is not euqal to vret.eid  *)
+
   (* caller *)
   let eid_caller = Mman_env.penv_of_stmt s in
   let kf_caller = Kernel_function.find_englobing_kf s in
+
   (* callee *)
   let eid_callee = MV.Model.env vret in
+
   (* common unifying environment *)
   let eid_common, _, _ = Mman_env.penv_unify eid_caller eid_callee in
+  let _ = Mman_options.Self.debug ~level:2 "DF:eid_common %d @." 
+        eid_common
+  in 
+
   (* prepare caller state *)
   (*  - forget globals: here, not relational analysis *)
   let state_caller_noglobs =
     MV.Model.forget_list vcall (globals ())
   in
+  let _ = Mman_options.Self.debug ~level:2 "DF:state_caller_noglobs:\n %a @." 
+          MV.Model.pretty state_caller_noglobs
+  in 
+
+
   (*  - extend to common environment *)
   let state_caller_extended =
     MV.Model.change_env state_caller_noglobs
       eid_caller eid_common in
+  let _ = Mman_options.Self.debug ~level:2 "DF:state_caller_extended:\n %a@."
+      MV.Model.pretty state_caller_extended 
+  in
+
   
   (* prepare callee state *)
   let state_callee_ret_update =
@@ -329,6 +365,12 @@ let compute_fun_ret s lv vcall vret kf_callee =
   let state_composed =
     MV.Model.intersects state_caller_extended state_callee_extended
   in
+
+  let _ = Mman_options.Self.debug ~level:2 "DF:caller state extended: %a \n callee state: %a@."
+      MV.Model.pretty state_caller_extended  
+      MV.Model.pretty state_callee_extended  
+  in
+
   let state_proj_caller =
     MV.Model.change_env state_composed
       eid_common eid_caller
@@ -369,19 +411,14 @@ let isIgnoredFunction kf =
 *)
 module Compute(AnPar: ComputeArg) = struct
   (* The JOIN_SEMILATTICE *)
-  include ValapJoinSemiLattice
-      
+  include ValapJoinSemiLattice      
   (* The forward abstract transfer *)
   (* See pattern in plugins/from/from_compute.ml *)
   let rec transfer_stmt_main (s: Cil_types.stmt) (aval: t) =
-    (*let _ = (Mman_options.Self.debug ~dkey:dflw_dkey ~level:1
+    let _ = (Mman_options.Self.debug ~level:2
                "DF:transfer_stmt_main: sid:%a@.   on %a@."
                Cil_datatype.Stmt.pretty_sid s
                MV.Model.pretty aval)
-    in*)
-    let _ = (Mman_options.Self.feedback "=========================\n DF:transfer_stmt_main stmt_id: %a " 
-             Cil_datatype.Stmt.pretty_sid s
-             (*MV.Model.pretty aval*) )
     in 
     match s.skind with
     | Instr(Set (lv, exp, _)) ->
@@ -390,8 +427,7 @@ module Compute(AnPar: ComputeArg) = struct
         map_on_all_succs s (transfer_assign s lv exp aval)
           
     | Instr(Call(lv, fe, argl,_)) ->
-        (* special case sbrk *) 
-        
+        (* special case sbrk *)         
         let sei = aval.eid in 
         let kf =
           (match Kernel_function.get_called fe with
@@ -491,9 +527,10 @@ module Compute(AnPar: ComputeArg) = struct
     let llv_dw, lexp_dw,_ = Mman_asyn.transform_sbrk_dw lv argl in 
     MV.Model.do_assign aval llv lexp llv_dw lexp_dw 
       
-  and transfer_call (s: Cil_types.stmt) kf_callee lv argl
-    (aval: t) : t
+  and transfer_call (s: Cil_types.stmt) kf_callee lv argl (aval: t) 
+    : t
     =
+    let _ = Mman_options.Self.feedback "DF:transfer_call...@." in
     (* assert (kf.fname != sbrk) && not(isIgnoredFunction kf) *)
     let _, kf_caller = Kernel_function.find_from_sid s.sid in
     let _ = Mman_options.Self.debug ~level:1 "DF:do_call: %a(...)@."
@@ -502,6 +539,7 @@ module Compute(AnPar: ComputeArg) = struct
     (* compute the call state for kf to see if not yet computed *)
     let init_callee = compute_fun_init s kf_caller kf_callee argl aval in
     
+
     (* compute the return state of the callee *)
     let ret_callee = !compute_fun AnPar.stack s kf_callee init_callee in
     
@@ -740,7 +778,8 @@ let rec compute_from_entry_point () =
     (* compute initial state *)
     let init_state = get_init_state kf
     in
-    let _ = Mman_options.Self.feedback "DF:initial_state \n %a =================== @." 
+    let _ = Mman_options.Self.feedback "DF:initial_state eid:%d \n %a =================== @." 
+                init_state.MV.Model.eid
                 MV.Model.pretty init_state
     in 
     compute kf init_state
@@ -752,8 +791,9 @@ and get_init_state kf =
   let init_stmt = Kernel_function.find_first_stmt kf in
   let eid_stmt = Mman_env.penv_of_stmt init_stmt in
   let _ = Mman_options.Self.feedback "DF:Computing initial state@." in
-  let _ = Mman_options.Self.feedback "DF:Initial_state_stmt (sid:%a)@."
-                Cil_datatype.Stmt.pretty_sid init_stmt 
+  let _ = Mman_options.Self.feedback "DF:Initial_state_stmt (sid:%a, peid:%d) @."
+                Cil_datatype.Stmt.pretty_sid init_stmt  eid_stmt
+
   in 
   let _ = init_globals () in
   
@@ -768,11 +808,11 @@ and get_init_state kf =
         glb_loc_state
       )
   in
-  let _ = Mman_options.Self.debug ~dkey:dflw_dkey ~level:1
+  (*let _ = Mman_options.Self.debug ~level:2
       "DF:Initial state (sid:%a): %a@."
       Cil_datatype.Stmt.pretty_sid init_stmt
       MV.Model.pretty init_state
-  in
+  in*)
   init_state
     
 (**

@@ -862,7 +862,7 @@ void warm_boot(char *str)
   return;
 }
 
-HEADER *frhd = (HEADER *)0;
+HEADER *frhd;
 static short memleft = (short)0;
 void laFree(void *ap)
 {

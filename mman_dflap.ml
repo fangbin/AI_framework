@@ -118,105 +118,12 @@ let rec init_globals ()
       init_glv := gl;
       init_gexp := ge;
       init_gcnd := gc;
-
-      (*init_gcnd := (Mman_asyn.coerce_var vinfo_hli Cil.voidPtrType);*)
-      (*init_gcnd := Mman_asyn.init_globals;*)
       
-      (* Iterate over globals *)
-      (*Globals.Vars.iter_in_file_order init_global;*)
-      (* = iter_globals init_global (Ast.get()).globals *)
-
       let _ = Mman_options.Self.feedback "initialization done\n--------------@." in 
       init_done := true
     end
   
-   
-(*
- and init_global vi ii =
-  match vi.vstorage, ii.init with
-  | Cil_types.Static, Some(Cil_types.SingleInit(ei)) ->
-      (* assert: the initialisation expression cannot use contexts *)
-      let avi = Mman_asyn.AVar(vi) in
-      let aei = Mman_asyn.transform_exp ei in
-      begin
-        init_glv  := !init_glv  @ [avi];
-        init_gexp := !init_gexp @ [aei]
-      end
-  
-  | Cil_types.Static, Some(Cil_types.CompoundInit(ty,ls)) -> 
-      (* TODO:deal with struct init *)
-      let _ = Mman_options.Self.feedback "dflap:init_global: struct init@." in 
-      init_galloc := !init_galloc @ [Mman_asyn.AVar(vi)];
 
-      List.iter 
-        ( fun (ofs,ci) -> 
-          match ci with
-          | Cil_types.SingleInit(ei) ->            
-                begin
-                  match ofs with
-                  | Field(fi,_) -> 
-                    let al, ex = Mman_asyn.transform_field2exp vi fi in 
-                      init_glv  := !init_glv  @ [al];
-                      init_structs_fi := !init_structs_fi @ [al];
-
-
-                    let aex = Mman_asyn.transform_exp ei in
-                      init_gexp := !init_gexp @ [aex];
-                  | _ -> ()
-                end
-          | _ -> ()
-        )
-      ls
-      (*Cil_types.CompoundInit (typ * (offset * init)) list*)
-
-  
-  | Cil_types.Static, None ->
-      (* depend on the type *) 
-      init_gcnd := !init_gcnd @ (Mman_asyn.coerce_var vi vi.vtype)
-  
-  | Cil_types.NoStorage, Some(Cil_types.SingleInit(ei)) -> 
-      begin 
-        match vi.vtype with
-        | TPtr ( pty, attr ) ->  (* attr is [] *)
-          
-            let isChunk = Cil_datatype.Typ.equal
-                          !(Mman_dabs.dabs).cty vi.Cil_types.vtype 
-                in
-            if (isChunk) then 
-              ( 
-                match pty with 
-                | TNamed (tyif,attrs) ->  (* attrs is [] *)
-                    begin 
-                      
-                      (*init_galloc := !init_galloc @ [Mman_asyn.AVar(vi)];*) (* *)
-                      (*let avi = Mman_asyn.AVar(vi) in
-                      let aei = Mman_asyn.transform_exp ei in
-                       
-                        init_glv  := !init_glv  @ [avi];
-                        init_gexp := !init_gexp @ [aei];*)
-
-
-                      Mman_options.Self.debug ~level:1"DF: vinfo TNamed:'%a' type: %a @."
-                       Printer.pp_varinfo vi
-                       Printer.pp_typ vi.vtype 
-                       ; 
-                    end 
-                | _ -> 
-                       Mman_options.Self.debug ~level:1"DF: vinfo:'%a' type: %a @."
-                       Printer.pp_varinfo vi
-                       Printer.pp_typ vi.vtype 
-              )
-
-        | _ -> ()
-
-
-
-
-      end 
-
-  | _ , _ -> ()
-  
-*)
 (**
  * State of the computation for first stmt for functions
 *)

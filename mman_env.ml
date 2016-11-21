@@ -656,6 +656,7 @@ let penv_addsvar (eid: t) (svl: Mman_svar.Svar.t list)
       ))
       svl
   in
+
   (penv_add { pe with pvars = !pvars }), nsvl
 
 
@@ -695,12 +696,14 @@ let senv_equal e1 e2 =
   (equal_vidmap e1.svars e2.svars) 
     
 let senv_print fmt (e: senvinfo) =
-  Format.fprintf fmt "senv_%d = @(%d,penv_%d,@.[%d] %a @)"
+  Format.fprintf fmt "senv_%d = @(%d,penv_%d,@.[%d] \n senv:%a @. penv_%d:%a @)"
     e.se_id
     e.se_ucnt
     e.peid
     (VidMap.cardinal e.svars)
     pp_vidmap e.svars
+    e.peid
+    pp_vidmap ((penv_get e.peid).pvars)
 
 let senv_new ~eid =
   { se_id = eid;
@@ -764,6 +767,7 @@ let seid_new () = (SEnvMap.cardinal (!senvs))
  * Get environment at position ei                                                
 *)
 let senv_get eid =
+
   SEnvMap.find eid (!senvs)
 
 (**
@@ -802,22 +806,32 @@ let senv_vars ei =
   let se = senv_get ei in 
   (penv_vars se.peid)@(VidMap.bindings se.svars)
 
+
 (** 
- * Get list of symbolic variables in ei
+ * Get list of symbolic variables in senv(ei)
 *)
 let senv_vars2 (eid:int )
 :Mman_svar.Svar.t list
 = 
   begin 
     let svl = ref [] in 
-    let se = senv_get eid in 
+    let se = senv_get eid in     
+    let pe = penv_get se.peid in
     VidMap.iter
     (
       fun i sv ->
-      svl := !svl@[(sv)]
+        svl := !svl@[(sv)]
+    )
+    pe.pvars
+    ;
+    VidMap.iter
+    (
+      fun i sv ->
+        svl := !svl@[(sv)]
     )
     se.svars
     ;
+
     !svl
   end 
 
@@ -875,20 +889,21 @@ let senv_getvtyp ei svid =
  * Return the identifier of the new environment and 
  *        the list of varinfo added (successfully if vi != hole)
 *)
-let senv_addsvar (eid: t) (svl: Mman_svar.Svar.t list)
+(*let senv_addsvar (eid: t) (svl: Mman_svar.Svar.t list)
   : t * (Mman_svar.Svar.t list)
   =
   let se = senv_get eid in
-  let pe_size = penv_size se.peid in 
-  
+  let pe_size = penv_size se.peid in   
   let maxkey = (VidMap.cardinal se.svars) + pe_size -1  in
-
   let svars = ref (copy_vidmap se.svars) in
   let rkey = ref (maxkey + 1) in
-  let nsvl = List.map (fun svi ->
-      (let force_add = fun sv ->
+  let nsvl = 
+    List.map 
+    (fun svi ->
+      (let force_add = 
+        fun sv ->
           let nsv = { sv with Mman_svar.id = !rkey } in
-          begin
+          begin 
             svars := VidMap.add !rkey nsv !svars;
             rkey := !rkey + 1;
             nsv
@@ -904,20 +919,111 @@ let senv_addsvar (eid: t) (svl: Mman_svar.Svar.t list)
                Mman_svar.sv_mk_hole
              end
            with Not_found -> force_add svi
-      ))
-      svl
+    ))
+    svl
   in
   (senv_add { se with svars = !svars }), nsvl
-  
+  *)
 
-(* initialise the symbolic environment *)
+
+
+
+(**
+ * Add a list of new variables and build a new environment
+ * id starts from 0, not extended after penv 
+*)
+let senv_addsvar (eid: t) (svl: Mman_svar.Svar.t list)
+  : t * (Mman_svar.Svar.t list)
+  =
+  let se = senv_get eid in
+  let pe_size = penv_size se.peid in   
+  (*let maxkey = (VidMap.cardinal se.svars) + pe_size -1  in*)
+  let maxkey = VidMap.cardinal se.svars + 30  in (* set the max number of program variables*)
+  let svars = ref (copy_vidmap se.svars) in
+  let rkey = ref (maxkey ) in
+  let nsvl = 
+    List.map 
+    (fun svi ->
+      (let force_add = 
+        fun sv ->
+          let nsv = { sv with Mman_svar.id = !rkey } in
+          begin 
+            svars := VidMap.add !rkey nsv !svars;
+            rkey := !rkey + 1;
+            nsv
+          end
+       in
+       match svi.Mman_svar.kind with
+       | Mman_svar.SVar -> force_add svi
+       | _ ->
+           try
+             let _ = comem_vidmap se.svars svi
+             in begin
+               (Mman_options.Self.failure "Existing symbolic variable");
+               Mman_svar.sv_mk_hole
+             end
+           with Not_found -> force_add svi
+    ))
+    svl
+  in
+  (*senvs := SEnvMap.remove eid (!senvs);*)
+  (senv_add { se with svars = !svars }), nsvl
+
+
+
+
+
+(**
+ * add a list of new variables bot do not build a new environment
+ * Return the identifier of the new environment and 
+ *        the list of varinfo added (successfully if vi != hole)
+*)
+let senv_addsvar_2 (eid: t) (svl: Mman_svar.Svar.t list)
+  =
+  let se = senv_get eid in
+  let pe_size = penv_size se.peid in   
+  let maxkey = (VidMap.cardinal se.svars) + pe_size -1  in
+  let svars = ref (copy_vidmap se.svars) in
+  let rkey = ref (maxkey + 1) in
+    List.map 
+    (fun svi ->
+      (let force_add = 
+        fun sv ->
+          let nsv = { sv with Mman_svar.id = !rkey } in
+          begin 
+            svars := VidMap.add !rkey nsv !svars;
+            rkey := !rkey + 1;
+            nsv
+          end
+       in
+       match svi.Mman_svar.kind with
+       | Mman_svar.SVar -> force_add svi
+       | _ ->
+           try
+             let _ = comem_vidmap se.svars svi
+             in begin
+               (Mman_options.Self.failure "Existing symbolic variable");
+               Mman_svar.sv_mk_hole
+             end
+           with Not_found -> force_add svi
+    ))
+    svl
+    ;
+    senvs := SEnvMap.add eid {se with svars = !svars} (!senvs);
+    eid 
+
+
+
+(* initialise the symbolic environment, 
+ * id starts from a fixed number 
+ *)
 let senvs_init (peid:int) 
     : t 
     = 
     begin
-      let penv = penv_get peid in 
-      Mman_options.Self.debug ~level:1 "MEV:initialise symbolic environment" ; 
-      let seid = seid_new () in  (* or consider seid is equal to peid *)
+      let penv = penv_get peid in       
+      let seid = seid_new () in
+      Mman_options.Self.debug ~level:1 "MEV:initialise symbolic environment, seid:%d" seid ; 
       (*let psvars = penv_vars peid in *)
       let senvnew = 
           { se_id = seid;
@@ -927,12 +1033,12 @@ let senvs_init (peid:int)
             (* svars = penv.pvars *)
             } 
       in 
+      (* add the senv *)
       senvs := SEnvMap.add seid senvnew (!senvs);
-      seid 
+      seid       
       
       (*let sei, ls = senv_addsvar seid Mman_svar.Svar.reprs  in  
       sei*)
-
     end
 
 
@@ -1138,4 +1244,56 @@ begin
     !featl 
 end
 
+(* change peid of senv, update symbolic id *)
+(*let senv_change_pe (seid:int) (newpeid:int)
+=
+  begin 
+    let _ = (Mman_options.Self.debug ~level:2 "MEV:senv_change_pe, old senv:%a \n newpeid:%d@."
+                senv_print (senv_get seid)) newpeid
+    in 
+    let se = senv_get seid in 
+    let new_se = 
+      {
+        se_id = seid ; 
+        se_ucnt = se.se_ucnt; 
+        peid = newpeid ; 
+        svars = VidMap.empty;
+      }
+   in 
+   let svars = senv_vars2 seid in    
+   (* remove old senv *)
+   senvs := SEnvMap.remove seid (!senvs);
+   (* add the new senv*)
+   senvs := SEnvMap.add  seid new_se (!senvs);
+   (* update id of symbolic variables, after penv(peid) *)
+   senv_addsvar_2 seid svars;
+   (Mman_options.Self.debug ~level:1 "MEV:senv_change_pe, new senv:%a @."
+                senv_print (senv_get seid));
+ end 
+*)
+
+ (* change peid of senv , seid is not changed *)
+let senv_change_pe (seid:int) (newpeid:int)
+=
+  begin 
+    let _ = (Mman_options.Self.debug ~level:2 "MEV:senv_change_pe, old senv:%a@."
+                senv_print (senv_get seid))
+    in 
+    let se = senv_get seid in 
+    let new_se = 
+      {
+        se_id = seid; 
+        (*se_id = newpeid;*)
+        se_ucnt = se.se_ucnt; 
+        peid = newpeid; 
+        svars = se.svars;
+      }
+   in 
+   (* remove old senv *)
+   senvs := SEnvMap.remove seid (!senvs);
+   (* add the new senv*)
+   senvs := SEnvMap.add seid new_se (!senvs);
+   (Mman_options.Self.debug ~level:1 "MEV:senv_change_pe, new senv:%a @."
+                senv_print (senv_get seid));
+ end 
 

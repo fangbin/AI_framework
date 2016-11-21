@@ -1182,13 +1182,13 @@ let transform_sbrk
     | Some(v) ->
         let alv1, ae1 = transform_lval2var_syn v in
         let _ = (Mman_options.Self.debug ~level:1
-                   "ASY:transform_sbrk: %a:=%a[sbrk(%a)]@."
+                   "ASY:transform_sbrk: %a:=%a[sbrk(%a)] (SHAPE)@."
                    pp_alval alv1 
                    pp_aexp ae1 
                    pp_aexp ae_sz)
         in
         let ae1f = replace_hole (* in *) ae1 (* by *) aex_sbrk in
-        let _ = (Mman_options.Self.debug ~level:1 "\tto: %a:=%a@."
+        let _ = (Mman_options.Self.debug ~level:1 "\tto: %a:=%a (SHAPE)@."
                    pp_alval alv1 
                    pp_aexp ae1f)
         in
@@ -1237,18 +1237,18 @@ let transform_sbrk_dw
     | Some(v) ->
         let alv1, ae1 = transform_lval2var_syn v in
         let _ = (Mman_options.Self.debug ~level:1
-                   "ASY:transform_sbrk: %a:=%a[sbrk(%a)] (MDW)@."
+                   "ASY:transform_sbrk: %a:=%a[sbrk(%a)] (DW)@."
                    pp_alval alv1 pp_aexp ae1 pp_aexp ae_sz)
         in
         let ae1f = replace_hole (* in *) ae1 (* by *) aex_hli in
-        let _ = (Mman_options.Self.debug ~level:1 "\tto: %a:=%a@."
+        let _ = (Mman_options.Self.debug ~level:1 "\tto: %a:=%a (DW)@."
                    pp_alval alv1 pp_aexp ae1f)
         in
         [alv1], [ae1f]
     )
   in
   let ae2f = ABinOp(AAdd, aex_hli, ae_sz) in
-  let _ = (Mman_options.Self.debug ~level:1 "\tto: %a:=%a@."
+  let _ = (Mman_options.Self.debug ~level:1 "\tto: %a:=%a (DW)@."
              pp_alval alv_hli pp_aexp ae2f)
   in
   let avl = alv1l@[alv_hli] in
@@ -1388,11 +1388,17 @@ and to_senv_lval (sei: Mman_env.t) (lv: alval) (isLoc: bool)
   | AVar(vi) ->
 
       let svi = Mman_env.senv_getvar sei (Mman_svar.sv_mk_var vi) in
-      
-      let svil = if isLoc then
+       let _ = Mman_options.Self.debug ~level:1 "ASY:to_senv_lval, vi:%a, svi:%a..... @." 
+                  Printer.pp_varinfo vi 
+                  Mman_svar.Svar.pretty svi 
+                      in 
+
+      let svil = 
+        if isLoc then
           Mman_env.senv_getvar sei
             (Mman_svar.sv_mk_loc (Mman_svar.Svar.id svi) (Mman_svar.svtype vi))
         else
+
           svi
       in
       let isptr = Cil.isPointerType vi.vtype in
