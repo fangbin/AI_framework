@@ -1,4 +1,4 @@
-[mman] DW:env2apron,seid:-1  env_vars list length: 0
+[mman] DW:env2apron,seid:-1, env_vars list length: 0
 [mman] DW:env2apron: 
         seid_-1 -> [0]
        []
@@ -191,7 +191,8 @@
        } @)
 [mman] MV:old value  ({peid:3}
        Top)
-[mman] DW:env2apron,seid:0  env_vars list length: 15
+[mman] MEV:senv_vars2:15
+[mman] DW:env2apron,seid:0, env_vars list length: 15
 [mman] DW:env2apron: 
         seid_0 -> [1]
        [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> _heapend:int 5> _heapstart:int 6> c4__csz:int 7> c4__fn:int 8> c7__csz:int 9> c7__fn:int 10> frhd:int 11> man:int 12> memleft:int 13> p1:int 14> p2:int]
@@ -231,6 +232,24 @@
         dwords:{seid_0, peid_3}top 
        )
 [mman] DW:do_assign: eid:0
+[mman] DW:to_var, Mman_asyn.AFeat(fk, Mman_asyn.AVar(_heapstart))
+[mman] MEV:senv_getvar, seid:0
+[mman] DW:to_var, vi (4)_heapstart
+[mman] ENV:its feature (4,fn)
+[mman] DW:to_var, Mman_asyn.AFeat(fk, Mman_asyn.AVar(_heapstart))
+[mman] MEV:senv_getvar, seid:0
+[mman] DW:to_var, vi (4)_heapstart
+[mman] ENV:its feature (4,csz)
+[mman] DW:to_var, Mman_asyn.AFeat(fk, Mman_asyn.AVar(_heapend))
+[mman] MEV:senv_getvar, seid:0
+[mman] DW:to_var, vi (7)_heapend
+[mman] ENV:its feature (7,fn)
+[mman] DW:to_var, Mman_asyn.AFeat(fk, Mman_asyn.AVar(_heapend))
+[mman] MEV:senv_getvar, seid:0
+[mman] DW:to_var, vi (7)_heapend
+[mman] ENV:its feature (7,csz)
+[mman] DW:to_var, Mman_asyn.AVar(memleft)
+[mman] MEV:senv_getvar, seid:0
 [mman] DW:do_assign: c4__fn:=0 (DW)
 [mman] DW:do_assign: c4__csz:=0 (DW)
 [mman] DW:do_assign: c7__fn:=0 (DW)
@@ -240,21 +259,6 @@
        ({seid_0, peid_3}[|memleft=0; c7__fn=0; c7__csz=0;
                                                c4__fn=0; c4__csz=0|])
 [mman] MV:finish do_assign.
-[mman] MV:new eshape value:
-        ({peid:3}
-       eshape: stack:(seid:0,peid:3) 
-        (4)_heapstart |-> (4)_heapstart,
-        (7)_heapend |-> (7)_heapend,
-        
-       heap list 
-       [(4)_heapstart::(7)_heapend::]
-       atoms:
-       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
-       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
-       emp,
-        
-        dwords:{seid_0, peid_3}[|memleft=0; c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0|] 
-       )
 [mman] MV:assign_done,vinit.eid:3 
        , new value: 
         ({peid:3}
@@ -280,25 +284,23 @@
 [mman] MV:meet_exp_one, eid:0, esh.seid:0....
 [mman] MSH:do guard, seid:0...
 [mman] MSH:do guard_one...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:0
+[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_10>=0
 [mman] MSH:do guard_one...
+[mman] MSH:evalE ...
+[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_2>=0
 [mman] MSH:do guard_one...
+[mman] MSH:evalE ...
+[mman] MSH:evalE ex1 and ex2  ...
+[mman] MSH:evalE ...
+[mman] MSH:evalE ...
+[mman] MSH:after evalE, dot unfold ...
+[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:(sv_2 - sv_3)=0
-[mman] MDW:meet_exp, sei:0, dw.eid:0 on 
-        ({seid_0, peid_3}[|memleft=0; c7__fn=0;
-                                                             c7__csz=0; c4__fn=0;
-                                                             c4__csz=0|]) ......
-[mman] MDW:const:frhd -_i,0 0 >= 0
-[mman] Mman_asyn.ASVar(sid:2), sei:0
-[mman] MDW:const:__hli -_i,0 0 >= 0
-[mman] Mman_asyn.ASVar(sid:2), sei:0
-[mman] Mman_asyn.ASVar(sid:3), sei:0
-[mman] MDW:const:__hli -_i,0 __hst -_i,0 0 = 0
-[mman] DW: after meet_exp 
-       ({seid_0, peid_3}[|-__hli+__hst=0; memleft=0; c7__fn=0;
-                                              c7__csz=0; c4__fn=0; c4__csz=0;
-                                              frhd>=0; __hli>=0|])
+[mman] MV:MSH.guard done...
 [mman] MV:finish meet_exp.
 [mman] DF:set_fun_locals....
 [mman] MV:meet_exp....
@@ -309,25 +311,21 @@
 [mman] MV:meet_exp_one, eid:0, esh.seid:0....
 [mman] MSH:do guard, seid:0...
 [mman] MSH:do guard_one...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:0
+[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_12>=0
 [mman] MSH:do guard_one...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:0
+[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_13>=0
 [mman] MSH:do guard_one...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:0
+[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_14>=0
-[mman] MDW:meet_exp, sei:0, dw.eid:0 on 
-        ({seid_0, peid_3}[|-__hli+__hst=0;
-                                                             memleft=0; c7__fn=0;
-                                                             c7__csz=0; c4__fn=0;
-                                                             c4__csz=0; frhd>=0;
-                                                             __hli>=0|]) ......
-[mman] MDW:const:man -_i,0 0 >= 0
-[mman] MDW:const:p1 -_i,0 0 >= 0
-[mman] MDW:const:p2 -_i,0 0 >= 0
-[mman] DW: after meet_exp 
-       ({seid_0, peid_3}[|-__hli+__hst=0; memleft=0; c7__fn=0;
-                                              c7__csz=0; c4__fn=0; c4__csz=0; 
-                                              p2>=0; p1>=0; man>=0; frhd>=0;
-                                              __hli>=0|])
+[mman] MV:MSH.guard done...
 [mman] MV:finish meet_exp.
 [mman] DF:initial_state eid:3 
         {peid:3}
@@ -342,8 +340,7 @@
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
        emp,
         
-        dwords:{seid_0, peid_3}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; p2>=0; p1>=0; man>=0; frhd>=0; __hli>=0|] 
+        dwords:{seid_0, peid_3}[|memleft=0; c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0|] 
         ===================
 [mman] DF:transfer_stmt_main: sid:85
           on {peid:3}
@@ -358,8 +355,7 @@
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
        emp,
         
-        dwords:{seid_0, peid_3}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; p2>=0; p1>=0; man>=0; frhd>=0; __hli>=0|]
+        dwords:{seid_0, peid_3}[|memleft=0; c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0|]
 [mman] DF:function called: laInit'
 [mman] DF:transfer_call...
 [mman] DF:do_call: laInit(...)
@@ -378,8 +374,7 @@
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
        emp,
         
-        dwords:{seid_0, peid_3}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; p2>=0; p1>=0; man>=0; frhd>=0; __hli>=0|]
+        dwords:{seid_0, peid_3}[|memleft=0; c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0|]
 [mman] DF:call_state_forgot_retres:eid:3 
        {peid:3}
        eshape: stack:(seid:0,peid:3) 
@@ -393,8 +388,7 @@
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
        emp,
         
-        dwords:{seid_0, peid_3}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; p2>=0; p1>=0; man>=0; frhd>=0; __hli>=0|]
+        dwords:{seid_0, peid_3}[|memleft=0; c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0|]
 [mman] MEV:Unify penvs 3, 0
 [mman] DF:Unified env eid_common:3, 
         penv_3 = (3,[15] 
@@ -416,8 +410,7 @@
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
        emp,
         
-        dwords:{seid_0, peid_3}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; p2>=0; p1>=0; man>=0; frhd>=0; __hli>=0|]
+        dwords:{seid_0, peid_3}[|memleft=0; c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0|]
 [mman] MV:change_env...
 [mman] MV:eid:3, eiold:3, einew: 0
 [mman] MEV:senv_change_pe, old senv:senv_0 = @(0,penv_3,
@@ -429,7 +422,7 @@
        	(5)c4__csz;	(6)c4__fn;	(7)_heapend;	(8)c7__csz;	(9)c7__fn;
        	(10)frhd;	(11)memleft;	(12)man;	(13)p1;	(14)p2;
        } @)
-[mman] MEV:senv_change_pe, new senv:senv_0 = @(0,penv_0,
+[mman] MEV:senv_change_pe, new senv:senv_1 = @(0,penv_0,
        [0] 
         senv:
        {} 
@@ -437,17 +430,17 @@
        {	(0)__null;	(1)__hole;	(2)__hli;	(3)__hst;	(4)_heapstart;
        	(5)c4__csz;	(6)c4__fn;	(7)_heapend;	(8)c7__csz;	(9)c7__fn;
        	(10)frhd;	(11)memleft;} @)
-[mman] DW:update apron mapping, eid:0...
-[mman] DW:old apron envs list: seid_-1->apei_0 
-        []
-[mman] DW:old apron envs list: seid_0->apei_1 
-        [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> _heapend:int 5> _heapstart:int 6> c4__csz:int 7> c4__fn:int 8> c7__csz:int 9> c7__fn:int 10> frhd:int 11> man:int 12> memleft:int 13> p1:int 14> p2:int]
-[mman] DW:update env_map
-[mman] DW:env_vars , seid:0
-[mman] DW:new apron envs list: []
-[mman] DW:new apron envs list: [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> _heapend:int 5> _heapstart:int 6> c4__csz:int 7> c4__fn:int 8> c7__csz:int 9> c7__fn:int 10> frhd:int 11> man:int 12> memleft:int 13> p1:int 14> p2:int]
+[mman] MEV:senv_vars2:12
+[mman] DW:env2apron,seid:1, env_vars list length: 12
+[mman] DW:env2apron: 
+        seid_1 -> [2]
+       [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> _heapend:int 5> _heapstart:int 6> c4__csz:int 7> c4__fn:int 8> c7__csz:int 9> c7__fn:int 10> frhd:int 11> memleft:int]
+[mman] DW:change_env...
+[mman] DW:eid:0, eiold:0, einew: 1
+[mman] DW:assertion value eid 0 = old eid 0
+[mman] DW: emvironment changed
 [mman] After project out caller locals: {peid:0}
-       eshape: stack:(seid:0,peid:0) 
+       eshape: stack:(seid:1,peid:0) 
         (4)_heapstart |-> (4)_heapstart,
         (7)_heapend |-> (7)_heapend,
         
@@ -458,29 +451,17 @@
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
        emp,
         
-        dwords:{seid_0, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; p2>=0; p1>=0; man>=0; frhd>=0; __hli>=0|]
+        dwords:{seid_1, peid_0}[|memleft=0; c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0|]
 [mman] DF:set_fun_locals....
 [mman] MV:meet_exp....
 [mman] MV:meet_exp_set....
-[mman] MV:meet_exp_one, eid:0, esh.seid:0....
-[mman] MSH:do guard, seid:0...
-[mman] MDW:meet_exp, sei:0, dw.eid:0 on 
-        ({seid_0, peid_0}[|-__hli+__hst=0;
-                                                             memleft=0; c7__fn=0;
-                                                             c7__csz=0; c4__fn=0;
-                                                             c4__csz=0; p2>=0;
-                                                             p1>=0; man>=0; 
-                                                             frhd>=0; __hli>=0|]) ......
-[mman] DW: after meet_exp 
-       ({seid_0, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0;
-                                              c7__csz=0; c4__fn=0; c4__csz=0; 
-                                              p2>=0; p1>=0; man>=0; frhd>=0;
-                                              __hli>=0|])
+[mman] MV:meet_exp_one, eid:1, esh.seid:1....
+[mman] MSH:do guard, seid:1...
+[mman] MV:MSH.guard done...
 [mman] MV:finish meet_exp.
 [mman] DF:compute_fun_init done. 
         State at first stmt sid:77: {peid:0}
-       eshape: stack:(seid:0,peid:0) 
+       eshape: stack:(seid:1,peid:0) 
         (4)_heapstart |-> (4)_heapstart,
         (7)_heapend |-> (7)_heapend,
         
@@ -491,12 +472,11 @@
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
        emp,
         
-        dwords:{seid_0, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; p2>=0; p1>=0; man>=0; frhd>=0; __hli>=0|]
+        dwords:{seid_1, peid_0}[|memleft=0; c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0|]
 [mman] DF:compute_fun_aux....
 [mman] DF:transfer_stmt_main: sid:77
           on {peid:0}
-       eshape: stack:(seid:0,peid:0) 
+       eshape: stack:(seid:1,peid:0) 
         (4)_heapstart |-> (4)_heapstart,
         (7)_heapend |-> (7)_heapend,
         
@@ -507,8 +487,7 @@
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
        emp,
         
-        dwords:{seid_0, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; p2>=0; p1>=0; man>=0; frhd>=0; __hli>=0|]
+        dwords:{seid_1, peid_0}[|memleft=0; c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0|]
 [mman] DF:function called: sbrk'
 [mman] DF:transfer_sbrk: /* sid:77 */
                          _heapstart.ptr = (struct hdr *)sbrk(65360);
@@ -520,69 +499,55 @@
 [mman] to: fn(_heapstart):=__hli (DW)
 [mman] to: __hli:=(__hli + 65360) (DW)
 [mman] MV:do_assign: fn(_heapstart):=sbrk(65360), peid:0
-[mman] MV:do_assign_one...eid:0, esh.seid:0, dw.eid:0
+[mman] MV:do_assign_one...peid:0, esh.seid:1, dw.seid:1
 [mman] MSH:evalL afeat(fk, _heapstart)
+[mman] MEV:senv_getvar, seid:1
 [mman] ASY:to_senv_lval, vi:_heapstart, svi:(4)_heapstart.....
 [mman] MSH:evalL,AVar, lv:sv_4...
+[mman] MV:after evaL:fn(sv_4)
+[mman] MSH:evalE ...
+[mman] MV:after evaE:sbrk(65360)
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo......
 [mman] MSH:Add feature 'csz' for 'id:6'
 [mman] MSH:Add feature 'fn' for 'id:6'
-[mman] MSH:new senv: senv_2 = @(0,penv_0,
+[mman] new svar added vi.id32
+[mman] MSH:new senv: senv_3 = @(0,penv_0,
        [3] 
         senv:
-       {	(30)__s30;	(31)c6__csz;	(32)c6__fn;} 
+       {	(30)c6__csz;	(31)c6__fn;	(32)__s32;} 
         penv_0:
        {	(0)__null;	(1)__hole;	(2)__hli;	(3)__hst;	(4)_heapstart;
        	(5)c4__csz;	(6)c4__fn;	(7)_heapend;	(8)c7__csz;	(9)c7__fn;
        	(10)frhd;	(11)memleft;} @)
-[mman] MV:eshape mutate done, esh.seid:0
+[mman] MV:eshape mutate done, esh.seid:1
 [mman] DW:change_env...
-[mman] DW:eid:0, eiold:0, einew: 2
-[mman] DW:assertion value eid 0 = old eid 0
-[mman] DW:env2apron,seid:2  env_vars list length: 15
+[mman] DW:eid:1, eiold:1, einew: 3
+[mman] DW:assertion value eid 1 = old eid 1
+[mman] MEV:senv_vars2:15
+[mman] DW:env2apron,seid:3, env_vars list length: 15
 [mman] DW:env2apron: 
-        seid_2 -> [2]
-       [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> __s30:int 5> _heapend:int 6> _heapstart:int 7> c4__csz:int 8> c4__fn:int 9> c6__csz:int 10> c6__fn:int 11> c7__csz:int 12> c7__fn:int 13> frhd:int 14> memleft:int]
+        seid_3 -> [3]
+       [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> __s32:int 5> _heapend:int 6> _heapstart:int 7> c4__csz:int 8> c4__fn:int 9> c6__csz:int 10> c6__fn:int 11> c7__csz:int 12> c7__fn:int 13> frhd:int 14> memleft:int]
 [mman] DW: emvironment changed
 [mman] MV:finish do_assign.
-[mman] MV:new eshape value:
-        ({peid:2}
-       eshape: stack:(seid:2,peid:0) 
-        (4)_heapstart |-> (4)_heapstart,
-        (6)c4__fn |-> (6)c4__fn,
-        (7)_heapend |-> (7)_heapend,
-        
-       heap list 
-       [(4)_heapstart::(7)_heapend::(6)c4__fn::(30)__s30::]
-       atoms:
-       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
-       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
-       chd((6)c4__fn)[csz:(31)c6__csz,fn:(32)c6__fn,]  * 
-       blk((30)__s30,(2)__hli) * 
-       emp,
-        
-        dwords:{seid_2, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; frhd>=0; __hli>=0|] 
-       )
 [mman] DF:transfer_stmt_main: sid:78
-          on {peid:2}
-       eshape: stack:(seid:2,peid:0) 
+          on {peid:3}
+       eshape: stack:(seid:3,peid:0) 
         (4)_heapstart |-> (4)_heapstart,
         (6)c4__fn |-> (6)c4__fn,
         (7)_heapend |-> (7)_heapend,
         
        heap list 
-       [(4)_heapstart::(7)_heapend::(6)c4__fn::(30)__s30::]
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
        atoms:
        chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
-       chd((6)c4__fn)[csz:(31)c6__csz,fn:(32)c6__fn,]  * 
-       blk((30)__s30,(2)__hli) * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
        emp,
         
-        dwords:{seid_2, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; frhd>=0; __hli>=0|]
+        dwords:{seid_3, peid_0}[|memleft=0; c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0|]
 [mman] DF:function called: sbrk'
 [mman] DF:transfer_sbrk: /* sid:78 */
                          _heapend.ptr = (struct hdr *)sbrk(0);
@@ -593,95 +558,62 @@
 [mman] ASY:transform_sbrk: fn(_heapend):=__hole[sbrk(0)] (DW)
 [mman] to: fn(_heapend):=__hli (DW)
 [mman] to: __hli:=(__hli + 0) (DW)
-[mman] MV:do_assign: fn(_heapend):=sbrk(0), peid:2
-[mman] MV:do_assign_one...eid:2, esh.seid:2, dw.eid:2
+[mman] MV:do_assign: fn(_heapend):=sbrk(0), peid:3
+[mman] MV:do_assign_one...peid:3, esh.seid:3, dw.seid:3
 [mman] MSH:evalL afeat(fk, _heapend)
+[mman] MEV:senv_getvar, seid:3
 [mman] ASY:to_senv_lval, vi:_heapend, svi:(7)_heapend.....
 [mman] MSH:evalL,AVar, lv:sv_7...
+[mman] MV:after evaL:fn(sv_7)
+[mman] MSH:evalE ...
+[mman] MV:after evaE:sbrk(0)
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo......
-[mman] MV:eshape mutate done, esh.seid:2
+[mman] MV:eshape mutate done, esh.seid:3
 [mman] MV:finish do_assign.
-[mman] MV:new eshape value:
-        ({peid:2}
-       eshape: stack:(seid:2,peid:0) 
-        (4)_heapstart |-> (4)_heapstart,
-        (6)c4__fn |-> (6)c4__fn,
-        (7)_heapend |-> (7)_heapend,
-        (9)c7__fn |-> (2)__hli,
-        
-       heap list 
-       [(4)_heapstart::(7)_heapend::(6)c4__fn::(30)__s30::]
-       atoms:
-       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
-       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
-       chd((6)c4__fn)[csz:(31)c6__csz,fn:(32)c6__fn,]  * 
-       blk((30)__s30,(2)__hli) * 
-       emp,
-        
-        dwords:{seid_2, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; frhd>=0; __hli>=0|] 
-       )
 [mman] DF:transfer_stmt_main: sid:79
-          on {peid:2}
-       eshape: stack:(seid:2,peid:0) 
+          on {peid:3}
+       eshape: stack:(seid:3,peid:0) 
         (4)_heapstart |-> (4)_heapstart,
         (6)c4__fn |-> (6)c4__fn,
         (7)_heapend |-> (7)_heapend,
         (9)c7__fn |-> (2)__hli,
         
        heap list 
-       [(4)_heapstart::(7)_heapend::(6)c4__fn::(30)__s30::]
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
        atoms:
        chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
-       chd((6)c4__fn)[csz:(31)c6__csz,fn:(32)c6__fn,]  * 
-       blk((30)__s30,(2)__hli) * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
        emp,
         
-        dwords:{seid_2, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; frhd>=0; __hli>=0|]
+        dwords:{seid_3, peid_0}[|memleft=0; c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0|]
 [mman] s.skind: Instr1
 [mman] ASY:transform_lval2var: frhd
 [mman] transform_assign: frhd:=__hole[_heapstart.ptr]
 [mman] replace_vinfo _heapstart/_heapstart in fn(_heapstart)
 [mman] to: frhd:=fn(_heapstart)
-[mman] MV:do_assign: frhd:=fn(_heapstart), peid:2
-[mman] MV:do_assign_one...eid:2, esh.seid:2, dw.eid:2
+[mman] MV:do_assign: frhd:=fn(_heapstart), peid:3
+[mman] MV:do_assign_one...peid:3, esh.seid:3, dw.seid:3
+[mman] MEV:senv_getvar, seid:3
 [mman] ASY:to_senv_lval, vi:frhd, svi:(10)frhd.....
 [mman] MSH:evalL,AVar, lv:sv_10...
+[mman] MV:after evaL:sv_10
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:3
 [mman] MSH:evalE_feat...
+[mman] MV:after evaE:sv_6
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo......
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH: svR: (6)c4__fn
 [mman] MSH:mutate_stack
-[mman] MV:eshape mutate done, esh.seid:2
+[mman] MV:eshape mutate done, esh.seid:3
 [mman] MV:finish do_assign.
-[mman] MV:new eshape value:
-        ({peid:2}
-       eshape: stack:(seid:2,peid:0) 
-        (4)_heapstart |-> (4)_heapstart,
-        (6)c4__fn |-> (6)c4__fn,
-        (7)_heapend |-> (7)_heapend,
-        (9)c7__fn |-> (2)__hli,
-        (10)frhd |-> (6)c4__fn,
-        
-       heap list 
-       [(4)_heapstart::(7)_heapend::(6)c4__fn::(30)__s30::]
-       atoms:
-       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
-       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
-       chd((6)c4__fn)[csz:(31)c6__csz,fn:(32)c6__fn,]  * 
-       blk((30)__s30,(2)__hli) * 
-       emp,
-        
-        dwords:{seid_2, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; frhd>=0; __hli>=0|] 
-       )
 [mman] DF:transfer_stmt_main: sid:80
-          on {peid:2}
-       eshape: stack:(seid:2,peid:0) 
+          on {peid:3}
+       eshape: stack:(seid:3,peid:0) 
         (4)_heapstart |-> (4)_heapstart,
         (6)c4__fn |-> (6)c4__fn,
         (7)_heapend |-> (7)_heapend,
@@ -689,56 +621,38 @@
         (10)frhd |-> (6)c4__fn,
         
        heap list 
-       [(4)_heapstart::(7)_heapend::(6)c4__fn::(30)__s30::]
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
        atoms:
        chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
-       chd((6)c4__fn)[csz:(31)c6__csz,fn:(32)c6__fn,]  * 
-       blk((30)__s30,(2)__hli) * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
        emp,
         
-        dwords:{seid_2, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; frhd>=0; __hli>=0|]
+        dwords:{seid_3, peid_0}[|memleft=0; c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0|]
 [mman] s.skind: Instr1
 [mman] ASY:transform_lval2var: frhd->ptr
 [mman] transform_assign: fn(frhd):=__hole[(struct hdr *)0]
 [mman] build cast(4) of (4)
 [mman] to: fn(frhd):=0
-[mman] MV:do_assign: fn(frhd):=0, peid:2
-[mman] MV:do_assign_one...eid:2, esh.seid:2, dw.eid:2
+[mman] MV:do_assign: fn(frhd):=0, peid:3
+[mman] MV:do_assign_one...peid:3, esh.seid:3, dw.seid:3
 [mman] MSH:evalL afeat(fk, frhd)
+[mman] MEV:senv_getvar, seid:3
 [mman] ASY:to_senv_lval, vi:frhd, svi:(10)frhd.....
 [mman] MSH:evalL,AVar, lv:sv_10...
+[mman] MV:after evaL:fn(sv_6)
+[mman] MSH:evalE ...
+[mman] MV:after evaE:0
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo......
 [mman] MSH:mutate_meminfo, ACst......
 [mman] MSH:mutate_meminfo, Feature......
-[mman] MV:eshape mutate done, esh.seid:2
+[mman] MV:eshape mutate done, esh.seid:3
 [mman] MV:finish do_assign.
-[mman] MV:new eshape value:
-        ({peid:2}
-       eshape: stack:(seid:2,peid:0) 
-        (4)_heapstart |-> (4)_heapstart,
-        (6)c4__fn |-> (6)c4__fn,
-        (7)_heapend |-> (7)_heapend,
-        (9)c7__fn |-> (2)__hli,
-        (10)frhd |-> (6)c4__fn,
-        
-       heap list 
-       [(4)_heapstart::(7)_heapend::(6)c4__fn::(30)__s30::]
-       atoms:
-       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
-       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
-       chd((6)c4__fn)[csz:(31)c6__csz,fn:(32)c6__fn,]  * 
-       blk((30)__s30,(2)__hli) * 
-       emp,
-        
-        dwords:{seid_2, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; frhd>=0; __hli>=0|] 
-       )
 [mman] DF:transfer_stmt_main: sid:81
-          on {peid:2}
-       eshape: stack:(seid:2,peid:0) 
+          on {peid:3}
+       eshape: stack:(seid:3,peid:0) 
         (4)_heapstart |-> (4)_heapstart,
         (6)c4__fn |-> (6)c4__fn,
         (7)_heapend |-> (7)_heapend,
@@ -746,16 +660,15 @@
         (10)frhd |-> (6)c4__fn,
         
        heap list 
-       [(4)_heapstart::(7)_heapend::(6)c4__fn::(30)__s30::]
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
        atoms:
        chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
-       chd((6)c4__fn)[csz:(31)c6__csz,fn:(32)c6__fn,]  * 
-       blk((30)__s30,(2)__hli) * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
        emp,
         
-        dwords:{seid_2, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; frhd>=0; __hli>=0|]
+        dwords:{seid_3, peid_0}[|memleft=0; c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0|]
 [mman] s.skind: Instr1
 [mman] ASY:transform_lval2var: frhd->size
 [mman] transform_assign: csz(frhd):=(__hole * 8)[(unsigned int)((char *)_heapend.ptr - (char *)_heapstart.ptr) / sizeof(HEADER)]
@@ -765,50 +678,40 @@
 [mman] build cast(4) of (4)
 [mman] build cast(4) of (4)
 [mman] to: csz(frhd):=(((fn(_heapend) - fn(_heapstart)) / 8) * 8)
-[mman] MV:do_assign: csz(frhd):=(((fn(_heapend) - fn(_heapstart)) / 8) * 8), peid:2
-[mman] MV:do_assign_one...eid:2, esh.seid:2, dw.eid:2
+[mman] MV:do_assign: csz(frhd):=(((fn(_heapend) - fn(_heapstart)) / 8) * 8), peid:3
+[mman] MV:do_assign_one...peid:3, esh.seid:3, dw.seid:3
 [mman] MSH:evalL afeat(fk, frhd)
+[mman] MSH:feature is size, work on data part
+[mman] MEV:senv_getvar, seid:3
+[mman] ASY:to_senv_lval, vi:frhd, svi:(10)frhd.....
+[mman] MSH:evalL,AVar, lv:sv_10...
+[mman] MV:after evaL:csz(sv_6)
+[mman] MSH:evalE ...
+[mman] MSH:evalE ex1 and ex2  ...
+[mman] MSH:evalE ...
+[mman] MSH:evalE ex1 and ex2  ...
+[mman] MSH:evalE ...
+[mman] MSH:evalE ex1 and ex2  ...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:3
 [mman] MSH:evalE_feat...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:3
 [mman] MSH:evalE_feat...
-[mman] DW:do_one_assign: d.eid:2,peid:0, csz(frhd):=(((fn(_heapend) - fn(_heapstart)) / 8) * 8),...
-[mman] DW:on ({seid_2, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0;
-                                c4__fn=0; c4__csz=0; frhd>=0; __hli>=0|])
-[mman] DW: senv:senv_2 = @(0,penv_0,
-       [3] 
-        senv:
-       {	(30)__s30;	(31)c6__csz;	(32)c6__fn;} 
-        penv_0:
-       {	(0)__null;	(1)__hole;	(2)__hli;	(3)__hst;	(4)_heapstart;
-       	(5)c4__csz;	(6)c4__fn;	(7)_heapend;	(8)c7__csz;	(9)c7__fn;
-       	(10)frhd;	(11)memleft;} @)
-[mman] __hole:=(c7__fn -_i,0 c4__fn) /_i,0 8 *_i,0 8
-[mman] DW:to [|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0;
-               __hole=0; frhd>=0; __hli>=0|]
+[mman] MSH:after evalE, dot unfold ...
+[mman] MSH:evalE ...
+[mman] MSH:after evalE, dot unfold ...
+[mman] MSH:evalE ...
+[mman] MSH:after evalE, dot unfold ...
+[mman] MV:after evaE:(((sv_9 - sv_6) / 8) * 8)
+[mman] MV:eshape mutate
+[mman] MSH:mutate_meminfo......
+[mman] failure: Unsupported assign
+[mman] MV:eshape mutate done, esh.seid:3
 [mman] MV:finish do_assign.
-[mman] MV:new eshape value:
-        ({peid:2}
-       eshape: stack:(seid:2,peid:0) 
-        (4)_heapstart |-> (4)_heapstart,
-        (6)c4__fn |-> (6)c4__fn,
-        (7)_heapend |-> (7)_heapend,
-        (9)c7__fn |-> (2)__hli,
-        (10)frhd |-> (6)c4__fn,
-        
-       heap list 
-       [(4)_heapstart::(7)_heapend::(6)c4__fn::(30)__s30::]
-       atoms:
-       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
-       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
-       chd((6)c4__fn)[csz:(31)c6__csz,fn:(32)c6__fn,]  * 
-       blk((30)__s30,(2)__hli) * 
-       emp,
-        
-        dwords:{seid_2, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; __hole=0; frhd>=0; __hli>=0|] 
-       )
 [mman] DF:transfer_stmt_main: sid:82
-          on {peid:2}
-       eshape: stack:(seid:2,peid:0) 
+          on {peid:3}
+       eshape: stack:(seid:3,peid:0) 
         (4)_heapstart |-> (4)_heapstart,
         (6)c4__fn |-> (6)c4__fn,
         (7)_heapend |-> (7)_heapend,
@@ -816,16 +719,15 @@
         (10)frhd |-> (6)c4__fn,
         
        heap list 
-       [(4)_heapstart::(7)_heapend::(6)c4__fn::(30)__s30::]
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
        atoms:
        chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
-       chd((6)c4__fn)[csz:(31)c6__csz,fn:(32)c6__fn,]  * 
-       blk((30)__s30,(2)__hli) * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
        emp,
         
-        dwords:{seid_2, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; __hole=0; frhd>=0; __hli>=0|]
+        dwords:{seid_3, peid_0}[|memleft=0; c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0|]
 [mman] s.skind: Instr1
 [mman] ASY:transform_lval2var: memleft
 [mman] transform_assign: memleft:=__hole[(short)frhd->size]
@@ -834,48 +736,29 @@
 [mman] replace_vinfo frhd/_heapstart in csz(_heapstart)
 [mman] build cast(2) of (2)
 [mman] to: memleft:=(csz(frhd) / 8)
-[mman] MV:do_assign: memleft:=(csz(frhd) / 8), peid:2
-[mman] MV:do_assign_one...eid:2, esh.seid:2, dw.eid:2
+[mman] MV:do_assign: memleft:=(csz(frhd) / 8), peid:3
+[mman] MV:do_assign_one...peid:3, esh.seid:3, dw.seid:3
+[mman] MSH:evalE ...
+[mman] MSH:evalE ex1 and ex2  ...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:3
 [mman] MSH:evalE_feat...
-[mman] DW:do_one_assign: d.eid:2,peid:0, memleft:=(csz(frhd) / 8),...
-[mman] DW:on ({seid_2, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0;
-                                c4__fn=0; c4__csz=0; __hole=0; frhd>=0; __hli>=0|])
-[mman] DW: senv:senv_2 = @(0,penv_0,
-       [3] 
-        senv:
-       {	(30)__s30;	(31)c6__csz;	(32)c6__fn;} 
-        penv_0:
-       {	(0)__null;	(1)__hole;	(2)__hli;	(3)__hst;	(4)_heapstart;
-       	(5)c4__csz;	(6)c4__fn;	(7)_heapend;	(8)c7__csz;	(9)c7__fn;
-       	(10)frhd;	(11)memleft;} @)
-[mman] memleft:=__hole /_i,0 8
-[mman] DW:to [|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0;
-               __hole=0; frhd>=0; __hli>=0|]
+[mman] MSH:evalE ...
+[mman] MSH:after evalE, dot unfold ...
+[mman] MV:after evaE:(sv_30 / 8)
+[mman] DW:do_assign: eid:3
+[mman] DW:to_var, Mman_asyn.AVar(memleft)
+[mman] MEV:senv_getvar, seid:3
+[mman] Mman_asyn.ASVar(sid:30), sei:3
+[mman] DW:do_assign: memleft:=c6__csz /_i,0 8 (DW)
+[mman] DW: after do_assign 
+       ({seid_3, peid_0}[|c7__fn=0; c7__csz=0; c4__fn=0;
+                                               c4__csz=0; -c6__csz+8memleft+8>=0;
+                                               c6__csz-8memleft+8>=0|])
 [mman] MV:finish do_assign.
-[mman] MV:new eshape value:
-        ({peid:2}
-       eshape: stack:(seid:2,peid:0) 
-        (4)_heapstart |-> (4)_heapstart,
-        (6)c4__fn |-> (6)c4__fn,
-        (7)_heapend |-> (7)_heapend,
-        (9)c7__fn |-> (2)__hli,
-        (10)frhd |-> (6)c4__fn,
-        
-       heap list 
-       [(4)_heapstart::(7)_heapend::(6)c4__fn::(30)__s30::]
-       atoms:
-       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
-       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
-       chd((6)c4__fn)[csz:(31)c6__csz,fn:(32)c6__fn,]  * 
-       blk((30)__s30,(2)__hli) * 
-       emp,
-        
-        dwords:{seid_2, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; __hole=0; frhd>=0; __hli>=0|] 
-       )
 [mman] DF:transfer_stmt_main: sid:104
-          on {peid:2}
-       eshape: stack:(seid:2,peid:0) 
+          on {peid:3}
+       eshape: stack:(seid:3,peid:0) 
         (4)_heapstart |-> (4)_heapstart,
         (6)c4__fn |-> (6)c4__fn,
         (7)_heapend |-> (7)_heapend,
@@ -883,19 +766,19 @@
         (10)frhd |-> (6)c4__fn,
         
        heap list 
-       [(4)_heapstart::(7)_heapend::(6)c4__fn::(30)__s30::]
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
        atoms:
        chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
-       chd((6)c4__fn)[csz:(31)c6__csz,fn:(32)c6__fn,]  * 
-       blk((30)__s30,(2)__hli) * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
        emp,
         
-        dwords:{seid_2, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; __hole=0; frhd>=0; __hli>=0|]
+        dwords:{seid_3, peid_0}[|c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0;
+                         -c6__csz+8memleft+8>=0; c6__csz-8memleft+8>=0|]
 [mman] compute_fun_aux done....
-[mman] DF:ret_callee: {peid:2}
-       eshape: stack:(seid:2,peid:0) 
+[mman] DF:ret_callee: {peid:3}
+       eshape: stack:(seid:3,peid:0) 
         (4)_heapstart |-> (4)_heapstart,
         (6)c4__fn |-> (6)c4__fn,
         (7)_heapend |-> (7)_heapend,
@@ -903,20 +786,20 @@
         (10)frhd |-> (6)c4__fn,
         
        heap list 
-       [(4)_heapstart::(7)_heapend::(6)c4__fn::(30)__s30::]
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
        atoms:
        chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
-       chd((6)c4__fn)[csz:(31)c6__csz,fn:(32)c6__fn,]  * 
-       blk((30)__s30,(2)__hli) * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
        emp,
         
-        dwords:{seid_2, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; __hole=0; frhd>=0; __hli>=0|]
+        dwords:{seid_3, peid_0}[|c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0;
+                         -c6__csz+8memleft+8>=0; c6__csz-8memleft+8>=0|]
 [mman] DF:ret_call: laInit(...)
 [mman] DF:Combine the callee return state vret with the caller state ...
 [mman] DF:vcall: {peid:3}
-       eshape: stack:(seid:0,peid:0) 
+       eshape: stack:(seid:0,peid:3) 
         (4)_heapstart |-> (4)_heapstart,
         (7)_heapend |-> (7)_heapend,
         
@@ -927,10 +810,9 @@
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
        emp,
         
-        dwords:{seid_0, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; p2>=0; p1>=0; man>=0; frhd>=0; __hli>=0|]
-[mman] DF:returned_state: {peid:2}
-       eshape: stack:(seid:2,peid:0) 
+        dwords:{seid_0, peid_3}[|memleft=0; c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0|]
+[mman] DF:returned_state: {peid:3}
+       eshape: stack:(seid:3,peid:0) 
         (4)_heapstart |-> (4)_heapstart,
         (6)c4__fn |-> (6)c4__fn,
         (7)_heapend |-> (7)_heapend,
@@ -938,25 +820,21 @@
         (10)frhd |-> (6)c4__fn,
         
        heap list 
-       [(4)_heapstart::(7)_heapend::(6)c4__fn::(30)__s30::]
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
        atoms:
        chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
-       chd((6)c4__fn)[csz:(31)c6__csz,fn:(32)c6__fn,]  * 
-       blk((30)__s30,(2)__hli) * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
        emp,
         
-        dwords:{seid_2, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; __hole=0; frhd>=0; __hli>=0|]
-[mman] MEV:Unify penvs 3, 2
-[mman] old pvar_12/16 -> pvar_15
-[mman] old pvar_13/16 -> pvar_16
-[mman] old pvar_14/16 -> pvar_17
-[mman] old pvar_15/16 -> pvar_18
-[mman] DF:eid_common 5
+        dwords:{seid_3, peid_0}[|c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0;
+                         -c6__csz+8memleft+8>=0; c6__csz-8memleft+8>=0|]
+[mman] MEV:Unify penvs 3, 3
+[mman] DF:eid_common 3
 [mman] forget _heapstart,... in 
         {peid:3}
-       eshape: stack:(seid:0,peid:0) 
+       eshape: stack:(seid:0,peid:3) 
         (4)_heapstart |-> (4)_heapstart,
         (7)_heapend |-> (7)_heapend,
         
@@ -967,11 +845,10 @@
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
        emp,
         
-        dwords:{seid_0, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; p2>=0; p1>=0; man>=0; frhd>=0; __hli>=0|]
+        dwords:{seid_0, peid_3}[|memleft=0; c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0|]
 [mman] DF:state_caller_noglobs:
         {peid:3}
-       eshape: stack:(seid:0,peid:0) 
+       eshape: stack:(seid:0,peid:3) 
         (4)_heapstart |-> (4)_heapstart,
         (7)_heapend |-> (7)_heapend,
         
@@ -982,42 +859,12 @@
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
        emp,
         
-        dwords:{seid_0, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; p2>=0; p1>=0; man>=0; frhd>=0; __hli>=0|]
+        dwords:{seid_0, peid_3}[|memleft=0; c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0|]
 [mman] MV:change_env...
-[mman] MV:eid:3, eiold:3, einew: 5
-[mman] MEV:senv_change_pe, old senv:senv_0 = @(0,penv_0,
-       [0] 
-        senv:
-       {} 
-        penv_0:
-       {	(0)__null;	(1)__hole;	(2)__hli;	(3)__hst;	(4)_heapstart;
-       	(5)c4__csz;	(6)c4__fn;	(7)_heapend;	(8)c7__csz;	(9)c7__fn;
-       	(10)frhd;	(11)memleft;} @)
-[mman] MEV:senv_change_pe, new senv:senv_0 = @(0,penv_5,
-       [0] 
-        senv:
-       {} 
-        penv_5:
-       {	(0)__null;	(1)__hole;	(2)__hli;	(3)__hst;	(4)_heapstart;
-       	(5)c4__csz;	(6)c4__fn;	(7)_heapend;	(8)c7__csz;	(9)c7__fn;
-       	(10)frhd;	(11)memleft;	(12)man;	(13)p1;	(14)p2;
-       	(15)f1671_ap;	(16)nxt;	(17)prev;	(18)f;} @)
-[mman] DW:update apron mapping, eid:0...
-[mman] DW:old apron envs list: seid_-1->apei_0 
-        []
-[mman] DW:old apron envs list: seid_0->apei_1 
-        [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> _heapend:int 5> _heapstart:int 6> c4__csz:int 7> c4__fn:int 8> c7__csz:int 9> c7__fn:int 10> frhd:int 11> man:int 12> memleft:int 13> p1:int 14> p2:int]
-[mman] DW:old apron envs list: seid_2->apei_2 
-        [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> __s30:int 5> _heapend:int 6> _heapstart:int 7> c4__csz:int 8> c4__fn:int 9> c6__csz:int 10> c6__fn:int 11> c7__csz:int 12> c7__fn:int 13> frhd:int 14> memleft:int]
-[mman] DW:update env_map
-[mman] DW:env_vars , seid:0
-[mman] DW:new apron envs list: []
-[mman] DW:new apron envs list: [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> _heapend:int 5> _heapstart:int 6> c4__csz:int 7> c4__fn:int 8> c7__csz:int 9> c7__fn:int 10> frhd:int 11> man:int 12> memleft:int 13> p1:int 14> p2:int]
-[mman] DW:new apron envs list: [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> __s30:int 5> _heapend:int 6> _heapstart:int 7> c4__csz:int 8> c4__fn:int 9> c6__csz:int 10> c6__fn:int 11> c7__csz:int 12> c7__fn:int 13> frhd:int 14> memleft:int]
+[mman] MV:eid:3, eiold:3, einew: 3
 [mman] DF:state_caller_extended:
-        {peid:5}
-       eshape: stack:(seid:0,peid:5) 
+        {peid:3}
+       eshape: stack:(seid:0,peid:3) 
         (4)_heapstart |-> (4)_heapstart,
         (7)_heapend |-> (7)_heapend,
         
@@ -1028,10 +875,9 @@
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
        emp,
         
-        dwords:{seid_0, peid_5}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; p2>=0; p1>=0; man>=0; frhd>=0; __hli>=0|]
-[mman] return state: {peid:2}
-       eshape: stack:(seid:2,peid:0) 
+        dwords:{seid_0, peid_3}[|memleft=0; c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0|]
+[mman] return state: {peid:3}
+       eshape: stack:(seid:3,peid:0) 
         (4)_heapstart |-> (4)_heapstart,
         (6)c4__fn |-> (6)c4__fn,
         (7)_heapend |-> (7)_heapend,
@@ -1039,49 +885,20 @@
         (10)frhd |-> (6)c4__fn,
         
        heap list 
-       [(4)_heapstart::(7)_heapend::(6)c4__fn::(30)__s30::]
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
        atoms:
        chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
-       chd((6)c4__fn)[csz:(31)c6__csz,fn:(32)c6__fn,]  * 
-       blk((30)__s30,(2)__hli) * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
        emp,
         
-        dwords:{seid_2, peid_0}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; __hole=0; frhd>=0; __hli>=0|]
+        dwords:{seid_3, peid_0}[|c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0;
+                         -c6__csz+8memleft+8>=0; c6__csz-8memleft+8>=0|]
 [mman] MV:change_env...
-[mman] MV:eid:2, eiold:2, einew: 5
-[mman] MEV:senv_change_pe, old senv:senv_2 = @(0,penv_0,
-       [3] 
-        senv:
-       {	(30)__s30;	(31)c6__csz;	(32)c6__fn;} 
-        penv_0:
-       {	(0)__null;	(1)__hole;	(2)__hli;	(3)__hst;	(4)_heapstart;
-       	(5)c4__csz;	(6)c4__fn;	(7)_heapend;	(8)c7__csz;	(9)c7__fn;
-       	(10)frhd;	(11)memleft;} @)
-[mman] MEV:senv_change_pe, new senv:senv_2 = @(0,penv_5,
-       [3] 
-        senv:
-       {	(30)__s30;	(31)c6__csz;	(32)c6__fn;} 
-        penv_5:
-       {	(0)__null;	(1)__hole;	(2)__hli;	(3)__hst;	(4)_heapstart;
-       	(5)c4__csz;	(6)c4__fn;	(7)_heapend;	(8)c7__csz;	(9)c7__fn;
-       	(10)frhd;	(11)memleft;	(12)man;	(13)p1;	(14)p2;
-       	(15)f1671_ap;	(16)nxt;	(17)prev;	(18)f;} @)
-[mman] DW:update apron mapping, eid:2...
-[mman] DW:old apron envs list: seid_-1->apei_0 
-        []
-[mman] DW:old apron envs list: seid_0->apei_1 
-        [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> _heapend:int 5> _heapstart:int 6> c4__csz:int 7> c4__fn:int 8> c7__csz:int 9> c7__fn:int 10> frhd:int 11> man:int 12> memleft:int 13> p1:int 14> p2:int]
-[mman] DW:old apron envs list: seid_2->apei_2 
-        [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> __s30:int 5> _heapend:int 6> _heapstart:int 7> c4__csz:int 8> c4__fn:int 9> c6__csz:int 10> c6__fn:int 11> c7__csz:int 12> c7__fn:int 13> frhd:int 14> memleft:int]
-[mman] DW:update env_map
-[mman] DW:env_vars , seid:2
-[mman] DW:new apron envs list: []
-[mman] DW:new apron envs list: [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> _heapend:int 5> _heapstart:int 6> c4__csz:int 7> c4__fn:int 8> c7__csz:int 9> c7__fn:int 10> frhd:int 11> man:int 12> memleft:int 13> p1:int 14> p2:int]
-[mman] DW:new apron envs list: [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> __s30:int 5> _heapend:int 6> _heapstart:int 7> c4__csz:int 8> c4__fn:int 9> c6__csz:int 10> c6__fn:int 11> c7__csz:int 12> c7__fn:int 13> frhd:int 14> memleft:int]
-[mman] DF:caller state extended: {peid:5}
-       eshape: stack:(seid:0,peid:5) 
+[mman] MV:eid:3, eiold:3, einew: 3
+[mman] DF:caller state extended: {peid:3}
+       eshape: stack:(seid:0,peid:3) 
         (4)_heapstart |-> (4)_heapstart,
         (7)_heapend |-> (7)_heapend,
         
@@ -1092,11 +909,10 @@
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
        emp,
         
-        dwords:{seid_0, peid_5}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; p2>=0; p1>=0; man>=0; frhd>=0; __hli>=0|] 
+        dwords:{seid_0, peid_3}[|memleft=0; c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0|] 
         
-        callee state: {peid:5}
-       eshape: stack:(seid:2,peid:5) 
+        callee state: {peid:3}
+       eshape: stack:(seid:3,peid:0) 
         (4)_heapstart |-> (4)_heapstart,
         (6)c4__fn |-> (6)c4__fn,
         (7)_heapend |-> (7)_heapend,
@@ -1104,51 +920,21 @@
         (10)frhd |-> (6)c4__fn,
         
        heap list 
-       [(4)_heapstart::(7)_heapend::(6)c4__fn::(30)__s30::]
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
        atoms:
        chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
-       chd((6)c4__fn)[csz:(31)c6__csz,fn:(32)c6__fn,]  * 
-       blk((30)__s30,(2)__hli) * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
        emp,
         
-        dwords:{seid_2, peid_5}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; __hole=0; frhd>=0; __hli>=0|]
+        dwords:{seid_3, peid_0}[|c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0;
+                         -c6__csz+8memleft+8>=0; c6__csz-8memleft+8>=0|]
 [mman] MV:change_env...
-[mman] MV:eid:5, eiold:5, einew: 3
-[mman] MEV:senv_change_pe, old senv:senv_2 = @(0,penv_5,
-       [3] 
-        senv:
-       {	(30)__s30;	(31)c6__csz;	(32)c6__fn;} 
-        penv_5:
-       {	(0)__null;	(1)__hole;	(2)__hli;	(3)__hst;	(4)_heapstart;
-       	(5)c4__csz;	(6)c4__fn;	(7)_heapend;	(8)c7__csz;	(9)c7__fn;
-       	(10)frhd;	(11)memleft;	(12)man;	(13)p1;	(14)p2;
-       	(15)f1671_ap;	(16)nxt;	(17)prev;	(18)f;} @)
-[mman] MEV:senv_change_pe, new senv:senv_2 = @(0,penv_3,
-       [3] 
-        senv:
-       {	(30)__s30;	(31)c6__csz;	(32)c6__fn;} 
-        penv_3:
-       {	(0)__null;	(1)__hole;	(2)__hli;	(3)__hst;	(4)_heapstart;
-       	(5)c4__csz;	(6)c4__fn;	(7)_heapend;	(8)c7__csz;	(9)c7__fn;
-       	(10)frhd;	(11)memleft;	(12)man;	(13)p1;	(14)p2;
-       } @)
-[mman] DW:update apron mapping, eid:2...
-[mman] DW:old apron envs list: seid_-1->apei_0 
-        []
-[mman] DW:old apron envs list: seid_0->apei_1 
-        [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> _heapend:int 5> _heapstart:int 6> c4__csz:int 7> c4__fn:int 8> c7__csz:int 9> c7__fn:int 10> frhd:int 11> man:int 12> memleft:int 13> p1:int 14> p2:int]
-[mman] DW:old apron envs list: seid_2->apei_2 
-        [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> __s30:int 5> _heapend:int 6> _heapstart:int 7> c4__csz:int 8> c4__fn:int 9> c6__csz:int 10> c6__fn:int 11> c7__csz:int 12> c7__fn:int 13> frhd:int 14> memleft:int]
-[mman] DW:update env_map
-[mman] DW:env_vars , seid:2
-[mman] DW:new apron envs list: []
-[mman] DW:new apron envs list: [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> _heapend:int 5> _heapstart:int 6> c4__csz:int 7> c4__fn:int 8> c7__csz:int 9> c7__fn:int 10> frhd:int 11> man:int 12> memleft:int 13> p1:int 14> p2:int]
-[mman] DW:new apron envs list: [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> __s30:int 5> _heapend:int 6> _heapstart:int 7> c4__csz:int 8> c4__fn:int 9> c6__csz:int 10> c6__fn:int 11> c7__csz:int 12> c7__fn:int 13> frhd:int 14> memleft:int]
+[mman] MV:eid:3, eiold:3, einew: 3
 [mman] DF:transfer_stmt_main: sid:86
           on {peid:3}
-       eshape: stack:(seid:2,peid:3) 
+       eshape: stack:(seid:3,peid:0) 
         (4)_heapstart |-> (4)_heapstart,
         (6)c4__fn |-> (6)c4__fn,
         (7)_heapend |-> (7)_heapend,
@@ -1156,39 +942,1117 @@
         (10)frhd |-> (6)c4__fn,
         
        heap list 
-       [(4)_heapstart::(7)_heapend::(6)c4__fn::(30)__s30::]
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
        atoms:
        chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
        chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
-       chd((6)c4__fn)[csz:(31)c6__csz,fn:(32)c6__fn,]  * 
-       blk((30)__s30,(2)__hli) * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
        emp,
         
-        dwords:{seid_2, peid_3}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0; c4__fn=0;
-                         c4__csz=0; __hole=0; frhd>=0; __hli>=0|]
+        dwords:{seid_3, peid_0}[|c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0;
+                         -c6__csz+8memleft+8>=0; c6__csz-8memleft+8>=0|]
 [mman] s.skind: Instr1
 [mman] ASY:transform_lval2var: man
 [mman] transform_assign: man:=__hole[(void *)0]
 [mman] build cast(4) of (4)
 [mman] to: man:=0
 [mman] MV:do_assign: man:=0, peid:3
-[mman] MV:do_assign_one...eid:3, esh.seid:2, dw.eid:2
-[mman] DW:do_one_assign: d.eid:2,peid:3, man:=0,...
-[mman] DW:on ({seid_2, peid_3}[|-__hli+__hst=0; memleft=0; c7__fn=0; c7__csz=0;
-                                c4__fn=0; c4__csz=0; __hole=0; frhd>=0; __hli>=0|])
-[mman] DW: senv:senv_2 = @(0,penv_3,
-       [3] 
-        senv:
-       {	(30)__s30;	(31)c6__csz;	(32)c6__fn;} 
-        penv_3:
+[mman] MV:do_assign_one...peid:3, esh.seid:3, dw.seid:3
+[mman] MEV:senv_getvar, seid:3
+[mman] ASY:to_senv_lval, vi:man, svi:(1)__hole.....
+[mman] MV:after evaL:sv_1
+[mman] MSH:evalE ...
+[mman] MV:after evaE:0
+[mman] MV:eshape mutate
+[mman] MSH:mutate_meminfo......
+[mman] MSH:mutate_meminfo, ACst......
+[mman] MSH:mutate_meminfo, SVChunk, none ......
+[mman] MV:eshape mutate done, esh.seid:3
+[mman] MV:finish do_assign.
+[mman] DF:transfer_stmt_main: sid:87
+          on {peid:3}
+       eshape: stack:(seid:3,peid:0) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (6)c4__fn,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_3, peid_0}[|c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0;
+                         -c6__csz+8memleft+8>=0; c6__csz-8memleft+8>=0|]
+[mman] DF:function called: laAlloc'
+[mman] DF:transfer_call...
+[mman] DF:do_call: laAlloc(...)
+[mman] DF:compute_fun_init...
+[mman] DF:caller_penv:3, callee_penv:1, state.eid:3...
+[mman] forget __retres,... in 
+        {peid:3}
+       eshape: stack:(seid:3,peid:0) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (6)c4__fn,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_3, peid_0}[|c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0;
+                         -c6__csz+8memleft+8>=0; c6__csz-8memleft+8>=0|]
+[mman] DF:call_state_forgot_retres:eid:3 
+       {peid:3}
+       eshape: stack:(seid:3,peid:0) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (6)c4__fn,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_3, peid_0}[|c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0;
+                         -c6__csz+8memleft+8>=0; c6__csz-8memleft+8>=0|]
+[mman] MEV:Unify penvs 3, 1
+[mman] old pvar_12/16 -> pvar_15
+[mman] old pvar_13/16 -> pvar_16
+[mman] old pvar_14/16 -> pvar_17
+[mman] old pvar_15/16 -> pvar_18
+[mman] DF:Unified env eid_common:5, 
+        penv_5 = (1,[19] 
        {	(0)__null;	(1)__hole;	(2)__hli;	(3)__hst;	(4)_heapstart;
        	(5)c4__csz;	(6)c4__fn;	(7)_heapend;	(8)c7__csz;	(9)c7__fn;
        	(10)frhd;	(11)memleft;	(12)man;	(13)p1;	(14)p2;
-       } @)
-[mman] man:=0
+       	(15)f1677_nbytes;	(16)nxt;	(17)prev;	(18)nunits;} )
+[mman] MV:change_env...
+[mman] MV:eid:3, eiold:3, einew: 5
+[mman] MEV:senv_change_pe, old senv:senv_3 = @(0,penv_0,
+       [3] 
+        senv:
+       {	(30)c6__csz;	(31)c6__fn;	(32)__s32;} 
+        penv_0:
+       {	(0)__null;	(1)__hole;	(2)__hli;	(3)__hst;	(4)_heapstart;
+       	(5)c4__csz;	(6)c4__fn;	(7)_heapend;	(8)c7__csz;	(9)c7__fn;
+       	(10)frhd;	(11)memleft;} @)
+[mman] MEV:senv_change_pe, new senv:senv_4 = @(0,penv_5,
+       [3] 
+        senv:
+       {	(30)c6__csz;	(31)c6__fn;	(32)__s32;} 
+        penv_5:
+       {	(0)__null;	(1)__hole;	(2)__hli;	(3)__hst;	(4)_heapstart;
+       	(5)c4__csz;	(6)c4__fn;	(7)_heapend;	(8)c7__csz;	(9)c7__fn;
+       	(10)frhd;	(11)memleft;	(12)man;	(13)p1;	(14)p2;
+       	(15)f1677_nbytes;	(16)nxt;	(17)prev;	(18)nunits;} @)
+[mman] MEV:senv_vars2:22
+[mman] DW:env2apron,seid:4, env_vars list length: 22
+[mman] DW:env2apron: 
+        seid_4 -> [4]
+       [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> __s32:int 5> _heapend:int 6> _heapstart:int 7> c4__csz:int 8> c4__fn:int 9> c6__csz:int 10> c6__fn:int 11> c7__csz:int 12> c7__fn:int 13> f1677_nbytes:int 14> frhd:int 15> man:int 16> memleft:int 17> nunits:int 18> nxt:int 19> p1:int 20> p2:int 21> prev:int]
+[mman] DW:change_env...
+[mman] DW:eid:3, eiold:3, einew: 4
+[mman] DW:assertion value eid 3 = old eid 3
+[mman] DW: emvironment changed
+[mman] MV:do_assign: nbytes:=20, peid:5
+[mman] MV:do_assign_one...peid:5, esh.seid:4, dw.seid:4
+[mman] MSH:evalE ...
+[mman] MV:after evaE:20
+[mman] DW:do_assign: eid:4
+[mman] DW:to_var, Mman_asyn.AVar(nbytes)
+[mman] MEV:senv_getvar, seid:4
+[mman] DW:do_assign: f1677_nbytes:=20 (DW)
+[mman] DW: after do_assign 
+       ({seid_4, peid_5}[|f1677_nbytes-20=0; c7__fn=0;
+                                               c7__csz=0; c4__fn=0; c4__csz=0;
+                                               -c6__csz+8memleft+8>=0;
+                                               c6__csz-8memleft+8>=0|])
+[mman] MV:finish do_assign.
+[mman] After formal args assign: {peid:4}
+       eshape: stack:(seid:4,peid:5) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (6)c4__fn,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_4, peid_5}[|f1677_nbytes-20=0; c7__fn=0; c7__csz=0; c4__fn=0;
+                         c4__csz=0; -c6__csz+8memleft+8>=0; c6__csz-8memleft+8>=0|]
+[mman] MV:change_env...
+[mman] MV:eid:4, eiold:5, einew: 1
+[mman] MEV:senv_change_pe, old senv:senv_4 = @(0,penv_5,
+       [3] 
+        senv:
+       {	(30)c6__csz;	(31)c6__fn;	(32)__s32;} 
+        penv_5:
+       {	(0)__null;	(1)__hole;	(2)__hli;	(3)__hst;	(4)_heapstart;
+       	(5)c4__csz;	(6)c4__fn;	(7)_heapend;	(8)c7__csz;	(9)c7__fn;
+       	(10)frhd;	(11)memleft;	(12)man;	(13)p1;	(14)p2;
+       	(15)f1677_nbytes;	(16)nxt;	(17)prev;	(18)nunits;} @)
+[mman] MEV:senv_change_pe, new senv:senv_5 = @(0,penv_1,
+       [3] 
+        senv:
+       {	(30)c6__csz;	(31)c6__fn;	(32)__s32;} 
+        penv_1:
+       {	(0)__null;	(1)__hole;	(2)__hli;	(3)__hst;	(4)_heapstart;
+       	(5)c4__csz;	(6)c4__fn;	(7)_heapend;	(8)c7__csz;	(9)c7__fn;
+       	(10)frhd;	(11)memleft;	(12)f1677_nbytes;	(13)nxt;	(14)prev;
+       	(15)nunits;} @)
+[mman] MEV:senv_vars2:19
+[mman] DW:env2apron,seid:5, env_vars list length: 19
+[mman] DW:env2apron: 
+        seid_5 -> [5]
+       [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> __s32:int 5> _heapend:int 6> _heapstart:int 7> c4__csz:int 8> c4__fn:int 9> c6__csz:int 10> c6__fn:int 11> c7__csz:int 12> c7__fn:int 13> f1677_nbytes:int 14> frhd:int 15> memleft:int 16> nunits:int 17> nxt:int 18> prev:int]
+[mman] DW:change_env...
+[mman] DW:eid:4, eiold:4, einew: 5
+[mman] DW:assertion value eid 4 = old eid 4
+[mman] DW: emvironment changed
+[mman] After project out caller locals: {peid:1}
+       eshape: stack:(seid:5,peid:1) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (6)c4__fn,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_5, peid_1}[|f1677_nbytes-20=0; c7__fn=0; c7__csz=0; c4__fn=0;
+                         c4__csz=0; -c6__csz+8memleft+8>=0; c6__csz-8memleft+8>=0|]
+[mman] DF:set_fun_locals....
+[mman] MV:meet_exp....
+[mman] MV:constraints:nxt>=0
+[mman] MV:constraints:prev>=0
+[mman] MV:constraints:__retres>=0
+[mman] MV:meet_exp_set....
+[mman] MV:meet_exp_one, eid:5, esh.seid:5....
+[mman] MSH:do guard, seid:5...
+[mman] MSH:do guard_one...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:evalE ...
+[mman] MSH:guard_one return constraint:sv_13>=0
+[mman] MSH:do guard_one...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:evalE ...
+[mman] MSH:guard_one return constraint:sv_14>=0
+[mman] MSH:do guard_one...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:evalE ...
+[mman] MSH:guard_one return constraint:sv_1>=0
+[mman] MV:MSH.guard done...
+[mman] MV:finish meet_exp.
+[mman] DF:compute_fun_init done. 
+        State at first stmt sid:50: {peid:1}
+       eshape: stack:(seid:5,peid:1) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (6)c4__fn,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_5, peid_1}[|f1677_nbytes-20=0; c7__fn=0; c7__csz=0; c4__fn=0;
+                         c4__csz=0; -c6__csz+8memleft+8>=0; c6__csz-8memleft+8>=0|]
+[mman] DF:compute_fun_aux....
+[mman] DF:transfer_stmt_main: sid:50
+          on {peid:1}
+       eshape: stack:(seid:5,peid:1) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (6)c4__fn,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_5, peid_1}[|f1677_nbytes-20=0; c7__fn=0; c7__csz=0; c4__fn=0;
+                         c4__csz=0; -c6__csz+8memleft+8>=0; c6__csz-8memleft+8>=0|]
+[mman] s.skind: Instr1
+[mman] ASY:transform_lval2var: nunits
+[mman] transform_assign: nunits:=__hole[(int)((((unsigned int)nbytes + sizeof(HEADER)) - (unsigned int)1) / sizeof(HEADER) + (unsigned int)1)]
+[mman] lval2exp: found nbytes
+[mman] build cast(4) of (4)
+[mman] build cast(4) of (4)
+[mman] build cast(4) of (4)
+[mman] build cast(4) of (4)
+[mman] to: nunits:=((((nbytes + 8) - 1) / 8) + 1)
+[mman] MV:do_assign: nunits:=((((nbytes + 8) - 1) / 8) + 1), peid:1
+[mman] MV:do_assign_one...peid:1, esh.seid:5, dw.seid:5
+[mman] MSH:evalE ...
+[mman] MSH:evalE ex1 and ex2  ...
+[mman] MSH:evalE ...
+[mman] MSH:evalE ex1 and ex2  ...
+[mman] MSH:evalE ...
+[mman] MSH:evalE ex1 and ex2  ...
+[mman] MSH:evalE ...
+[mman] MSH:evalE ex1 and ex2  ...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:evalE ...
+[mman] MSH:after evalE, dot unfold ...
+[mman] MSH:evalE ...
+[mman] MSH:after evalE, dot unfold ...
+[mman] MSH:evalE ...
+[mman] MSH:after evalE, dot unfold ...
+[mman] MSH:evalE ...
+[mman] MSH:after evalE, dot unfold ...
+[mman] DW:do_assign: eid:5
+[mman] DW:to_var, Mman_asyn.AVar(nunits)
+[mman] MEV:senv_getvar, seid:5
+[mman] DW:to_var, Mman_asyn.AVar(nbytes)
+[mman] MEV:senv_getvar, seid:5
+[mman] DW:do_assign: nunits:=(f1677_nbytes +_i,0 8 -_i,0 1) /_i,0 8 +_i,0 1 (DW)
+[mman] DW: after do_assign 
+       ({seid_5, peid_1}[|nunits-4=0; f1677_nbytes-20=0;
+                                               c7__fn=0; c7__csz=0; c4__fn=0;
+                                               c4__csz=0; -c6__csz+8memleft+8>=0;
+                                               c6__csz-8memleft+8>=0|])
+[mman] MV:finish do_assign.
+[mman] DF:transfer_stmt_main: sid:51
+          on {peid:5}
+       eshape: stack:(seid:5,peid:1) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (6)c4__fn,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_5, peid_1}[|nunits-4=0; f1677_nbytes-20=0; c7__fn=0; c7__csz=0;
+                         c4__fn=0; c4__csz=0; -c6__csz+8memleft+8>=0;
+                         c6__csz-8memleft+8>=0|]
+[mman] s.skind: Instr1
+[mman] ASY:transform_lval2var: prev
+[mman] transform_assign: prev:=__hole[(HEADER *)0]
+[mman] build cast(4) of (4)
+[mman] to: prev:=0
+[mman] MV:do_assign: prev:=0, peid:5
+[mman] MV:do_assign_one...peid:5, esh.seid:5, dw.seid:5
+[mman] MEV:senv_getvar, seid:5
+[mman] ASY:to_senv_lval, vi:prev, svi:(14)prev.....
+[mman] MSH:evalL,AVar, lv:sv_14...
+[mman] MV:after evaL:sv_14
+[mman] MSH:evalE ...
+[mman] MV:after evaE:0
+[mman] MV:eshape mutate
+[mman] MSH:mutate_meminfo......
+[mman] MSH:mutate_stack
+[mman] MV:eshape mutate done, esh.seid:5
+[mman] MV:finish do_assign.
+[mman] DF:transfer_stmt_main: sid:52
+          on {peid:5}
+       eshape: stack:(seid:5,peid:1) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (6)c4__fn,
+        (14)prev |-> (0)__null,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_5, peid_1}[|nunits-4=0; f1677_nbytes-20=0; c7__fn=0; c7__csz=0;
+                         c4__fn=0; c4__csz=0; -c6__csz+8memleft+8>=0;
+                         c6__csz-8memleft+8>=0|]
+[mman] s.skind: Instr1
+[mman] ASY:transform_lval2var: nxt
+[mman] transform_assign: nxt:=__hole[frhd]
+[mman] lval2exp: found frhd
+[mman] to: nxt:=frhd
+[mman] MV:do_assign: nxt:=frhd, peid:5
+[mman] MV:do_assign_one...peid:5, esh.seid:5, dw.seid:5
+[mman] MEV:senv_getvar, seid:5
+[mman] ASY:to_senv_lval, vi:nxt, svi:(13)nxt.....
+[mman] MSH:evalL,AVar, lv:sv_13...
+[mman] MV:after evaL:sv_13
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MV:after evaE:sv_6
+[mman] MV:eshape mutate
+[mman] MSH:mutate_meminfo......
+[mman] MSH:mutate_meminfo, location in stack...
+[mman] MSH: svR: (6)c4__fn
+[mman] MSH:mutate_stack
+[mman] MV:eshape mutate done, esh.seid:5
+[mman] MV:finish do_assign.
+[mman] DF:transfer_stmt_main: sid:53
+          on {peid:5}
+       eshape: stack:(seid:5,peid:1) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (6)c4__fn,
+        (13)nxt |-> (6)c4__fn,
+        (14)prev |-> (0)__null,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_5, peid_1}[|nunits-4=0; f1677_nbytes-20=0; c7__fn=0; c7__csz=0;
+                         c4__fn=0; c4__csz=0; -c6__csz+8memleft+8>=0;
+                         c6__csz-8memleft+8>=0|]
+[mman] DF:transfer_stmt_main: sid:55
+          on {peid:5}
+       eshape: stack:(seid:5,peid:1) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (6)c4__fn,
+        (13)nxt |-> (6)c4__fn,
+        (14)prev |-> (0)__null,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_5, peid_1}[|nunits-4=0; f1677_nbytes-20=0; c7__fn=0; c7__csz=0;
+                         c4__fn=0; c4__csz=0; -c6__csz+8memleft+8>=0;
+                         c6__csz-8memleft+8>=0|]
+[mman] s.skind: If
+[mman] transform guard nxt
+[mman] transform guard: (HEADER *) nxt (op) 0
+[mman] lval2exp: found nxt
+[mman] to: (true)nxt!=0
+       	  (false)nxt=0
+[mman] MV:meet_exp....
+[mman] MV:constraints:nxt=0
+[mman] MV:meet_exp_set....
+[mman] MV:meet_exp_one, eid:5, esh.seid:5....
+[mman] MSH:do guard, seid:5...
+[mman] MSH:do guard_one...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:evalE ...
+[mman] MSH:guard_one return constraint:sv_6=0
+[mman] MSH:guard return is None...
+[mman] MV:MSH.guard done...
+[mman] MV:after guard is NONE.
+[mman] MV:finish meet_exp.
+[mman] MV:meet_exp....
+[mman] MV:constraints:nxt!=0
+[mman] MV:meet_exp_set....
+[mman] MV:meet_exp_one, eid:5, esh.seid:5....
+[mman] MSH:do guard, seid:5...
+[mman] MSH:do guard_one...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:evalE ...
+[mman] MSH:guard_one return constraint:sv_6>0
+[mman] MV:MSH.guard done...
+[mman] MV:finish meet_exp.
+[mman] DF:transfer_stmt_main: sid:57
+          on {peid:5}
+       eshape: stack:(seid:5,peid:1) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (6)c4__fn,
+        (13)nxt |-> (6)c4__fn,
+        (14)prev |-> (0)__null,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_5, peid_1}[|nunits-4=0; f1677_nbytes-20=0; c7__fn=0; c7__csz=0;
+                         c4__fn=0; c4__csz=0; -c6__csz+8memleft+8>=0;
+                         c6__csz-8memleft+8>=0|]
+[mman] DF:transfer_stmt_main: sid:59
+          on {peid:5}
+       eshape: stack:(seid:5,peid:1) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (6)c4__fn,
+        (13)nxt |-> (6)c4__fn,
+        (14)prev |-> (0)__null,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_5, peid_1}[|nunits-4=0; f1677_nbytes-20=0; c7__fn=0; c7__csz=0;
+                         c4__fn=0; c4__csz=0; -c6__csz+8memleft+8>=0;
+                         c6__csz-8memleft+8>=0|]
+[mman] s.skind: If
+[mman] transform guard nxt->size >= (unsigned int)nunits
+[mman] transform guard: (int) nxt->size (op) (unsigned int)nunits
+[mman] replace_vinfo nxt/_heapstart in (csz(_heapstart) / 8)
+[mman] replace_vinfo nxt/_heapstart in 8
+[mman] replace_vinfo nxt/_heapstart in csz(_heapstart)
+[mman] lval2exp: found nunits
+[mman] build cast(4) of (4)
+[mman] to: (true)(csz(nxt) / 8)>=nunits
+       	  (false)(csz(nxt) / 8)>nunits
+[mman] MV:meet_exp....
+[mman] MV:constraints:(csz(nxt) / 8)>nunits
+[mman] MV:meet_exp_set....
+[mman] MV:meet_exp_one, eid:5, esh.seid:5....
+[mman] MSH:do guard, seid:5...
+[mman] MSH:do guard_one...
+[mman] MSH:evalE ...
+[mman] MSH:evalE ex1 and ex2  ...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:evalE_feat...
+[mman] MSH:evalE ...
+[mman] MSH:after evalE, dot unfold ...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:guard_one return constraint:(sv_30 / 8)>sv_15
+[mman] MV:MSH.guard done...
+[mman] MV:finish meet_exp.
+[mman] MV:meet_exp....
+[mman] MV:constraints:(csz(nxt) / 8)>=nunits
+[mman] MV:meet_exp_set....
+[mman] MV:meet_exp_one, eid:5, esh.seid:5....
+[mman] MSH:do guard, seid:5...
+[mman] MSH:do guard_one...
+[mman] MSH:evalE ...
+[mman] MSH:evalE ex1 and ex2  ...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:evalE_feat...
+[mman] MSH:evalE ...
+[mman] MSH:after evalE, dot unfold ...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:guard_one return constraint:(sv_30 / 8)>=sv_15
+[mman] MV:MSH.guard done...
+[mman] MV:finish meet_exp.
+[mman] DF:transfer_stmt_main: sid:73
+          on {peid:5}
+       eshape: stack:(seid:5,peid:1) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (6)c4__fn,
+        (13)nxt |-> (6)c4__fn,
+        (14)prev |-> (0)__null,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_5, peid_1}[|nunits-4=0; f1677_nbytes-20=0; c7__fn=0; c7__csz=0;
+                         c4__fn=0; c4__csz=0; -c6__csz+8memleft+8>=0;
+                         c6__csz-8memleft+8>=0|]
+[mman] s.skind: Instr1
+[mman] ASY:transform_lval2var: prev
+[mman] transform_assign: prev:=__hole[nxt]
+[mman] lval2exp: found nxt
+[mman] to: prev:=nxt
+[mman] MV:do_assign: prev:=nxt, peid:5
+[mman] MV:do_assign_one...peid:5, esh.seid:5, dw.seid:5
+[mman] MEV:senv_getvar, seid:5
+[mman] ASY:to_senv_lval, vi:prev, svi:(14)prev.....
+[mman] MSH:evalL,AVar, lv:sv_14...
+[mman] MV:after evaL:sv_14
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MV:after evaE:sv_6
+[mman] MV:eshape mutate
+[mman] MSH:mutate_meminfo......
+[mman] MSH:mutate_meminfo, location in stack...
+[mman] MSH: svR: (6)c4__fn
+[mman] MSH:mutate_stack
+[mman] MV:eshape mutate done, esh.seid:5
+[mman] MV:finish do_assign.
+[mman] DF:transfer_stmt_main: sid:74
+          on {peid:5}
+       eshape: stack:(seid:5,peid:1) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (6)c4__fn,
+        (13)nxt |-> (6)c4__fn,
+        (14)prev |-> (6)c4__fn,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_5, peid_1}[|nunits-4=0; f1677_nbytes-20=0; c7__fn=0; c7__csz=0;
+                         c4__fn=0; c4__csz=0; -c6__csz+8memleft+8>=0;
+                         c6__csz-8memleft+8>=0|]
+[mman] s.skind: Instr1
+[mman] ASY:transform_lval2var: nxt
+[mman] transform_assign: nxt:=__hole[nxt->ptr]
+[mman] replace_vinfo nxt/_heapstart in fn(_heapstart)
+[mman] to: nxt:=fn(nxt)
+[mman] MV:do_assign: nxt:=fn(nxt), peid:5
+[mman] MV:do_assign_one...peid:5, esh.seid:5, dw.seid:5
+[mman] MEV:senv_getvar, seid:5
+[mman] ASY:to_senv_lval, vi:nxt, svi:(13)nxt.....
+[mman] MSH:evalL,AVar, lv:sv_13...
+[mman] MV:after evaL:sv_13
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:evalE_feat...
+[mman] MV:after evaE:sv_31
+[mman] MV:eshape mutate
+[mman] MSH:mutate_meminfo......
+[mman] MSH:mutate_meminfo, location in stack...
+[mman] MSH: svR: (31)c6__fn
+[mman] MSH:mutate_stack
+[mman] MV:eshape mutate done, esh.seid:5
+[mman] MV:finish do_assign.
+[mman] failure: Incomparable heap graphs
+[mman] DF:transfer_stmt_main: sid:53
+          on {peid:5}
+       eshape: stack:(seid:5,peid:1) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (6)c4__fn,
+        (13)nxt |-> (6)c4__fn,
+        (14)prev |-> (0)__null,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_5, peid_1}[|nunits-4=0; f1677_nbytes-20=0; c7__fn=0; c7__csz=0;
+                         c4__fn=0; c4__csz=0; -c6__csz+8memleft+8>=0;
+                         c6__csz-8memleft+8>=0|]
+[mman] DF:transfer_stmt_main: sid:61
+          on {peid:5}
+       eshape: stack:(seid:5,peid:1) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (6)c4__fn,
+        (13)nxt |-> (6)c4__fn,
+        (14)prev |-> (0)__null,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_5, peid_1}[|nunits-4=0; f1677_nbytes-20=0; c7__fn=0; c7__csz=0;
+                         c4__fn=0; c4__csz=0; -c6__csz+8memleft+8>=0;
+                         c6__csz-8memleft+8>=0|]
+[mman] s.skind: If
+[mman] transform guard nxt->size > (unsigned int)nunits
+[mman] transform guard: (int) nxt->size (op) (unsigned int)nunits
+[mman] replace_vinfo nxt/_heapstart in (csz(_heapstart) / 8)
+[mman] replace_vinfo nxt/_heapstart in 8
+[mman] replace_vinfo nxt/_heapstart in csz(_heapstart)
+[mman] lval2exp: found nunits
+[mman] build cast(4) of (4)
+[mman] to: (true)(csz(nxt) / 8)>nunits
+       	  (false)(csz(nxt) / 8)>=nunits
+[mman] MV:meet_exp....
+[mman] MV:constraints:(csz(nxt) / 8)>=nunits
+[mman] MV:meet_exp_set....
+[mman] MV:meet_exp_one, eid:5, esh.seid:5....
+[mman] MSH:do guard, seid:5...
+[mman] MSH:do guard_one...
+[mman] MSH:evalE ...
+[mman] MSH:evalE ex1 and ex2  ...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:evalE_feat...
+[mman] MSH:evalE ...
+[mman] MSH:after evalE, dot unfold ...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:guard_one return constraint:(sv_30 / 8)>=sv_15
+[mman] MV:MSH.guard done...
+[mman] MV:finish meet_exp.
+[mman] MV:meet_exp....
+[mman] MV:constraints:(csz(nxt) / 8)>nunits
+[mman] MV:meet_exp_set....
+[mman] MV:meet_exp_one, eid:5, esh.seid:5....
+[mman] MSH:do guard, seid:5...
+[mman] MSH:do guard_one...
+[mman] MSH:evalE ...
+[mman] MSH:evalE ex1 and ex2  ...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:evalE_feat...
+[mman] MSH:evalE ...
+[mman] MSH:after evalE, dot unfold ...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:guard_one return constraint:(sv_30 / 8)>sv_15
+[mman] MV:MSH.guard done...
+[mman] MV:finish meet_exp.
+[mman] DF:transfer_stmt_main: sid:62
+          on {peid:5}
+       eshape: stack:(seid:5,peid:1) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (6)c4__fn,
+        (13)nxt |-> (6)c4__fn,
+        (14)prev |-> (0)__null,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_5, peid_1}[|nunits-4=0; f1677_nbytes-20=0; c7__fn=0; c7__csz=0;
+                         c4__fn=0; c4__csz=0; -c6__csz+8memleft+8>=0;
+                         c6__csz-8memleft+8>=0|]
+[mman] s.skind: Instr1
+[mman] ASY:transform_lval2var: nxt->size
+[mman] transform_assign: csz(nxt):=(__hole * 8)[nxt->size - (unsigned int)nunits]
+[mman] replace_vinfo nxt/_heapstart in (csz(_heapstart) / 8)
+[mman] replace_vinfo nxt/_heapstart in 8
+[mman] replace_vinfo nxt/_heapstart in csz(_heapstart)
+[mman] lval2exp: found nunits
+[mman] build cast(4) of (4)
+[mman] to: csz(nxt):=(((csz(nxt) / 8) - nunits) * 8)
+[mman] MV:do_assign: csz(nxt):=(((csz(nxt) / 8) - nunits) * 8), peid:5
+[mman] MV:do_assign_one...peid:5, esh.seid:5, dw.seid:5
+[mman] MSH:evalL afeat(fk, nxt)
+[mman] MSH:feature is size, work on data part
+[mman] MEV:senv_getvar, seid:5
+[mman] ASY:to_senv_lval, vi:nxt, svi:(13)nxt.....
+[mman] MSH:evalL,AVar, lv:sv_13...
+[mman] MV:after evaL:csz(sv_6)
+[mman] MSH:evalE ...
+[mman] MSH:evalE ex1 and ex2  ...
+[mman] MSH:evalE ...
+[mman] MSH:evalE ex1 and ex2  ...
+[mman] MSH:evalE ...
+[mman] MSH:evalE ex1 and ex2  ...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:evalE_feat...
+[mman] MSH:evalE ...
+[mman] MSH:after evalE, dot unfold ...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:after evalE, dot unfold ...
+[mman] MSH:evalE ...
+[mman] MSH:after evalE, dot unfold ...
+[mman] MV:after evaE:(((sv_30 / 8) - sv_15) * 8)
+[mman] MV:eshape mutate
+[mman] MSH:mutate_meminfo......
+[mman] failure: Unsupported assign
+[mman] MV:eshape mutate done, esh.seid:5
+[mman] MV:finish do_assign.
+[mman] DF:transfer_stmt_main: sid:66
+          on {peid:5}
+       eshape: stack:(seid:5,peid:1) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (6)c4__fn,
+        (13)nxt |-> (6)c4__fn,
+        (14)prev |-> (0)__null,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_5, peid_1}[|nunits-4=0; f1677_nbytes-20=0; c7__fn=0; c7__csz=0;
+                         c4__fn=0; c4__csz=0; -c6__csz+8memleft+8>=0;
+                         c6__csz-8memleft+8>=0|]
+[mman] s.skind: If
+[mman] transform guard prev == (HEADER *)0
+[mman] transform guard: (int) prev (op) (HEADER *)0
+[mman] lval2exp: found prev
+[mman] build cast(4) of (4)
+[mman] to: (true)prev=0
+       	  (false)prev!=0
+[mman] MV:meet_exp....
+[mman] MV:constraints:prev!=0
+[mman] MV:meet_exp_set....
+[mman] MV:meet_exp_one, eid:5, esh.seid:5....
+[mman] MSH:do guard, seid:5...
+[mman] MSH:do guard_one...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:evalE ...
+[mman] MSH:guard_one return constraint:false
+[mman] MSH:guard return is None...
+[mman] MV:MSH.guard done...
+[mman] MV:after guard is NONE.
+[mman] MV:finish meet_exp.
+[mman] MV:meet_exp....
+[mman] MV:constraints:prev=0
+[mman] MV:meet_exp_set....
+[mman] MV:meet_exp_one, eid:5, esh.seid:5....
+[mman] MSH:do guard, seid:5...
+[mman] MSH:do guard_one...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:evalE ...
+[mman] MSH:guard_one return constraint:0=0
+[mman] MV:MSH.guard done...
+[mman] MV:finish meet_exp.
+[mman] DF:transfer_stmt_main: sid:63
+          on {peid:5}
+       eshape: stack:(seid:5,peid:1) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (6)c4__fn,
+        (13)nxt |-> (6)c4__fn,
+        (14)prev |-> (0)__null,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_5, peid_1}[|nunits-4=0; f1677_nbytes-20=0; c7__fn=0; c7__csz=0;
+                         c4__fn=0; c4__csz=0; -c6__csz+8memleft+8>=0;
+                         c6__csz-8memleft+8>=0|]
+[mman] s.skind: Instr1
+[mman] ASY:transform_lval2var: nxt
+[mman] transform_assign: nxt:=__hole[nxt + nxt->size]
+[mman] lval2exp: found nxt
+[mman] replace_vinfo nxt/_heapstart in (csz(_heapstart) / 8)
+[mman] replace_vinfo nxt/_heapstart in 8
+[mman] replace_vinfo nxt/_heapstart in csz(_heapstart)
+[mman] to: nxt:=(nxt + ((csz(nxt) / 8) * 8))
+[mman] MV:do_assign: nxt:=(nxt + ((csz(nxt) / 8) * 8)), peid:5
+[mman] MV:do_assign_one...peid:5, esh.seid:5, dw.seid:5
+[mman] MEV:senv_getvar, seid:5
+[mman] ASY:to_senv_lval, vi:nxt, svi:(13)nxt.....
+[mman] MSH:evalL,AVar, lv:sv_13...
+[mman] MV:after evaL:sv_13
+[mman] MSH:evalE ...
+[mman] MSH:evalE ex1 and ex2  ...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:evalE ...
+[mman] MSH:evalE ex1 and ex2  ...
+[mman] MSH:evalE ...
+[mman] MSH:evalE ex1 and ex2  ...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:evalE_feat...
+[mman] MSH:evalE ...
+[mman] MSH:after evalE, dot unfold ...
+[mman] MSH:evalE ...
+[mman] MSH:after evalE, dot unfold ...
+[mman] MSH:after evalE, dot unfold ...
+[mman] MSH:evalE, pointer arithmetics...
+[mman] MV:after evaE:(sv_6 + ((sv_30 / 8) * 8))
+[mman] MV:evaE, need unfold
+[mman] MV:after evaL and evalE, unfold info:csz(sv_6)
+[mman] MV:need unfolding....
+[mman] unfold_one
+[mman] MV:finish do_assign.
+[mman] DF:transfer_stmt_main: sid:67
+          on {peid:5}
+       eshape: stack:(seid:5,peid:1) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (6)c4__fn,
+        (13)nxt |-> (6)c4__fn,
+        (14)prev |-> (0)__null,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_5, peid_1}[|nunits-4=0; f1677_nbytes-20=0; c7__fn=0; c7__csz=0;
+                         c4__fn=0; c4__csz=0; -c6__csz+8memleft+8>=0;
+                         c6__csz-8memleft+8>=0|]
+[mman] s.skind: Instr1
+[mman] ASY:transform_lval2var: frhd
+[mman] transform_assign: frhd:=__hole[nxt->ptr]
+[mman] replace_vinfo nxt/_heapstart in fn(_heapstart)
+[mman] to: frhd:=fn(nxt)
+[mman] MV:do_assign: frhd:=fn(nxt), peid:5
+[mman] MV:do_assign_one...peid:5, esh.seid:5, dw.seid:5
+[mman] MEV:senv_getvar, seid:5
+[mman] ASY:to_senv_lval, vi:frhd, svi:(10)frhd.....
+[mman] MSH:evalL,AVar, lv:sv_10...
+[mman] MV:after evaL:sv_10
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:evalE_feat...
+[mman] MV:after evaE:sv_31
+[mman] MV:eshape mutate
+[mman] MSH:mutate_meminfo......
+[mman] MSH:mutate_meminfo, location in stack...
+[mman] MSH: svR: (31)c6__fn
+[mman] MSH:mutate_stack
+[mman] MV:eshape mutate done, esh.seid:5
+[mman] MV:finish do_assign.
+[mman] DF:transfer_stmt_main: sid:69
+          on {peid:5}
+       eshape: stack:(seid:5,peid:1) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (31)c6__fn,
+        (13)nxt |-> (6)c4__fn,
+        (14)prev |-> (0)__null,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_5, peid_1}[|nunits-4=0; f1677_nbytes-20=0; c7__fn=0; c7__csz=0;
+                         c4__fn=0; c4__csz=0; -c6__csz+8memleft+8>=0;
+                         c6__csz-8memleft+8>=0|]
+[mman] s.skind: Instr1
+[mman] ASY:transform_lval2var: memleft
+[mman] transform_assign: memleft:=__hole[(short)((int)memleft - nunits)]
+[mman] lval2exp: found memleft
+[mman] build cast(4) of (4)
+[mman] lval2exp: found nunits
+[mman] build cast(2) of (2)
+[mman] to: memleft:=(memleft - nunits)
+[mman] MV:do_assign: memleft:=(memleft - nunits), peid:5
+[mman] MV:do_assign_one...peid:5, esh.seid:5, dw.seid:5
+[mman] MSH:evalE ...
+[mman] MSH:evalE ex1 and ex2  ...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:after evalE, dot unfold ...
+[mman] MV:after evaE:(sv_11 - sv_15)
+[mman] DW:do_assign: eid:5
+[mman] DW:to_var, Mman_asyn.AVar(memleft)
+[mman] MEV:senv_getvar, seid:5
+[mman] Mman_asyn.ASVar(sid:11), sei:5
+[mman] Mman_asyn.ASVar(sid:15), sei:5
+[mman] DW:do_assign: memleft:=memleft -_i,0 nunits (DW)
+[mman] DW: after do_assign 
+       ({seid_5, peid_1}[|nunits-4=0; f1677_nbytes-20=0;
+                                               c7__fn=0; c7__csz=0; c4__fn=0;
+                                               c4__csz=0; -c6__csz+8memleft+40>=0;
+                                               c6__csz-8memleft-24>=0|])
+[mman] MV:finish do_assign.
+[mman] DF:transfer_stmt_main: sid:71
+          on {peid:5}
+       eshape: stack:(seid:5,peid:1) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (31)c6__fn,
+        (13)nxt |-> (6)c4__fn,
+        (14)prev |-> (0)__null,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_5, peid_1}[|nunits-4=0; f1677_nbytes-20=0; c7__fn=0; c7__csz=0;
+                         c4__fn=0; c4__csz=0; -c6__csz+8memleft+40>=0;
+                         c6__csz-8memleft-24>=0|]
+[mman] s.skind: Instr1
+[mman] ASY:transform_lval2var: __retres
+[mman] transform_assign: __retres:=__hole[(void *)(nxt + 1)]
+[mman] lval2exp: found nxt
+[mman] build cast(4) of (4)
+[mman] to: __retres:=(nxt + (1 * 8))
+[mman] MV:do_assign: __retres:=(nxt + (1 * 8)), peid:5
+[mman] MV:do_assign_one...peid:5, esh.seid:5, dw.seid:5
+[mman] MEV:senv_getvar, seid:5
+[mman] ASY:to_senv_lval, vi:__retres, svi:(1)__hole.....
+[mman] MV:after evaL:sv_1
+[mman] MSH:evalE ...
+[mman] MSH:evalE ex1 and ex2  ...
+[mman] MSH:evalE ...
+[mman] MEV:senv_getvar, seid:5
+[mman] MSH:evalE ...
+[mman] MSH:evalE ex1 and ex2  ...
+[mman] MSH:evalE ...
+[mman] MSH:evalE ...
+[mman] MSH:after evalE, dot unfold ...
+[mman] MSH:after evalE, dot unfold ...
+[mman] MSH:evalE, pointer arithmetics...
+[mman] MV:after evaE:(sv_6 + (1 * 8))
+[mman] MV:evaE, need unfold
+[mman] MV:after evaL and evalE, unfold info:csz(sv_6)
+[mman] MV:need unfolding....
+[mman] unfold_one
+[mman] MV:finish do_assign.
+[mman] compute_fun_aux done....
+[mman] DF:ret_callee: {peid:-1}
+       Bot
+[mman] DF:ret_call: laAlloc(...)
+[mman] DF:Combine the callee return state vret with the caller state ...
+[mman] DF:vcall: {peid:3}
+       eshape: stack:(seid:3,peid:0) 
+        (4)_heapstart |-> (4)_heapstart,
+        (6)c4__fn |-> (6)c4__fn,
+        (7)_heapend |-> (7)_heapend,
+        (9)c7__fn |-> (2)__hli,
+        (10)frhd |-> (6)c4__fn,
+        
+       heap list 
+       [(4)_heapstart::(7)_heapend::(6)c4__fn::(32)__s32::]
+       atoms:
+       chd((4)_heapstart)[csz:(5)c4__csz,fn:(6)c4__fn,]  * 
+       chd((7)_heapend)[csz:(8)c7__csz,fn:(9)c7__fn,]  * 
+       chd((6)c4__fn)[csz:(30)c6__csz,fn:(31)c6__fn,]  * 
+       blk((32)__s32,(2)__hli) * 
+       emp,
+        
+        dwords:{seid_3, peid_0}[|c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0;
+                         -c6__csz+8memleft+8>=0; c6__csz-8memleft+8>=0|]
+[mman] DF:returned_state: {peid:-1}
+       Bot
+[mman] MEV:Unify penvs 3, -1
 [mman] failure: Unexpected exception.
-                Please submit bug report (Ref. "Manager.Error(_)").
-[kernel] Current source was: /Users/yuezhuang/Documents/projects/mem copy/bench/la/lamain.c:8
+                Please submit bug report (Ref. "Not_found").
+[kernel] Current source was: /Users/yuezhuang/Documents/projects/mem copy/bench/la/lamalloc.c:168
          The full backtrace is:
          Raised at file "src/kernel_services/plugin_entry_points/log.ml", line 583, characters 30-31
          Called from file "src/kernel_services/plugin_entry_points/log.ml", line 577, characters 9-16
