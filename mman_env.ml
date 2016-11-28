@@ -483,8 +483,8 @@ let penv_unify ei ej
         ssv2;
       let npe = { pe_id = (-1); pe_ucnt = 0; pvars = !ssv } in
       let npeid = penv_add npe in
-      (*let _ = (Mman_options.Self.debug ~level:2 "unified %a@."
-                 penv_print (penv_get npeid)) in*)
+      let _ = (Mman_options.Self.debug ~level:2 "unified %a@."
+                 penv_print (penv_get npeid)) in
       npeid, !mapi, !mapj
     end
     
@@ -542,11 +542,14 @@ let penvs_init_globals () =
   begin
     Vector.clear penvs;
     Globals.Vars.iter_in_file_order
-      (fun vinfo _ ->
+      (fun vinfo _ -> 
          if (vinfo.vstorage == Cil_types.Static) ||
             (Mman_dabs.is_chunk_struct vinfo.Cil_types.vtype) ||
-            (Mman_dabs.is_chunk_ptr vinfo.Cil_types.vtype)
-         then
+            (Mman_dabs.is_chunk_ptr vinfo.Cil_types.vtype) ||
+            (Cil.isVoidPtrType vinfo.vtype) ||
+            (vinfo.vstorage == Cil_types.NoStorage) 
+            (* TODO: to consider pointer type:void * *)
+         then       	         	
           (* adds vinfo program variable and 
            * its location on stack, if used in the program *)
           let lastid, svl = sv_add_pvar vinfo !svid in
@@ -829,10 +832,7 @@ let senv_vars2 (eid:int )
         svl := !svl@[(sv)]
     )
     se.svars
-    ;
-    let _ = Mman_options.Self.debug ~level:1 
-            "MEV:senv_vars2:%d" (List.length !svl)  
-    in 
+    ; 
     !svl
   end 
 
@@ -846,9 +846,7 @@ let senv_getvar (eid: int) (sv: Mman_svar.Svar.t)
   let se = senv_get eid in
   try
     comem_vidmap se.svars sv
-  with Not_found -> 
-    let _ = Mman_options.Self.debug ~level:1 
-            "MEV:senv_getvar, seid:%d" eid  in 
+  with Not_found ->  
     penv_getvar se.peid sv
 
 
@@ -1214,10 +1212,7 @@ let senv_get_feat svid eid fk
               | Feature(Some(optvid), fki) -> 
                     if (optvid == svid) &&
                        (fk == fki)
-                    then 
-                      let _ = Mman_options.Self.debug ~level:2 "ENV:its feature (%d,%s)@."
-                              optvid (Mman_dabs.get_fname fk) 
-                      in
+                    then  
                       feat := [(svi)] 
               |_->   ()
       )
@@ -1231,17 +1226,17 @@ let senv_get_feat svid eid fk
               | Feature(Some(optvid), fki) -> 
                     if (optvid == svid) &&
                        (fk == fki)
-                    then 
-                      let _ = Mman_options.Self.debug ~level:2 "ENV:its feature (%d,%s)@."
-                              optvid (Mman_dabs.get_fname fk) 
-                      in
+                    then  
                       feat := [(svi)] 
               |_->   ()
         )
         pe.pvars
       )
     ;
-    List.hd !feat
+    if !feat != [] then 
+    	List.hd !feat
+	else
+		Mman_svar.sv_mk_hole (* it is error *) 
 end
 
 
@@ -1253,8 +1248,9 @@ let senv_change_pe (seid:int) (newpeid:int)
 : int 
 =
   begin 
-    let _ = (Mman_options.Self.debug ~level:2 "MEV:senv_change_pe, old senv:%a@."
-                senv_print (senv_get seid))
+    let _ = (Mman_options.Self.debug ~level:2 "MEV:senv_change_pe, old senv:(seid:%d,peid:%d)@."
+            seid 
+            (senv_get seid).peid)
     in 
     let se = senv_get seid in 
     (*let nseid = senv_new () in *)
@@ -1269,8 +1265,9 @@ let senv_change_pe (seid:int) (newpeid:int)
    in  
    (* add the new senv paris(seid, peid) *)
    let nseid = senv_add new_se in 
-   let _ = (Mman_options.Self.debug ~level:1 "MEV:senv_change_pe, new senv:%a @."
-                senv_print (senv_get nseid))
+   let _ = (Mman_options.Self.debug ~level:1 "MEV:senv_change_pe, new senv:(seid:%d,peid:%d) @."
+              nseid 
+              newpeid)
    in
    nseid 
  end 

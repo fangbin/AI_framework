@@ -404,6 +404,7 @@ let is_fun_result (fname:string) (lf:logic_info)
         true
   | _ -> (Mman_options.Self.error "%s feature not a predicate@." fname;
           false)
+
          
 (** Read annotation for feature {!DA_CAL} and 
  *  set the {!dabs.align}, if correct.
@@ -539,7 +540,7 @@ let read_da_cdat (lf:logic_info) =
           t
     | _ -> Mman_options.Self.fatal "feature 'cdt': definition not a term@."
   in
-  (* Typecheck to : cty -> void* *)
+  (* Typecheck to : cty -> void* *)       
   if (not(is_fun_cty "cdat" lf)) ||
      (not(is_fun_result "cdat" lf
             Logic_utils.isLogicVoidPointerType))

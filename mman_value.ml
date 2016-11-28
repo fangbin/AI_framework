@@ -692,7 +692,7 @@ module Model = struct
     (c1_cn: Mman_asyn.aconstr list)
     : (sh2dw option)
     =
-    let _ = Mman_options.Self.debug ~level:1 "MV:meet_exp_one, eid:%d, esh.seid:%d....@."
+    let _ = Mman_options.Self.debug ~level:1 "MV:meet_exp_one, peid:%d, esh.seid:%d....@."
           eid esh.seid 
         in 
     let r, vf1_vfn = MSH.guard esh c1_cn in
@@ -752,7 +752,7 @@ module Model = struct
     (*TODO bug Failure("hd") => llv is empty *)
     if (List.length llv == 0 ) then d 
     else 
-    let _ = 
+    (*let _ = 
         List.iter2 
         ( fun lv le ->
              Mman_options.Self.debug ~level:2 "MV:do_assign: %a:=%a, peid:%d @."
@@ -760,7 +760,7 @@ module Model = struct
         )
         llv 
         lexp 
-    in
+    in*)
     let nmap =
       (match d.set with
       | None -> None      
@@ -780,7 +780,10 @@ module Model = struct
                 ModelMap.iter
                (fun exsh dw -> 
                       (*neid := exsh.seid;*)
-                      neid := dw.MDW.eid 
+                      let seid = dw.MDW.eid in 
+                      let se = Mman_env.senv_get seid in                       
+                      neid := se.peid 
+
                )
                nmp 
     | _ -> ()
@@ -793,9 +796,9 @@ module Model = struct
     in 
     let _ = Mman_options.Self.debug ~level:1 "MV:finish do_assign.@."
     in 
-    (*let _ = Mman_options.Self.debug ~level:1 "MV:new eshape value:\n %a @."
+    (*let _ = Mman_options.Self.debug ~level:1 "MV:finish do_assign, new eshape value:\n %a @."
              (pretty_code_intern Type.Basic) nvalue 
-    in*) 
+    in *)
     nvalue  
 
   and do_assign_set (eid: MEV.t)
@@ -829,329 +832,23 @@ module Model = struct
       !nmap
     end
 
-  (*and do_assign_one (eid: MEV.t) (esh: MSH.t) (dw: MDW.t)
-    (llv: Mman_asyn.alval list) (lexp: Mman_asyn.aexp list)
-    (llv_dw: Mman_asyn.alval list) (lexp_dw: Mman_asyn.aexp list)
-    : (sh2dw option)
-    =
-
-    (* assertion eid = esh.seid *)
-    let _ = Mman_options.Self.debug ~level:1 "MV:do_assign_one...eid:%d, esh.seid:%d, dw.eid:%d @." 
-            eid esh.seid dw.eid  
-    in
-    (* build from (esh, dw) the set of pairs where all assignments may be done *) 
-    let nllv = ref [] in
-    let nlexp = ref [] in
-    let vf = ref [] in
-    let r = ref true  in
-    let l = ref true in 
-    let isin = ref false in 
-      
-      (*let _ = (Mman_options.Self.debug ~level:2 "MV:penv: %a@."
-                 MEV.penv_print (MEV.penv_get (dw.eid))) 
-      in
-      (* initialize the symbolic environment *) 
-      let _ = (Mman_options.Self.debug ~level:2 "MV:senv: %a @."
-                 MEV.senv_print (MEV.senv_get esh.seid)) 
-      in*)
-
-    (* do assign on MDW, the llv (lexp) for MDW.do_assign should be 
-     * the result of evaL (evaE)  *)
-      (*let _ = 
-      List.iter2
-      (fun lv e -> 
-        Mman_options.Self.debug ~level:2 "MV:left and right of MDW: %a := %a@."
-        Mman_asyn.pp_alval lv 
-        Mman_asyn.pp_aexp e 
-      )
-      llv_dw
-      lexp_dw
-      in 
-      *)
-
-    begin
-      (* evaluate left *)
-      List.iter (fun lv ->                      
-                    ( 
-                      (* check  eval in shape or only do assign on data *)     
-                      (*let isin = senv_var_isin eid *)                      
-                      let rlv, rvf = MSH.evalL lv esh in 
-                      match rlv with
-                      | None ->  
-                               r := false;
-                               if rvf == [] 
-                               then  
-                                  nllv := (lv) :: (!nllv); 
-                      
-                      | Some(lv') ->
-                            begin 
-                               nllv := lv' :: (!nllv);
-                               vf := rvf @ (!vf)
-                            end
-                    ) 
-                 )
-                llv
-        ;
-
-      (*List.iter
-      (fun lv -> 
-          Mman_options.Self.debug ~level:2 "MV:after mutate left: %a @."
-          Mman_asyn.pp_alval lv  
-      )
-      !nllv
-      ; *) 
-      (* evaluate right aexp *)
-      List.iter (fun e ->                      
-                    (  
-                      let re, rvf = MSH.evalE e esh in
-                      match re with
-                      | None ->  
-                             l := false;
-                             if rvf == [] 
-                             then  nlexp := (e) :: (!nlexp);      
-                      
-                      | Some(e') ->
-                           begin 
-                             nlexp := (e') :: (!nlexp);
-                             vf := rvf @ (!vf)
-                           end 
-                    )                     
-                )
-                lexp
-        ;           
-
-      let _ = 
-      List.iter2
-      (fun lv e -> 
-          Mman_options.Self.debug ~level:2 "MV:after mutate left and right: %a := %a@."
-          Mman_asyn.pp_alval lv 
-          Mman_asyn.pp_aexp e 
-      )
-      !nllv
-      !nlexp
-      in    
-
-
-      let llv_dw_l = ref [] in 
-      let lexp_dw_l = ref [] in
-          List.iter2
-          (fun lv e ->  
-                    llv_dw_l := !llv_dw_l @ [lv];
-                    lexp_dw_l := !lexp_dw_l @ [e]
-          )
-          llv_dw
-          lexp_dw
-      ;
-
-
-
-      (*let new_dw = MDW.do_assign dw llv_dw  lexp_dw in  *)
-      
-
-      match esh.mem with
-      | Top | Bot -> 
-          (* Initially, while eshape value is Top and __hli is 
-           * assigned (when sbrk is called), the initial eshape 
-           * value will be created.
-           *)         
-         let nm = ref (ModelMap.empty) in
-         if (not !r) && (not !l) then  
-            match List.hd lexp  with
-            | ALval(AVar vi2) -> (* = __hli *)         
-                  begin                     
-                      if (String.compare (vi2.vname)  "__hli" == 0)
-                      then  
-                         match (List.hd llv) with
-                          | AVar vi  -> 
-                              begin  
-                                let eshv = MSH.init_state vi.vid eid in  
-                                 List.iter2 
-                                 (
-                                     fun lv e -> 
-                                          let ndw = MDW.assign lv e dw in 
-                                          nm :=  ModelMap.singleton eshv ndw;
-                                 )
-                                  llv 
-                                  lexp
-                                ; 
-                                Some (!nm)
-                              end 
-
-                          | AFeat (_fk, lv) ->  
-                                begin 
-                                  match lv with
-                                      | AVar vi  ->  
-                                        begin 
-                                           let _ = Mman_options.Self.debug ~level:1 " call shape init_state  @."  
-                                           in 
-                                            let eshv = MSH.init_state vi.vid eid in  
-                                             List.iter2 
-                                               (
-                                                   fun lv e -> 
-                                                        let ndw = MDW.assign lv e dw in 
-                                                        nm :=  ModelMap.singleton eshv ndw;
-                                               )
-                                                llv 
-                                                lexp
-                                            ; 
-                                           let _ = Mman_options.Self.debug ~level:1 "shape init state:%a @."  
-                                           MSH.pretty eshv 
-                                           in  
-                                            Some (!nm)
-                                        end 
-                                      | _ ->  None     
-                                end  
-                      else 
-                        None
-                  end            
-            | _ -> (*  fn(headpstart = 0 ) *)
-                begin                  
-                  List.iter2 
-                  ( 
-                    fun lv e ->
-                    let ndw = MDW.assign lv e dw in 
-                    nm :=  (ModelMap.singleton esh ndw)
-                  )
-                  llv 
-                  lexp 
-                  ; 
-                  Some (!nm) 
-                end
-          else Some(!nm)
-
-      | _ -> 
-          begin  
-              if (!vf == []) 
-              then (* do not unfold *)
-                (* the assignment may be done *) 
-                let nm = ref (ModelMap.empty) in 
-                let i = ref 0 in
-                begin
-                  List.iter2
-                    (
-                      fun lv e ->
-                       if (!r) then
-                         ( 
-                          let _ = Mman_options.Self.debug ~level:2 "MV:eshape mutate@."  in 
-                          let t1_tn = MSH.mutate lv e esh in
-                          if t1_tn == [] 
-                          then  r := false
-                          else
-                          ( 
-
-                            List.iter
-                              (
-                                fun (nsh, _vl, cl) ->                                                                   
-                                  if (List.length llv == List.length llv_dw) then 
-                                  (
-                                  (* The new senv (nsh.seid) is returned after evaluation.
-                                   * 1. add the svars into the peid of dw, get the new peid
-                                   * 2. change_env of dw and then do assign 
-                                   * 3. replace peid in senv with new peid *)
-
-                                   let dw_peid = dw.eid in 
-                                   let nsh_seid = nsh.MSH.seid in 
-                                   if (esh.seid == nsh_seid) then 
-                                        ( 
-                                          let new_dw = MDW.do_assign dw !nllv !nlexp  in                           
-                                          nm := join_map_isin isin !nm (ModelMap.singleton nsh new_dw);
-                                        )
-                                   else 
-                                        (
-                                          let _ = Mman_options.Self.debug ~level:2 "MV:eshape mutate, shape updated...@."  in 
-
-                                          let n_se = MEV.senv_get nsh_seid in 
-                                          let n_svars = MEV.senv_vars2 nsh_seid in 
-
-                                          (* add the new symbloc into penv*)
-                                          let n_peid , _  = MEV.penv_addsvar dw_peid n_svars in 
-                                          let n_dw = MDW.change_env dw dw_peid n_peid in 
-
-                                          MEV.senv_change_pe nsh.seid n_peid;
-
-                                          (* TODO: change stack of shape?*)
-
-                                          let nn_sh = MSH.change_env n_peid nsh in 
-
-                                          let nn_dw = MDW.do_assign n_dw !nllv !nlexp  in 
-                                          nm := join_map_isin isin !nm (ModelMap.singleton nn_sh nn_dw);
-                                        )
-                                  )
-                                  else (* special case for sbrk *)
-                                    (
-                                      let dw_peid = dw.eid in 
-                                      let nsh_seid = nsh.MSH.seid in 
-                                      if (esh.seid == nsh_seid) then 
-                                        (
-                                          let new_dw = MDW.do_assign dw llv_dw lexp_dw  in                           
-                                          nm := join_map_isin isin !nm (ModelMap.singleton nsh new_dw);
-                                        )
-                                       else 
-                                        (
-                                          let _ = Mman_options.Self.debug ~level:2 "MV:eshape mutate, (sbrk), shape updated, senv changed...@."  in 
-
-                                          let n_se = MEV.senv_get nsh_seid in 
-                                          let n_svars = MEV.senv_vars2 nsh_seid in 
-
-                                          (* add the new symbloc into penv*)
-                                          let n_peid , _  = MEV.penv_addsvar dw_peid n_svars in 
-                                          
-                                          let n_dw = MDW.change_env dw dw_peid n_peid in 
-                                          MEV.senv_change_pe nsh.seid n_peid;
-                                          let new_dw = MDW.do_assign n_dw llv_dw lexp_dw  in
-
-                                          let nn_sh = MSH.change_env n_peid nsh in                            
-                                          nm := join_map_isin isin !nm (ModelMap.singleton nn_sh new_dw);
-                                        )
-                                    )
-
-                              )
-                              t1_tn
-                              ;
-                              i := !i+1 
-                         )
-                        )
-                       else
-                         (
-                          i := !i+1
-                         )
-                    )
-                    (List.rev !nllv)
-                    (List.rev !nlexp)
-                  ;
-                  if (not !r) then None
-                  else  
-                      Some (!nm)
-                end
-              else
-                (* assignment needs some unfolding *)
-                let _ = Mman_options.Self.debug ~level:1 "MV:need unfolding....@." 
-                            in 
-                let m = unfold_one esh dw (!vf) in
-                do_assign_set eid llv lexp llv_dw lexp_dw m
-          end                      
-
-    end
-*)
-  
   and do_assign_one (eid: MEV.t) (esh: MSH.t) (dw: MDW.t)
     (llv: Mman_asyn.alval list) (lexp: Mman_asyn.aexp list)
     (llv_dw: Mman_asyn.alval list) (lexp_dw: Mman_asyn.aexp list)
     : (sh2dw option)
     =
     (* assertion eid = esh.seid *)
-    let _ = Mman_options.Self.debug ~level:1 "MV:do_assign_one...peid:%d, esh.seid:%d, dw.seid:%d @." 
-            eid esh.seid dw.eid  
-    in
     (* build from (esh, dw) the set of pairs where all assignments may be done *) 
     let nllv = ref [] in
     let nlexp = ref [] in
-    let vf = ref [] in
+    let vf = ref [] in  
     let vfl = ref [] in
     let r = ref false  in
     let l = ref false in 
     let isin = ref false in 
-    
+    let on_dw = ref false in 
+    let on_sha = ref false in
+ 
     begin
       (* evaluate left *)
       List.iter (fun lv ->                      
@@ -1160,17 +857,19 @@ module Model = struct
                       (*let isin = senv_var_isin eid *)                      
                       let rlv, rvf = MSH.evalL lv esh in 
                       match rlv with
-                      | None ->  r := true;                       
+                      | None ->  
+                      			let _ = Mman_options.Self.debug ~level:1 "MV:after evaL, None @."  in 
+                      			r := true;                       
+                      
                       | Some(lv') ->
                             begin 
-
                                let _ = Mman_options.Self.debug ~level:1 "MV:after evaL:%a@."  
                                        Mman_asyn.pp_alval lv'
                                in 
                                nllv := lv' :: (!nllv);
                                if (rvf != []) then          
                                 let _ = Mman_options.Self.debug ~level:2 "MV:evaL, need unfold @."  in 
-                                vf := rvf @ (!vf)
+                               vf := rvf @ (!vf)
                             end
                     ) 
                  )
@@ -1180,7 +879,10 @@ module Model = struct
                     (  
                       let re, rvf = MSH.evalE e esh in
                       match re with
-                      | None ->  l := true;                       
+                      | None ->  
+                      		let _ = Mman_options.Self.debug ~level:1 "MV:after evaE,None@." in 
+                      		l := true;                       
+                      
                       | Some(e') ->
                            begin 
                              let _ = Mman_options.Self.debug ~level:1 "MV:after evaE:%a@."  
@@ -1188,27 +890,76 @@ module Model = struct
                                in 
                              nlexp := (e') :: (!nlexp);
                              if (rvf != []) then
-                              let _ = Mman_options.Self.debug ~level:2 "MV:evaE, need unfold @."  in   
-                              vf := rvf @ (!vf)
+                              (	let _ = (Mman_options.Self.debug ~level:2 "MV:evaE, need unfold, rvf:%a @."  
+                              		    Mman_asyn.pp_alval (List.hd rvf))
+                          		in   
+                             	vf := rvf @ (!vf))
                            end 
                     )                     
                 )
                 lexp
       ;
-      let _ = 
-        List.iter 
-        (
-          fun lv -> 
-                  Mman_options.Self.debug ~level:1 "MV:after evaL and evalE, unfold info:%a@."  
-                  Mman_asyn.pp_alval lv
-        )
-        !vf 
-      in 
 
-      if ((!r) && (!l)) ||
-         ((List.length !nllv) != (List.length !nlexp))
+      let nm = ref (ModelMap.empty) in 
+      if (((List.length llv) != (List.length llv_dw)))
+  	  then 
+  	  	(
+  	  	begin 
+  	  		let _ = Mman_options.Self.debug ~level:1 "MV:do_assign_one, llv and llv_dw @."
+	        in 
+  	  		let ndw = MDW.do_assign dw llv_dw lexp_dw  in 
+  	  		  	on_dw := true;
+			List.iter2
+            ( 
+              fun lv e ->
+              if (not !r) then (* *)
+               (                      
+                begin 
+                  let _ = 
+	                   Mman_options.Self.debug ~level:1 "MV:do_assign: %a:=%a (SHAPE)@."
+	                   Mman_asyn.pp_alval (lv) 
+	                   Mman_asyn.pp_aexp (e);  
+              	  in 
+                  let _ = Mman_options.Self.debug ~level:2 "MV:eshape mutate@."  in 
+                  let t1_tn = MSH.mutate lv e esh in 
+                  let _ = Mman_options.Self.debug ~level:2 "MV:eshape mutate done, old esh.seid:%d @."  
+                        esh.MSH.seid
+                  in 
+                  if t1_tn == []  
+                  then  
+                        r := false
+                  else
+                  ( 
+                    List.iter
+                      ( 
+                        fun (nsh, _vl, cl) ->(* TODO: put constraints into DW *) 
+                          (* the seid of shape may be updated *)
+                          if (nsh.MSH.seid != esh.MSH.seid) 
+                          then  
+                             let new_dw = MDW.change_env ndw ndw.eid nsh.MSH.seid in 
+                             nm := join_map_isin isin !nm (ModelMap.singleton nsh new_dw); 
+                          else   
+                             nm := join_map_isin isin !nm (ModelMap.singleton nsh ndw);                             
+                      )
+                      t1_tn
+                  )
+            	end            
+            	)
+           )
+            (List.rev !nllv)
+            (List.rev !nlexp) 
+            ;
+            on_sha := true;
+            ;
+            Some(!nm)	
+        end 
+  	  	)
+
+      else if ((!r) && (!l)) ||
+         ((List.length !nllv) != (List.length !nlexp)) ||
+         ((!r)&&(!l))
       then (* the assignment only apllied on data *)
-          ( 
+          (  
                if (!nllv == []) && (!nlexp == []) 
                then 
                 begin 
@@ -1220,65 +971,73 @@ module Model = struct
                 end
               else if (!nllv == []) && (!nlexp != []) 
               then 
-                begin  (* assume !nlexp and lv has only one element *)     
+                begin 
                     let nm = ref (ModelMap.empty) in                         
-                    let ndw = MDW.do_assign dw llv !nlexp   in 
+                    let ndw = MDW.do_assign dw llv !nlexp  in 
                     nm :=  (ModelMap.singleton esh ndw)
                     ;  
                     Some (!nm) 
                 end
               else if (!nllv != []) && (!nlexp == []) 
               then 
-                begin 
-                    (* assume !nlexp and lv has only one element *)
+                begin                      
                     let nm = ref (ModelMap.empty) in                         
                     let ndw = MDW.do_assign dw !nllv lexp   in 
                     nm :=  (ModelMap.singleton esh ndw)
                     ;  
                     Some (!nm)                   
                 end
-              else None 
-          )
-      else 
+              else 
+              		None 
+          )     
+  	  else 
         begin
           (* do not need to unfold*)
-          if (!vf == []) 
+          if (!vf == []) &&  
+             (((List.length llv) == (List.length llv_dw)))
           then  
               begin
                 let nm = ref (ModelMap.empty) in 
                 List.iter2
                 ( 
                   fun lv e ->
-                  if (not !r) then
-                   (                     
-                        begin     
-                          begin  
-                            let _ = Mman_options.Self.debug ~level:2 "MV:eshape mutate@."  in 
-                            let t1_tn = MSH.mutate lv e esh in 
-                            let _ = Mman_options.Self.debug ~level:2 "MV:eshape mutate done, esh.seid:%d @."  
-                                        esh.MSH.seid
-                            in 
-                            if t1_tn == []  
-                            then  
-                                r := false
-                            else
-                            ( 
-                              List.iter
-                               ( 
-                                fun (nsh, _vl, cl) -> 
-                                  (* the seid of shape may be updated *)
-                                  if (nsh.MSH.seid != esh.MSH.seid) 
-                                  then  
-                                  let new_dw = MDW.change_env dw dw.eid nsh.MSH.seid in 
-                                    nm := join_map_isin isin !nm (ModelMap.singleton nsh new_dw); 
-                                  else  
-                                    nm := join_map_isin isin !nm (ModelMap.singleton nsh dw);                             
-                               )
-                              t1_tn
-                            )
-                          end 
-                        end 
-                    )                      
+                  if (not !r) &&(!on_sha == false)
+                  then
+                   (
+	                  match lv with 
+	              	 | Mman_asyn.AFeat(_, ASVar(svid)) ->                      
+	                        begin  
+	                          	let _ = Mman_options.Self.debug ~level:2 "MV:left is feature, do assign only on data @."  in 
+	                          	let ndw = MDW.do_assign dw [(lv)] [(e)]  in                                    
+	                          	nm := join_map_isin isin !nm (ModelMap.singleton esh ndw);	                         
+	                        end 
+	                 |_ -> 
+	                   		begin   
+	                          let _ = Mman_options.Self.debug ~level:2 "MV:eshape mutate@."  in 
+	                          let t1_tn = MSH.mutate lv e esh in 
+	                          let _ = Mman_options.Self.debug ~level:2 "MV:eshape mutate done, esh.seid:%d @."  
+	                                esh.MSH.seid
+	                          in 
+	                          if t1_tn == []  
+	                          then  
+	                                r := false
+	                          else
+	                          ( 
+	                            List.iter
+	                              ( 
+	                                fun (nsh, _vl, cl) -> (* TODO: put constraints into DW *) 
+	                                  (* the seid of shape may be updated *)
+	                                  if (nsh.MSH.seid != esh.MSH.seid) 
+	                                  then  
+	                                     let new_dw = MDW.change_env dw dw.eid nsh.MSH.seid in 
+	                                     nm := join_map_isin isin !nm (ModelMap.singleton nsh new_dw); 
+	                                  else   
+	                                     nm := join_map_isin isin !nm (ModelMap.singleton nsh dw);                             
+	                              )
+	                              t1_tn
+	                          )
+	                        end 
+                    ) 
                 )
                 (List.rev !nllv)
                 (List.rev !nlexp)
@@ -1289,31 +1048,22 @@ module Model = struct
                 else  
                       Some (!nm)
               end
-          else 
-            begin 
-              (* assignment needs some unfolding *)
-              (* vf != [] *)
-              (* [!nlexp] *)
-              match List.hd !nlexp with
-              | ABinOp (bop, ALval(ASVar(svid)), e2) ->
-                  let _ = Mman_options.Self.debug ~level:1 "MV:need unfolding....@." in 
-                
-                  None
-
-                (*let m = unfold_one esh dw (!vf) in
-                  None
-                  do_assign_set eid llv lexp llv_dw lexp_dw m*)
-
-            end 
+          else
+             let _ = Mman_options.Self.debug ~level:1 "MV:need unfolding....@." in 
+             let m = unfold_one esh dw (!vf) in
+              do_assign_set eid llv lexp llv_dw lexp_dw m
+              
         end
   end 
 
+
+
   (* initialize eshape value *)
   let eshape_init (d:t)  
-    :value 
-    = 
+   :value 
+   = 
     let _ =  Mman_options.Self.debug ~level:1 "-------------------initialize shape-------------------@."
-        in 
+    in 
     begin 
       let peid = d.eid in                 (* program enviornement*)
       let penv = MEV.penv_get peid in 
@@ -1349,7 +1099,6 @@ module Model = struct
                             )                  
                     end 
               |_ ->   ()
-
               (*| SVPtr(SVChunk), PVar(vif) ->  
                     (* create a location that progran variable points to *)
                     begin 
@@ -1405,13 +1154,10 @@ module Model = struct
     (llv_dw: Mman_asyn.alval list) (lexp_dw: Mman_asyn.aexp list)
     : t
     =
-    (* in the initial, state, senv has no variables,  
-     *)
-
     (*TODO bug Failure("hd") => llv is empty *)
     if (List.length llv == 0 ) then d 
     else 
-    let _ = 
+    (*let _ = 
         List.iter2 
         ( fun lv le ->
              Mman_options.Self.debug ~level:1 "MV:do_assign: %a:=%a, on dw, peid:%d @."
@@ -1419,10 +1165,10 @@ module Model = struct
         )
         llv 
         lexp 
-    in
-    let _ = Mman_options.Self.debug ~level:1 "on %a@."
+    in*)
+    (*let _ = Mman_options.Self.debug ~level:1 "on %a@."
                    (pretty_code_intern Type.Basic) d
-    in 
+    in*) 
     let nmap =
       (match d.set with
       | None -> None      
@@ -1443,9 +1189,9 @@ module Model = struct
     in 
     let _ = Mman_options.Self.debug ~level:1 "MV:finish do_assign.@."
     in 
-    (*let _ = Mman_options.Self.debug ~level:1 "MV:new eshape value:\n %a @."
+    let _ = Mman_options.Self.debug ~level:1 "MV:finish do_assign, new eshape value:\n %a @."
              (pretty_code_intern Type.Basic) nvalue 
-    in*) 
+    in
     nvalue  
 
   and do_assign_set_init (eid: MEV.t)
@@ -1506,21 +1252,25 @@ module Model = struct
 
   (** Project out the list of variables.
    *  Mainly used in the inter-procedural analysis *)
-  let forget_list (d: t) (llv: Mman_asyn.alval list) =
-    let _ = (Mman_options.Self.debug ~level:2 "forget %a,... in \n %a@."
-               Mman_asyn.pp_alval (List.hd llv)
-               pretty d)
-    in
-    d (* TODO *)
+  let forget_list (d: t) (llv: Mman_asyn.alval list) 
+  :t
+   =
+    let _ = (Mman_options.Self.debug ~level:2 "MV:forget vars ... @."
+    		 (*pretty d*) )
+	in 
+    if llv == [] 
+    then d 
+	else d (* TODO *)
+  
 
   (** Change from environment [envi] to [envj] by adding and projecting vars. *)
   let change_env (s: t) (eiold: MEV.t) (einew: MEV.t) 
-   = (* TODO *)
+   = 
     let _ = Mman_options.Self.debug ~level:1
                  "MV:change_env...@."
        in 
     let _ = Mman_options.Self.debug ~level:2
-                 "MV:eid:%d, eiold:%d, einew: %d@."
+                 "MV:peid:%d, old peid:%d, new peid(eid common): %d@."
                  s.eid eiold einew 
        in 
     if (eiold != einew) then 
@@ -1536,7 +1286,7 @@ module Model = struct
                     (* add new pair(seid', einew) in senv *) 
                     let seid' = MEV.senv_change_pe sh.seid einew in 
 
-                    (* replace (seid, peid) with (seid', einew) in shape *)
+                    (* replace (seid, peid) with (seid', einew) in shape, project out vars *)
                     let sh' = MSH.change_env seid' sh in 
 
                     (* add the mapping between (seid', einew) and new apei *)

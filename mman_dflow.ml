@@ -107,8 +107,6 @@ let init_glv : Mman_asyn.alval list ref = ref []
 let init_gexp : Mman_asyn.aexp list ref = ref []
 let init_gcnd : Mman_asyn.aconstr list ref = ref []
 
-
-
 let rec init_globals () 
   : unit
   =
@@ -131,7 +129,6 @@ let rec init_globals ()
       init_done := true
     end
   
-
 
 (**
  * State of the computation for first stmt for functions
@@ -200,18 +197,18 @@ let rec compute_fun_init s kf_caller kf_callee argl state =
                           (Kernel_function.get_return_type kf_caller))]
   in
 
-  let _ = Mman_options.Self.debug ~level:2
+  (*let _ = Mman_options.Self.debug ~level:2
              "DF:call_state_forgot_retres:eid:%d \n%a@."
              call_state_forgot_retres.eid
              MV.Model.pretty call_state_forgot_retres
-  in 
+  in*) 
 
   (*     o compute the unifying environment *)
   let eid_common, _, _ = Mman_env.penv_unify eid_caller eid_callee in
   let _ = (Mman_options.Self.debug ~level:2
-             "DF:Unified env eid_common:%d, \n %a@."
+             "DF:Unified env eid_common:%d @."
              eid_common
-             Mman_env.penv_print (Mman_env.penv_get eid_common)
+             (*Mman_env.penv_print (Mman_env.penv_get eid_common*)
           )
   in
   (* - extend the abstract value of the caller to this common env *)
@@ -219,10 +216,10 @@ let rec compute_fun_init s kf_caller kf_callee argl state =
     MV.Model.change_env call_state_forgot_retres
       eid_caller eid_common
   in
-  let _ = (Mman_options.Self.debug ~dkey:dflw_dkey ~level:2
+  (*let _ = (Mman_options.Self.debug ~dkey:dflw_dkey ~level:2
              "Extended caller value: %a@."
              MV.Model.pretty call_state_extended)
-  in
+  in*)
   (* - do assignment of formals by arguments *)
   let kf_fv1_fvn = Kernel_function.get_formals kf_callee in
 
@@ -238,18 +235,18 @@ let rec compute_fun_init s kf_caller kf_callee argl state =
       kf_fv1_fvn
       argl
   in
-  let _ = (Mman_options.Self.debug ~level:2
+  (*let _ = (Mman_options.Self.debug ~level:2
              "After formal args assign: %a@."
              MV.Model.pretty call_state_with_actuals)
-  in
+  in*)
   (* - project out caller environment *)
   let callee_state_without_locals =
     MV.Model.change_env call_state_with_actuals eid_common eid_callee
   in
-  let _ = (Mman_options.Self.debug ~level:2
+  (*let _ = (Mman_options.Self.debug ~level:2
              "After project out caller locals: %a@."
              MV.Model.pretty callee_state_without_locals)
-  in
+  in*)
   (* - initialise the local vars depending on their type *)
   let callee_state_init_stmt =
     set_fun_locals kf_callee eid_callee callee_state_without_locals
@@ -286,15 +283,13 @@ let compute_fun_ret s lv vcall vret kf_callee =
   let _ = Mman_options.Self.debug ~level:2 "DF:Combine the callee return state vret with the caller state ... @." 
       in
 
-   let _ = Mman_options.Self.debug ~level:2 "DF:vcall: %a @." 
+   (*let _ = Mman_options.Self.debug ~level:2 "DF:vcall: %a @." 
             MV.Model.pretty vcall
     in 
 
   let _ = Mman_options.Self.debug ~level:2 "DF:returned_state: %a @." 
             MV.Model.pretty vret
-    in 
-
-  (* Attention, eid_caller is not euqal to vret.eid  *)
+    in *)
 
   (* caller *)
   let eid_caller = Mman_env.penv_of_stmt s in
@@ -311,21 +306,20 @@ let compute_fun_ret s lv vcall vret kf_callee =
 
   (* prepare caller state *)
   (*  - forget globals: here, not relational analysis *)
-  let state_caller_noglobs =
-    MV.Model.forget_list vcall (globals ())
+  let state_caller_noglobs = MV.Model.forget_list vcall (globals ())
   in
-  let _ = Mman_options.Self.debug ~level:2 "DF:state_caller_noglobs:\n %a @." 
+  (*let _ = Mman_options.Self.debug ~level:2 "DF:state_caller_noglobs:\n %a @." 
           MV.Model.pretty state_caller_noglobs
-  in 
-
+  in*) 
 
   (*  - extend to common environment *)
-  let state_caller_extended =
-    MV.Model.change_env state_caller_noglobs
-      eid_caller eid_common in
-  let _ = Mman_options.Self.debug ~level:2 "DF:state_caller_extended:\n %a@."
-      MV.Model.pretty state_caller_extended 
+  let state_caller_extended = 
+  	  MV.Model.change_env state_caller_noglobs eid_caller eid_common 
   in
+  
+  (*let _ = Mman_options.Self.debug ~level:2 "DF:state_caller_extended:\n %a@."
+      MV.Model.pretty state_caller_extended 
+  in*)
 
   
   (* prepare callee state *)
@@ -343,8 +337,12 @@ let compute_fun_ret s lv vcall vret kf_callee =
       in
       match lv with
       | None -> (* forget callee only *)
+      	  let _ = Mman_options.Self.debug ~level:2 "DF:forget callee only...@."
+      	  in 
           MV.Model.forget_list vret [av_retres]
       | Some(_) -> (* assign callee __retres to unused _hole *)
+      	  let _ = Mman_options.Self.debug ~level:2 "DF:assign callee __retres to unused _hole...@."
+      	  in 
           let vret2hole =
             MV.Model.do_assign vret [av_hole] [Mman_asyn.ALval(av_retres)] 
                                     [av_hole] [Mman_asyn.ALval(av_retres)]
@@ -354,8 +352,9 @@ let compute_fun_ret s lv vcall vret kf_callee =
     else
       vret
   in
-  let _ = Mman_options.Self.debug ~level:2 "return state: %a@."
-      MV.Model.pretty state_callee_ret_update in
+  (*let _ = Mman_options.Self.debug ~level:2 "DF:state_callee_ret_update:%a@."
+      MV.Model.pretty state_callee_ret_update in*)
+  
   (*  - extend callee to common env *)
   let state_callee_extended =
     MV.Model.change_env state_callee_ret_update
@@ -366,10 +365,10 @@ let compute_fun_ret s lv vcall vret kf_callee =
     MV.Model.intersects state_caller_extended state_callee_extended
   in
 
-  let _ = Mman_options.Self.debug ~level:2 "DF:caller state extended: %a \n callee state: %a@."
+  (*let _ = Mman_options.Self.debug ~level:2 "DF:caller state extended: %a \nstate_callee_extended: %a@."
       MV.Model.pretty state_caller_extended  
       MV.Model.pretty state_callee_extended  
-  in
+  in*)
 
   let state_proj_caller =
     MV.Model.change_env state_composed
@@ -416,9 +415,10 @@ module Compute(AnPar: ComputeArg) = struct
   (* See pattern in plugins/from/from_compute.ml *)
   let rec transfer_stmt_main (s: Cil_types.stmt) (aval: t) =
     let _ = (Mman_options.Self.debug ~level:2
-               "DF:transfer_stmt_main: sid:%a@.   on %a@."
+               "-----------\n DF:transfer_stmt_main: sid:%a \n on%a @."
                Cil_datatype.Stmt.pretty_sid s
-               MV.Model.pretty aval)
+               (*Printer.pp_stmt s*)
+               MV.Model.pretty aval )
     in 
     match s.skind with
     | Instr(Set (lv, exp, _)) ->
@@ -530,28 +530,29 @@ module Compute(AnPar: ComputeArg) = struct
   and transfer_call (s: Cil_types.stmt) kf_callee lv argl (aval: t) 
     : t
     =
-    let _ = Mman_options.Self.feedback "DF:transfer_call...@." in
-    (* assert (kf.fname != sbrk) && not(isIgnoredFunction kf) *)
-    let _, kf_caller = Kernel_function.find_from_sid s.sid in
     let _ = Mman_options.Self.debug ~level:1 "DF:do_call: %a(...)@."
         Kernel_function.pretty kf_callee in
+    let _ = Mman_options.Self.feedback "DF:transfer_call...@." in
+    (* assert (kf.fname != sbrk) && not(isIgnoredFunction kf) *)
+    
+    let _, kf_caller = Kernel_function.find_from_sid s.sid in    
     
     (* compute the call state for kf to see if not yet computed *)
     let init_callee = compute_fun_init s kf_caller kf_callee argl aval in
     
-
     (* compute the return state of the callee *)
     let ret_callee = !compute_fun AnPar.stack s kf_callee init_callee in
     
-    let _ = Mman_options.Self.debug ~level:2 "DF:ret_callee: %a @." 
+    (*let _ = Mman_options.Self.debug ~level:2 "DF:ret_callee: %a @." 
             MV.Model.pretty ret_callee
-    in 
-
+    in*) 
     (* recombine the call state with the end state *)
     let _ = Mman_options.Self.debug ~level:1 "DF:ret_call: %a(...)@."
         Kernel_function.pretty kf_callee in
-    let end_caller = compute_fun_ret s lv aval ret_callee kf_callee in
     
+    let end_caller = compute_fun_ret s lv aval ret_callee kf_callee in
+    let _ = Mman_options.Self.debug ~level:1 "DF:ret_call state: %a@."
+        MV.Model.pretty end_caller in
     end_caller
       
   

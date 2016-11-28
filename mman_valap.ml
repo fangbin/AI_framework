@@ -145,11 +145,6 @@ let env2apron (eid: Mman_env.t)
             then Mman_env.senv_vars2 eid 
             else [] 
         in
-      let _ = Mman_options.Self.debug ~level:2
-          "DW:env2apron,seid:%d, env_vars list length: %d@."
-            eid   
-            (List.length svl) 
-            in 
       let avl = 
           List.map
           (
@@ -324,14 +319,11 @@ let to_var (sei: Mman_env.t) (lv: Mman_asyn.alval)
           in 
       let svi = env_getvar sei (Mman_svar.sv_mk_var vi) in
 
-      let _ = Mman_options.Self.debug ~level:1
+      (*let _ = Mman_options.Self.debug ~level:1
           "DW:to_var, vi %a"
           Mman_svar.Svar.pretty svi
-        in 
-      (*let fsvi = env_getvar sei (Mman_svar.sv_mk_feat
-                                             (Some (Mman_svar.Svar.id svi))
-                                             fk)
-      in*)
+        in*) 
+    
 
       let fsvi = Mman_env.senv_get_feat (Mman_svar.Svar.id svi) sei fk in 
       Apron.Var.of_string (Mman_svar.sv_tostring fsvi)
@@ -394,10 +386,10 @@ let rec to_texpr (sei: Mman_env.t) (ae: Mman_asyn.aexp)
       Apron.Texpr1.cst apenv (Apron.Coeff.s_of_int (Integer.to_int i))
         
   | Mman_asyn.ALval (lv) ->
-      (*let _ = Mman_options.Self.debug ~level:1
+      let _ = Mman_options.Self.debug ~level:1
           "MDW:to_texpr, seid:%d  @." sei 
           in  
-      let _ = (Mman_options.Self.debug ~level:1 "DW:senv: %a @."
+      (*let _ = (Mman_options.Self.debug ~level:1 "DW:senv: %a @."
                   Mman_env.senv_print (Mman_env.senv_get sei)) 
           in*)
 
@@ -519,7 +511,7 @@ module Model = struct
   (** Basic functions used in Datatype.S *)
   let pretty_code_intern (p_caller:Type.precedence) fmt (d: value) = 
     let pp fmt = begin
-      Format.fprintf fmt "{seid_%d, peid_%d}" 
+      Format.fprintf fmt "{seid:%d, peid:%d}" 
       d.eid 
       (Mman_env.senv_get d.eid).peid ;
       Apron.Abstract1.print fmt d.vap
@@ -814,14 +806,17 @@ module Model = struct
     else *) 
 
     let eid = d.eid in (* eid is equal to the seid of shape *)
-    let _ = Mman_options.Self.debug ~level:1 "DW:do_assign: eid:%d@."
+    let _ = Mman_options.Self.debug ~level:1 "DW:do_assign, env:%a@."
+    		Mman_env.senv_print (Mman_env.senv_get eid)
+    	in 
+    (*let _ = Mman_options.Self.debug ~level:1 "DW:do_assign: eid:%d@."
           d.eid 
-    in 
+    in*) 
     let apv1_apvn = List.map (fun lvi -> to_var eid lvi) llv
     in
     let ape1_apen = List.map (fun ei -> to_texpr eid ei) lexp 
     in
-    let _ = 
+    (*let _ = 
         List.iter2 
         ( fun lv le ->
              Mman_options.Self.debug ~level:1 "DW:do_assign: %a:=%a (DW)@."
@@ -830,7 +825,7 @@ module Model = struct
         )
         apv1_apvn 
         ape1_apen 
-    in 
+    in *)
     let at = (Apron.Abstract1.assign_texpr_array 
                 man_apron
                 (to_apron d.vap)
@@ -905,18 +900,18 @@ module Model = struct
     :t 
     =
     let _ = Mman_options.Self.debug ~level:1 "DW:change_env...@." in 
-    let _ = Mman_options.Self.debug ~level:2 "DW:eid:%d, eiold:%d, einew: %d@."
-                 d.eid eiold einew in 
+    (*let _ = Mman_options.Self.debug ~level:2 "DW:eid:%d, eiold:%d, einew: %d@."
+                 d.eid eiold einew in *)
     if eiold == einew
     then
       let _ = Mman_options.Self.debug ~level:2 "DW: emvironment changed" 
       in  
       copy_intern d
     else
-      let _ = Mman_options.Self.debug ~level:2
+      (*let _ = Mman_options.Self.debug ~level:2
               "DW:assertion value eid %d = old eid %d@."
               d.eid eiold
-               (*assert (d.eid == eiold)) *)in
+               (*assert (d.eid == eiold)) *)in*)
       let ap_einew = env2apron einew in
       let newenv = Apron.Abstract1.change_environment 
                             man_apron
@@ -972,7 +967,7 @@ module Model = struct
     = dw (* TODO *)
 
   (* do one assign *)
-  let assign (lv:Mman_asyn.alval) (exp:Mman_asyn.aexp) (d:t)
+  (*let assign (lv:Mman_asyn.alval) (exp:Mman_asyn.aexp) (d:t)
     : t 
     = 
     let _ = (Mman_options.Self.debug ~level:1 "DW:do_one_assign: d.seid:%d,peid:%d, %a:=%a,...@."
@@ -1018,7 +1013,7 @@ module Model = struct
     begin
       (Mman_options.Self.debug ~level:1 "DW:to %a@." Apron.Abstract1.print res);
       {eid = d.eid; vap = res}
-    end
+    end*)
 
 end
 
@@ -1040,8 +1035,8 @@ let init_globals (eid: Mman_env.t)
       if (eid = (Model.env !global_state))
       then !global_state
       else
-      (* Do assign *)
-      
+
+      (* Do assign *)      
       let vinit = Model.do_assign (Model.top_of eid) (v1_vn) (e1_en) in
       let _ = Mman_options.Self.feedback "DW: do assign done @." in
       let _ = Mman_options.Self.feedback "DW: do meet exp@." in

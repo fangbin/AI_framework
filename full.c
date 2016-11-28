@@ -2,9 +2,7 @@
 typedef int wchar_t;
 typedef unsigned int size_t;
 typedef int ssize_t;
-typedef unsigned int gid_t;
 typedef unsigned int uid_t;
-typedef long off_t;
 typedef int intptr_t;
 typedef long time_t;
 struct __anonstruct_fd_set_1 {
@@ -29,53 +27,19 @@ struct option {
    int *flag ;
    int val ;
 };
-typedef __builtin_va_list va_list;
-typedef unsigned int ino_t;
-typedef unsigned int blkcnt_t;
-typedef unsigned int blksize_t;
-typedef unsigned int dev_t;
-typedef unsigned int mode_t;
-typedef unsigned int nlink_t;
-struct stat {
-   dev_t st_dev ;
-   ino_t st_ino ;
-   mode_t st_mode ;
-   nlink_t st_nlink ;
-   uid_t st_uid ;
-   gid_t st_gid ;
-   dev_t st_rdev ;
-   off_t st_size ;
-   time_t st_atime ;
-   time_t st_mtime ;
-   time_t st_ctime ;
-   blksize_t st_blksize ;
-   blkcnt_t st_blocks ;
-};
-struct __fc_pos_t {
-   unsigned long __fc_stdio_position ;
-};
-typedef struct __fc_pos_t fpos_t;
-struct __fc_FILE {
-   unsigned int __fc_stdio_id ;
-   fpos_t __fc_position ;
-   char __fc_error ;
-   char __fc_eof ;
-   int __fc_flags ;
-   struct stat *__fc_inode ;
-   unsigned char *__fc_real_data ;
-   int __fc_real_data_max_size ;
-};
-typedef struct __fc_FILE FILE;
-struct hdr {
-   struct hdr *ptr ;
+typedef long Align;
+struct __anonstruct_s_5 {
+   union header *ptr ;
    unsigned int size ;
 };
-typedef struct hdr HEADER;
-void laInit(void);
+union header {
+   struct __anonstruct_s_5 s ;
+   Align x ;
+};
+typedef union header Header;
+void krFree(void *ap);
 
-void laFree(void *ap);
-
-void *laAlloc(int nbytes);
+void *krAlloc(unsigned int nbytes);
 
 /*@
 axiomatic MemCmp {
@@ -571,514 +535,228 @@ extern void *sbrk(intptr_t);
  */
 extern ssize_t write(int fd, void const *buf, size_t count);
 
-extern int __FC_errno;
+static Header base;
+static Header *freep = (Header *)0;
+Header *morecore(unsigned int nu);
 
-extern FILE *__fc_stdin;
-
-extern FILE *__fc_stdout;
-
-/*@ assigns \nothing; */
-extern int remove(char const *filename);
-
-/*@ assigns \nothing; */
-extern int rename(char const *old_name, char const *new_name);
-
-/*@ ensures
-      /* ip:39 */\result ≡ \null ∨
-                 (\valid{Here}(\result) ∧
-                  \fresh{Old, Here}(\result,sizeof(FILE)));
-    assigns \nothing;
- */
-extern FILE *tmpfile(void);
-
-/*@ assigns \result, *(s+(..));
-    assigns \result \from *(s+(..));
-    assigns *(s+(..)) \from \nothing;
- */
-extern char *tmpnam(char *s);
-
-/*@ requires /* ip:41 */\valid{Here}(stream);
-    ensures /* ip:40 */\result ≡ 0 ∨ \result ≡ -1;
-    assigns \result;
-    assigns \result \from stream, stream->__fc_stdio_id;
- */
-extern int fclose(FILE *stream);
-
-/*@ requires /* ip:43 */stream ≡ \null ∨ \valid_read{Here}(stream);
-    ensures /* ip:42 */\result ≡ 0 ∨ \result ≡ -1;
-    assigns \result;
-    assigns \result \from stream, stream->__fc_stdio_id;
- */
-extern int fflush(FILE *stream);
-
-FILE __fc_fopen[512];
-FILE * const __p_fc_fopen = &(__fc_fopen[0]);
-/*@ ensures
-      /* ip:44 */\result ≡ \null ∨
-                 \subset(\result, &__fc_fopen[0 .. 512-1]);
-    assigns \result;
-    assigns \result \from *(filename+(..)), *(mode+(..)), __p_fc_fopen;
- */
-extern FILE *fopen(char const *filename, char const *mode);
-
-/*@ ensures
-      /* ip:45 */\result ≡ \null ∨
-                 (\valid{Here}(\result) ∧
-                  \fresh{Old, Here}(\result,sizeof(FILE)));
-    assigns \result;
-    assigns \result \from fildes, *(mode+(..));
- */
-extern FILE *fdopen(int fildes, char const *mode);
-
-/*@ ensures /* ip:46 */\result ≡ \null ∨ \result ≡ \old(stream);
-    assigns *stream;
- */
-extern FILE *freopen(char const *filename, char const *mode, FILE *stream);
-
-/*@ assigns *stream;
-    assigns *stream \from buf; */
-extern void setbuf(FILE *stream, char *buf);
-
-/*@ assigns *stream;
-    assigns *stream \from buf, mode, size; */
-extern int setvbuf(FILE *stream, char *buf, int mode, size_t size);
-
-/*@ assigns *stream;
-    assigns *stream \from stream->__fc_stdio_id; */
-extern int fprintf(FILE *stream, char const *format , ...);
-
-/*@ assigns *stream;
-    assigns *stream \from stream->__fc_stdio_id; */
-extern int fscanf(FILE *stream, char const *format , ...);
-
-/*@ assigns *__fc_stdout;
-    assigns *__fc_stdout \from *(format+(..)); */
-extern int printf(char const *format , ...);
-
-/*@ assigns *__fc_stdin; */
-extern int scanf(char const *format , ...);
-
-/*@ assigns *(s+(0 .. n-1)); */
-extern int snprintf(char *s, size_t n, char const *format , ...);
-
-/*@ assigns *(s+(0 ..)); */
-extern int sprintf(char *s, char const *format , ...);
-
-/*@ assigns *stream;
-    assigns *stream \from *(format+(..)), arg; */
-extern int vfprintf(FILE *stream, char const *format, va_list arg);
-
-/*@ assigns *stream;
-    assigns *stream \from *(format+(..)), *stream; */
-extern int vfscanf(FILE *stream, char const *format, va_list arg);
-
-/*@ assigns *__fc_stdout;
-    assigns *__fc_stdout \from arg; */
-extern int vprintf(char const *format, va_list arg);
-
-/*@ assigns *__fc_stdin;
-    assigns *__fc_stdin \from *(format+(..)); */
-extern int vscanf(char const *format, va_list arg);
-
-/*@ assigns *(s+(0 .. n-1));
-    assigns *(s+(0 .. n-1)) \from *(format+(..)), arg;
- */
-extern int vsnprintf(char *s, size_t n, char const *format, va_list arg);
-
-/*@ assigns *(s+(0 ..));
-    assigns *(s+(0 ..)) \from *(format+(..)), arg; */
-extern int vsprintf(char *s, char const *format, va_list arg);
-
-/*@ assigns *stream; */
-extern int fgetc(FILE *stream);
-
-/*@ ensures /* ip:47 */\result ≡ \null ∨ \result ≡ \old(s);
-    assigns *(s+(0 .. n-1)), *stream, \result;
-    assigns *(s+(0 .. n-1)) \from *stream;
-    assigns *stream \from *stream;
-    assigns \result \from s, n, *stream;
- */
-extern char *fgets(char *s, int n, FILE *stream);
-
-/*@ assigns *stream; */
-extern int fputc(int c, FILE *stream);
-
-/*@ assigns *stream;
-    assigns *stream \from *(s+(..)); */
-extern int fputs(char const *s, FILE *stream);
-
-/*@ assigns \result, *stream;
-    assigns \result \from *stream;
-    assigns *stream \from *stream;
- */
-extern int getc(FILE *stream);
-
-/*@ assigns \result;
-    assigns \result \from *__fc_stdin; */
-extern int getchar(void);
-
-/*@ ensures /* ip:48 */\result ≡ \old(s) ∨ \result ≡ \null;
-    assigns *(s+(..)), \result;
-    assigns *(s+(..)) \from *__fc_stdin;
-    assigns \result \from s, __fc_stdin;
- */
-extern char *gets(char *s);
-
-/*@ assigns *stream;
-    assigns *stream \from c; */
-extern int putc(int c, FILE *stream);
-
-/*@ assigns *__fc_stdout;
-    assigns *__fc_stdout \from c; */
-extern int putchar(int c);
-
-/*@ assigns *__fc_stdout;
-    assigns *__fc_stdout \from *(s+(..)); */
-extern int puts(char const *s);
-
-/*@ assigns *stream;
-    assigns *stream \from c; */
-extern int ungetc(int c, FILE *stream);
-
-/*@ requires /* ip:51 */\valid{Here}((char *)ptr+(0 .. nmemb*size-1));
-    requires /* ip:52 */\valid{Here}(stream);
-    ensures /* ip:49 */\result ≤ \old(nmemb);
-    ensures
-      /* ip:50 */\initialized{Here}((char *)\old(ptr)+(0 ..
-                                                           \result*\old(size)-1));
-    assigns *((char *)ptr+(0 .. nmemb*size-1)), \result;
-    assigns *((char *)ptr+(0 .. nmemb*size-1)) \from size, nmemb, *stream;
-    assigns \result \from size, *stream;
- */
-extern size_t fread(void *ptr, size_t size, size_t nmemb, FILE *stream);
-
-/*@ requires /* ip:54 */\valid_read{Here}((char *)ptr+(0 .. nmemb*size-1));
-    requires /* ip:55 */\valid{Here}(stream);
-    ensures /* ip:53 */\result ≤ \old(nmemb);
-    assigns *stream, \result;
-    assigns *stream \from *((char *)ptr+(0 .. nmemb*size-1));
-    assigns \result \from *((char *)ptr+(0 .. nmemb*size-1));
- */
-extern size_t fwrite(void const *ptr, size_t size, size_t nmemb, FILE *stream);
-
-/*@ assigns *pos;
-    assigns *pos \from *stream; */
-extern int fgetpos(FILE *stream, fpos_t *pos);
-
-/*@ assigns *stream, __FC_errno;
-    assigns *stream \from offset, whence; */
-extern int fseek(FILE *stream, long offset, int whence);
-
-/*@ assigns *stream;
-    assigns *stream \from *pos; */
-extern int fsetpos(FILE *stream, fpos_t const *pos);
-
-/*@ assigns \result, __FC_errno;
-    assigns \result \from *stream;
-    assigns __FC_errno \from *stream;
- */
-extern long ftell(FILE *stream);
-
-/*@ assigns *stream;
-    assigns *stream \from \nothing; */
-extern void rewind(FILE *stream);
-
-/*@ assigns *stream;
-    assigns *stream \from \nothing; */
-extern void clearerr(FILE *stream);
-
-/*@ assigns \result;
-    assigns \result \from *stream; */
-extern int feof(FILE *stream);
-
-/*@ assigns \result;
-    assigns \result \from *stream; */
-extern int fileno(FILE *stream);
-
-/*@ assigns *stream;
-    assigns *stream \from \nothing; */
-extern void flockfile(FILE *stream);
-
-/*@ assigns *stream;
-    assigns *stream \from \nothing; */
-extern void funlockfile(FILE *stream);
-
-/*@ assigns \result, *stream;
-    assigns \result \from \nothing;
-    assigns *stream \from \nothing;
- */
-extern int ftrylockfile(FILE *stream);
-
-/*@ assigns \result;
-    assigns \result \from *stream; */
-extern int ferror(FILE *stream);
-
-/*@ assigns __fc_stdout;
-    assigns __fc_stdout \from __FC_errno, *(s+(..)); */
-extern void perror(char const *s);
-
-/*@ assigns \result, *stream;
-    assigns \result \from *stream;
-    assigns *stream \from *stream;
- */
-extern int getc_unlocked(FILE *stream);
-
-/*@ assigns \result;
-    assigns \result \from *__fc_stdin; */
-extern int getchar_unlocked(void);
-
-/*@ assigns *stream;
-    assigns *stream \from c; */
-extern int putc_unlocked(int c, FILE *stream);
-
-/*@ assigns *__fc_stdout;
-    assigns *__fc_stdout \from c; */
-extern int putchar_unlocked(int c);
-
-/*@ assigns *stream;
-    assigns *stream \from \nothing; */
-extern void clearerr_unlocked(FILE *stream);
-
-/*@ assigns \result;
-    assigns \result \from *stream; */
-extern int feof_unlocked(FILE *stream);
-
-/*@ assigns \result;
-    assigns \result \from *stream; */
-extern int ferror_unlocked(FILE *stream);
-
-/*@ assigns \result;
-    assigns \result \from *stream; */
-extern int fileno_unlocked(FILE *stream);
-
-/*@ ghost int isfree; */
-static HEADER _heapstart = {.ptr = (struct hdr *)0, .size = (unsigned int)0};
-static HEADER _heapend = {.ptr = (struct hdr *)0, .size = (unsigned int)0};
-void warm_boot(char *str)
+void *krAlloc(unsigned int nbytes)
 {
+  /* Locals: __retres, p, prevp, nunits */
+  void *__retres;
+  Header *p;
+  Header *prevp;
+  unsigned int nunits;
   /* sid:1 */
-  printf("%s\n",str);
-  /* sid:95 */
-  return;
+  nunits = ((nbytes + sizeof(Header)) - (unsigned int)1) / sizeof(Header) + (unsigned int)1;
+  /* sid:2 */
+  prevp = freep;
+  /* sid:3 */
+  if (prevp == (Header *)0) {
+    /* sid:4 */
+    { /* sequence */
+      /* sid:5 */
+      prevp = & base;
+      /*effects: (freep, prevp) prevp <- base, base*/
+      /* sid:6 */
+      freep = prevp;
+      /*effects: (freep) freep <- */
+      /* sid:7 */
+      base.s.ptr = freep;
+      /*effects: (base.s.ptr) base.s.ptr <- */
+    }
+    /* sid:8 */
+    base.s.size = (unsigned int)0;
+  }
+  else {
+    
+  }
+  /* sid:10 */
+  p = prevp->s.ptr;
+  /* sid:11 */
+  while (1) {
+    /* sid:12 */
+    /*block:begin*/
+      {
+      /* sid:14 */
+      if (p->s.size >= nunits) {
+        /* sid:16 */
+        if (p->s.size == nunits) {
+          /* sid:17 */
+          prevp->s.ptr = p->s.ptr;
+        }
+        else {
+          /* sid:18 */
+          p->s.size -= nunits;
+          /* sid:19 */
+          p += p->s.size;
+          /* sid:20 */
+          p->s.size = nunits;
+        }
+        /* sid:21 */
+        freep = prevp;
+        /* sid:23 */
+        __retres = (void *)(p + 1);
+        /* sid:91 */
+        goto return_label;
+      }
+      else {
+        
+      }
+      /* sid:26 */
+      if (p == freep) {
+        /* sid:27 */
+        p = morecore(nunits);
+        /* sid:28 */
+        if (p == (Header *)0) {
+          /* sid:29 */
+          __retres = (void *)0;
+          /* sid:92 */
+          goto return_label;
+        }
+        else {
+          
+        }
+      }
+      else {
+        
+      }
+    }
+    /*block:end*/
+    /* sid:32 */
+    prevp = p;
+    /* sid:33 */
+    p = p->s.ptr;
+  }
+  return_label: /* internal */ /* sid:93 */
+                               return __retres;
 }
 
-HEADER *frhd;
-static short memleft = (short)0;
-void laFree(void *ap)
+Header *morecore(unsigned int nu)
 {
-  /* Locals: nxt, prev, f */
-  HEADER *nxt;
-  HEADER *prev;
-  HEADER *f;
-  /* sid:4 */
-  f = (HEADER *)ap - 1;
-  /* sid:5 */
-  memleft = (short)((unsigned int)memleft + f->size);
-  /* sid:7 */
-  if (frhd > f) {
-    /* sid:8 */
-    nxt = frhd;
-    /* sid:9 */
-    frhd = f;
-    /* sid:10 */
-    prev = f + f->size;
-    /* sid:12 */
-    if (prev == nxt) {
-      /* sid:13 */
-      f->size += nxt->size;
-      /* sid:14 */
-      f->ptr = nxt->ptr;
-    }
-    else {
-      /* sid:15 */
-      f->ptr = nxt;
-    }
-    /* sid:97 */
+  /* Locals: __retres, cp, up */
+  Header *__retres;
+  char *cp;
+  Header *up;
+  /* sid:36 */
+  if (nu < (unsigned int)1024) {
+    /* sid:37 */
+    nu = (unsigned int)1024;
+  }
+  else {
+    
+  }
+  /* sid:39 */
+  cp = (char *)sbrk((int)(nu * sizeof(Header)));
+  /* sid:41 */
+  if (cp == (char *)(-1)) {
+    /* sid:42 */
+    __retres = (Header *)0;
+    /* sid:95 */
     goto return_label;
   }
   else {
     
   }
-  /* sid:18 */
-  prev = (HEADER *)0;
-  /* sid:19 */
-  nxt = frhd;
-  /* sid:20 */
+  /* sid:44 */
+  up = (Header *)cp;
+  /* sid:45 */
+  up->s.size = nu;
+  /* sid:46 */
+  krFree((void *)(up + 1));
+  /* sid:48 */
+  __retres = freep;
+  return_label: /* internal */ /* sid:96 */
+                               return __retres;
+}
+
+void krFree(void *ap)
+{
+  /* Locals: bp, p */
+  Header *bp;
+  Header *p;
+  /* sid:50 */
+  bp = (Header *)ap - 1;
+  /* sid:51 */
+  p = freep;
+  /* sid:52 */
   while (1) {
-    /* sid:22 */
-    if (nxt) {
-      /* sid:24 */
-      if (nxt < f) {
-        
+    /* sid:54 */
+    if (bp > p) {
+      /* sid:56 */
+      if (bp < p->s.ptr) {
+        /* sid:57 */
+        break;
       }
       else {
-        /* sid:25 */
-        break;
+        
       }
     }
     else {
-      /* sid:26 */
-      break;
+      
     }
-    /* sid:27 */
-    /*block:begin*/
-      {
-      /* sid:29 */
-      if (nxt + nxt->size == f) {
-        /* sid:30 */
-        nxt->size += f->size;
-        /* sid:31 */
-        f = nxt + nxt->size;
-        /* sid:33 */
-        if (f == nxt->ptr) {
-          /* sid:34 */
-          nxt->size += f->size;
-          /* sid:35 */
-          nxt->ptr = f->ptr;
+    /* sid:59 */
+    if (p >= p->s.ptr) {
+      /* sid:61 */
+      if (bp > p) {
+        /* sid:62 */
+        break;
+      }
+      else {
+        /* sid:64 */
+        if (bp < p->s.ptr) {
+          /* sid:65 */
+          break;
         }
         else {
           
         }
-        /* sid:98 */
-        goto return_label;
       }
-      else {
-        
-      }
-    }
-    /*block:end*/
-    /* sid:39 */
-    prev = nxt;
-    /* sid:40 */
-    nxt = nxt->ptr;
-  }
-  /* sid:41 */
-  prev->ptr = f;
-  /* sid:42 */
-  prev = f + f->size;
-  /* sid:44 */
-  if (prev == nxt) {
-    /* sid:45 */
-    f->size += nxt->size;
-    /* sid:46 */
-    f->ptr = nxt->ptr;
-  }
-  else {
-    /* sid:47 */
-    f->ptr = nxt;
-  }
-  return_label: /* internal */ /* sid:99 */
-                               return;
-}
-
-void *laAlloc(int nbytes)
-{
-  /* Locals: __retres, nxt, prev, nunits */
-  void *__retres;
-  HEADER *nxt;
-  HEADER *prev;
-  int nunits;
-  /* sid:50 */
-  nunits = (int)((((unsigned int)nbytes + sizeof(HEADER)) - (unsigned int)1) / sizeof(HEADER) + (unsigned int)1);
-  /* sid:51 */
-  prev = (HEADER *)0;
-  /* sid:52 */
-  nxt = frhd;
-  /* sid:53 */
-  while (1) {
-    /* sid:55 */
-    if (nxt) {
-      
     }
     else {
-      /* sid:56 */
-      break;
+      
     }
-    /* sid:57 */
-    /*block:begin*/
-      {
-      /* sid:59 */
-      if (nxt->size >= (unsigned int)nunits) {
-        /* sid:61 */
-        if (nxt->size > (unsigned int)nunits) {
-          /* sid:62 */
-          nxt->size -= (unsigned int)nunits;
-          /* sid:63 */
-          nxt += nxt->size;
-          /* sid:64 */
-          nxt->size = (unsigned int)nunits;
-        }
-        else {
-          /* sid:66 */
-          if (prev == (HEADER *)0) {
-            /* sid:67 */
-            frhd = nxt->ptr;
-          }
-          else {
-            /* sid:68 */
-            prev->ptr = nxt->ptr;
-          }
-        }
-        /* sid:69 */
-        memleft = (short)((int)memleft - nunits);
-        /* sid:71 */
-        __retres = (void *)(nxt + 1);
-        /* sid:101 */
-        goto return_label;
-      }
-      else {
-        
-      }
-    }
-    /*block:end*/
+    /* sid:68 */
+    p = p->s.ptr;
+  }
+  /* sid:70 */
+  if (bp + bp->s.size == p->s.ptr) {
+    /* sid:71 */
+    bp->s.size += (p->s.ptr)->s.size;
+    /* sid:72 */
+    bp->s.ptr = (p->s.ptr)->s.ptr;
+  }
+  else {
     /* sid:73 */
-    prev = nxt;
-    /* sid:74 */
-    nxt = nxt->ptr;
+    bp->s.ptr = p->s.ptr;
   }
   /* sid:75 */
-  __retres = (void *)0;
-  return_label: /* internal */ /* sid:102 */
-                               return __retres;
-}
-
-void laInit(void)
-{
-  /* sid:77 */
-  _heapstart.ptr = (struct hdr *)sbrk(65360);
-  /* sid:78 */
-  _heapend.ptr = (struct hdr *)sbrk(0);
+  if (p + p->s.size == bp) {
+    /* sid:76 */
+    p->s.size += bp->s.size;
+    /* sid:77 */
+    p->s.ptr = bp->s.ptr;
+  }
+  else {
+    /* sid:78 */
+    p->s.ptr = bp;
+  }
   /* sid:79 */
-  frhd = _heapstart.ptr;
-  /* sid:80 */
-  frhd->ptr = (struct hdr *)0;
-  /* sid:81 */
-  frhd->size = (unsigned int)((char *)_heapend.ptr - (char *)_heapstart.ptr) / sizeof(HEADER);
-  /* sid:82 */
-  memleft = (short)frhd->size;
-  /* sid:104 */
+  freep = p;
+  /* sid:98 */
   return;
 }
 
-/*@ type cty = HEADER *;
+/*@ type cty = Header *;
  */
-/*@ logic cty cbe{L}= _heapstart.ptr;
+/*@ logic ℤ csz{L}(cty x) = \at(x->s.size,L);
  */
-/*@ logic cty cen{L}= _heapend.ptr;
+/*@ logic cty fn{L}(cty x) = \at(x->s.ptr,L);
  */
-/*@ logic ℤ csz{L}(cty x) = \at(x->size*sizeof(HEADER),L);
+/*@ logic char * malloc= "krAlloc";
  */
-/*@ logic cty fbe{L}= frhd;
+/*@ logic char * minit= "morecore";
  */
-/*@ logic cty fen= \null;
- */
-/*@ logic cty fn{L}(cty x) = \at(x->ptr,L);
- */
-/*@ logic char * malloc= "laAlloc";
- */
-/*@ logic char * minit= "laInit";
- */
-/*@ logic char * free= "laFree";
+/*@ logic char * mfree= "krFree";
 
 */
 int main(void)
@@ -1088,25 +766,23 @@ int main(void)
   void *man;
   void *p1;
   void *p2;
-  /* sid:85 */
-  laInit();
-  /* sid:86 */
+  /* sid:82 */
   man = (void *)0;
+  /* sid:83 */
+  p1 = krAlloc((unsigned int)20);
+  /* sid:84 */
+  krAlloc((unsigned int)20);
+  /* sid:85 */
+  p2 = krAlloc((unsigned int)20);
+  /* sid:86 */
+  krAlloc((unsigned int)20);
   /* sid:87 */
-  p1 = laAlloc(20);
+  krFree(p1);
   /* sid:88 */
-  laAlloc(20);
+  krFree(p2);
   /* sid:89 */
-  p2 = laAlloc(20);
-  /* sid:90 */
-  laAlloc(20);
-  /* sid:91 */
-  laFree(p1);
-  /* sid:92 */
-  laFree(p2);
-  /* sid:93 */
   __retres = 0;
-  /* sid:106 */
+  /* sid:100 */
   return __retres;
 }
 

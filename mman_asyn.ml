@@ -66,10 +66,10 @@ type aconstr =
   | ACmp of acmpop * aexp * aexp
 
 and acmpop =
-  | AEQ
-  | ASUPEQ
-  | ASUP
-  | ADISEQ
+  | AEQ      (* == *)
+  | ASUPEQ	 (* >= *)
+  | ASUP     (* > *)
+  | ADISEQ   (* != *)
   | AEQMOD of int
       
 
@@ -825,7 +825,6 @@ let rec transform_exp_aux (exp: Cil_types.exp)
     let ae =
       match exp.enode with
       | Const(c) ->
-
           ACst(transform_cst c)  
           (*transform_cst c *)
 
@@ -990,10 +989,12 @@ let rec transform_exp_aux (exp: Cil_types.exp)
                      | _ -> raise (Not_dealt "Bitvector expression")
                     )
                )
+		   		  
            | _ -> (* IndexPI _, Cmp _,
                      LAnd, LOr *)
                raise (Not_dealt "Binary expression")
           )
+      
       | CastE(ty,e1) ->
           let ae1 = transform_exp_aux e1 in
           let algty = Cil.bytesAlignOf ty in
@@ -1085,7 +1086,7 @@ and transform_guard_bool exp =
   | Cil_types.BinOp (op, eL, eR, _) ->
       (match op with
        | Cil_types.Eq -> eL, eR, AEQ, ADISEQ
-                         
+       | Cil_types.Ne -> eL, eR, ADISEQ, AEQ
        | Cil_types.Lt -> eR, eL, ASUP, ASUPEQ
        | Cil_types.Le -> eR, eL, ASUPEQ, ASUP
        | Cil_types.Gt -> eL, eR, ASUP, ASUPEQ
@@ -1388,10 +1389,10 @@ and to_senv_lval (sei: Mman_env.t) (lv: alval) (isLoc: bool)
   | AVar(vi) ->
 
       let svi = Mman_env.senv_getvar sei (Mman_svar.sv_mk_var vi) in
-       let _ = Mman_options.Self.debug ~level:1 "ASY:to_senv_lval, vi:%a, svi:%a..... @." 
+       (*let _ = Mman_options.Self.debug ~level:1 "ASY:to_senv_lval, vi:%a, svi:%a..... @." 
                   Printer.pp_varinfo vi 
                   Mman_svar.Svar.pretty svi 
-                      in 
+                      in *)
 
       let svil = 
         if isLoc then
