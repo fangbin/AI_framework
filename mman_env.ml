@@ -423,6 +423,12 @@ let penv_unify ei ej
   : int * int array * int array
   =
   let _ = (Mman_options.Self.feedback "MEV:Unify penvs %d, %d@." ei ej) in
+  if (ei > 0)&&(ej < 0) 
+  then 
+    	let mi = ref (Array.init (penv_size ei) (fun i -> i)) in
+  		let mj = ref (Array.init (0) (fun i -> i)) in
+  		ei, !mi,!mj
+  else 
   let mapi = ref (Array.init (penv_size ei) (fun i -> i)) in
   let mapj = ref (Array.init (penv_size ej) (fun i -> i)) in
   if ei == ej then
@@ -485,9 +491,10 @@ let penv_unify ei ej
       let npeid = penv_add npe in
       let _ = (Mman_options.Self.debug ~level:2 "unified %a@."
                  penv_print (penv_get npeid)) in
-      npeid, !mapi, !mapj
-    end
-    
+      npeid, !mapi, !mapj      
+  end
+
+
 (**
  * Size of the environment as number of variables
 *)

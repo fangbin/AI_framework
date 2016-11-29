@@ -1012,7 +1012,6 @@ and evalE_atom
 (**************************************************************************)
                        
 (** Meet the graph with a list of constraints.
- 
     If the meet may be done with the constraints on shape,
     then return the new shape and the constraints for the data part;
     otherwise, return the left values to be unfolded.
@@ -1561,13 +1560,28 @@ and mutate_meminfo (seid: MEV.t) (g: meminfo)
   | ALval(ASVar(sviR)) ->
       let _ = Mman_options.Self.debug ~level:2 "MSH:mutate_meminfo, location in stack...@." in 
       let svR = Mman_env.senv_getvinfo seid sviR in
-      let _ = Mman_options.Self.debug ~level:2 "MSH: svR: %a@." 
+      let _ = Mman_options.Self.debug ~level:2 "MSH:location svR: %a@." 
               Mman_svar.Svar.pretty svR 
             in 
       begin
         (* pre-condition 2a): location in stack *)
         (* TODO: i.e., not a feature ?? what about DA_CDAT ? *)
-        if (svR.Mman_svar.kind == Mman_svar.SVar) then 
+       match svR.Mman_svar.kind with
+       | SVar -> 
+       	  (* change the stack *)
+          	[(some_of seid (mutate_stack seid g sviL sviR), [], [])]
+       | PVar vi  ->  
+       	  (* change the stack *)
+          	[(some_of seid (mutate_stack seid g sviL sviR), [], [])]
+       | Hli ->
+       	   	[(some_of seid (mutate_stack seid g sviL Mman_svar.svid_hli), [], [])]
+       | Feature(_,_) -> 
+       		[(some_of seid (mutate_stack seid g sviL sviR), [], [])]
+       |_ -> []
+
+       (* if (svR.Mman_svar.kind == Mman_svar.SVar) ||
+           (svR.Mman_svar.kind == Mman_svar.PVar)
+         then 
           (* change the stack *)
           [(some_of seid (mutate_stack seid g sviL sviR), [], [])]
         else if (svR.Mman_svar.kind == Mman_svar.Hli) 
@@ -1576,9 +1590,11 @@ and mutate_meminfo (seid: MEV.t) (g: meminfo)
           in 
           [(some_of seid (mutate_stack seid g sviL Mman_svar.svid_hli), [], [])]
         else 
+            let _ = Mman_options.Self.debug ~level:2 "MSH:svar is @." 
+        	in 
             match svR.Mman_svar.kind with
             | Feature(_,_) -> [(some_of seid (mutate_stack seid g sviL sviR), [], [])]
-            | _ ->  []  
+            | _ ->  []  *)
       end
       
   | ABinOp(AAdd, ALval(ASVar(bl)), eoff) ->

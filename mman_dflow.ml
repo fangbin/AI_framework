@@ -110,7 +110,7 @@ let init_gcnd : Mman_asyn.aconstr list ref = ref []
 let rec init_globals () 
   : unit
   =
-  let _ = Mman_options.Self.feedback "running init globals@." in 
+  let _ = Mman_options.Self.feedback "DF:running init globals@." in 
   if not(!init_done) then
     begin
       let gl, ge, gc = Mman_asyn.init_globals () in 
@@ -286,10 +286,10 @@ let compute_fun_ret s lv vcall vret kf_callee =
    (*let _ = Mman_options.Self.debug ~level:2 "DF:vcall: %a @." 
             MV.Model.pretty vcall
     in 
-
+*)
   let _ = Mman_options.Self.debug ~level:2 "DF:returned_state: %a @." 
             MV.Model.pretty vret
-    in *)
+    in 
 
   (* caller *)
   let eid_caller = Mman_env.penv_of_stmt s in
@@ -443,7 +443,6 @@ module Compute(AnPar: ComputeArg) = struct
         let newaval =
           if (String.compare (Kernel_function.get_name kf) "sbrk") == 0
           then (* sbrk call *)
-
             (transfer_sbrk s lv argl aval)
           else if (isIgnoredFunction kf) then
             aval
@@ -530,8 +529,10 @@ module Compute(AnPar: ComputeArg) = struct
   and transfer_call (s: Cil_types.stmt) kf_callee lv argl (aval: t) 
     : t
     =
-    let _ = Mman_options.Self.debug ~level:1 "DF:do_call: %a(...)@."
-        Kernel_function.pretty kf_callee in
+    let _ = Mman_options.Self.debug ~level:1 "DF:do_call, kf_callee: %a(...), stmt:%a@."
+        Kernel_function.pretty kf_callee 
+        Printer.pp_stmt s
+    in
     let _ = Mman_options.Self.feedback "DF:transfer_call...@." in
     (* assert (kf.fname != sbrk) && not(isIgnoredFunction kf) *)
     
@@ -543,12 +544,18 @@ module Compute(AnPar: ComputeArg) = struct
     (* compute the return state of the callee *)
     let ret_callee = !compute_fun AnPar.stack s kf_callee init_callee in
     
-    (*let _ = Mman_options.Self.debug ~level:2 "DF:ret_callee: %a @." 
+    let _ = Mman_options.Self.debug ~level:2 "DF:init_callee: %a @." 
+            MV.Model.pretty init_callee
+    in
+    
+    let _ = Mman_options.Self.debug ~level:2 "DF:ret_callee: %a @." 
             MV.Model.pretty ret_callee
-    in*) 
+    in
     (* recombine the call state with the end state *)
-    let _ = Mman_options.Self.debug ~level:1 "DF:ret_call: %a(...)@."
-        Kernel_function.pretty kf_callee in
+    let _ = Mman_options.Self.debug ~level:1 "DF:ret_call: %a(...) \n DF:%a@."
+        Kernel_function.pretty kf_callee 
+        MV.Model.pretty aval
+    in
     
     let end_caller = compute_fun_ret s lv aval ret_callee kf_callee in
     let _ = Mman_options.Self.debug ~level:1 "DF:ret_call state: %a@."
@@ -697,7 +704,9 @@ let compute_fun_aux stack s kf_callee init_callee
              bot_ret)
         in
         let _ = Mman_options.Self.debug ~level:1
-              "compute_fun_aux done....@." in 
+              "compute_fun_aux done \n%a....@." 
+              MV.Model.pretty state_ret
+          in 
         state_ret
       end
     end
@@ -792,8 +801,10 @@ and get_init_state kf =
   let init_stmt = Kernel_function.find_first_stmt kf in
   let eid_stmt = Mman_env.penv_of_stmt init_stmt in
   let _ = Mman_options.Self.feedback "DF:Computing initial state@." in
-  let _ = Mman_options.Self.feedback "DF:Initial_state_stmt (sid:%a, peid:%d) @."
-                Cil_datatype.Stmt.pretty_sid init_stmt  eid_stmt
+  let _ = Mman_options.Self.feedback "DF:Initial_state_stmt (sid:%a,%a, peid:%d) @."
+                Cil_datatype.Stmt.pretty_sid init_stmt  
+                Printer.pp_stmt init_stmt 
+                eid_stmt
 
   in 
   let _ = init_globals () in

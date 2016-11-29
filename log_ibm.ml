@@ -17,11 +17,10 @@
 [mman] feature 'csz': ok
 [mman] feature 'cn': undefined
 [mman] feature 'cp': undefined
-[mman] feature 'cdt': undefined
+[mman] feature 'cdt': ok
 [mman] feature 'fn': undefined
 [mman] feature 'fp': undefined
-[mman] user error: flag feature has bad result type
-[mman] user error: feature 'cf': bad profile
+[mman] feature 'cf': ok
 [mman] feature 'cpf': undefined
 [mman] method 'minit': ok
 [mman] method 'malloc': ok
@@ -218,53 +217,20 @@
         
         dwords:{seid:0, peid:3}top
 [mman] DF:function called: ibmInit'
-[mman] DF:transfer_call...
 [mman] DF:do_call: ibmInit(...)
+[mman] DF:transfer_call...
 [mman] DF:compute_fun_init...
 [mman] DF:caller_penv:3, callee_penv:0, state.eid:3...
-[mman] forget vars ... in 
-        {peid:3}
-       eshape: stack:(seid:0,peid:3) 
-        
-       heap list 
-       []
-       atoms:
-       emp,
-        
-        dwords:{seid:0, peid:3}top
-[mman] DF:call_state_forgot_retres:eid:3 
-       {peid:3}
-       eshape: stack:(seid:0,peid:3) 
-        
-       heap list 
-       []
-       atoms:
-       emp,
-        
-        dwords:{seid:0, peid:3}top
+[mman] MV:forget vars ...
 [mman] MEV:Unify penvs 3, 0
 [mman] unified penv_3 = (3,[17] 
        {	(0)__null;	(1)__hole;	(2)__hli;	(3)__hst;	(4)__fc_time;
        	(5)__fc_time_tm;	(6)__l5;	(7)__p_fc_time_tm;	(8)__fc_fds;	(9)has_initialized;
        	(10)managed_memory_start;	(11)last_valid_address;	(12)man;	(13)p1;	(14)p2;
        	(15)p3;	(16)p4;} )
-[mman] DF:Unified env eid_common:3, 
-        penv_3 = (3,[17] 
-       {	(0)__null;	(1)__hole;	(2)__hli;	(3)__hst;	(4)__fc_time;
-       	(5)__fc_time_tm;	(6)__l5;	(7)__p_fc_time_tm;	(8)__fc_fds;	(9)has_initialized;
-       	(10)managed_memory_start;	(11)last_valid_address;	(12)man;	(13)p1;	(14)p2;
-       	(15)p3;	(16)p4;} )
+[mman] DF:Unified env eid_common:3
 [mman] MV:change_env...
 [mman] MV:peid:3, old peid:3, new peid(eid common): 3
-[mman] After formal args assign: {peid:3}
-       eshape: stack:(seid:0,peid:3) 
-        
-       heap list 
-       []
-       atoms:
-       emp,
-        
-        dwords:{seid:0, peid:3}top
 [mman] MV:change_env...
 [mman] MV:peid:3, old peid:3, new peid(eid common): 0
 [mman] MEV:senv_change_pe, old senv:(seid:0,peid:3)
@@ -275,15 +241,6 @@
        [0> __fc_fds:int 1> __fc_time:int 2> __fc_time_tm:int 3> __hli:int 4> __hole:int 5> __hst:int 6> __l5:int 7> __null:int 8> __p_fc_time_tm:int 9> has_initialized:int 10> last_valid_address:int 11> managed_memory_start:int]
 [mman] DW:change_env...
 [mman] DW: emvironment changed
-[mman] After project out caller locals: {peid:0}
-       eshape: stack:(seid:1,peid:0) 
-        
-       heap list 
-       []
-       atoms:
-       emp,
-        
-        dwords:{seid:1, peid:0}top
 [mman] DF:set_fun_locals....
 [mman] MV:meet_exp....
 [mman] MV:meet_exp_set....
@@ -418,39 +375,8 @@
         
         dwords:{seid:1, peid:0}[|-__hli+last_valid_address=0; has_initialized-1=0|]
 [mman] compute_fun_aux done....
-[mman] DF:ret_callee: {peid:0}
-       eshape: stack:(seid:1,peid:0) 
-        (10)managed_memory_start |-> (2)__hli,
-        (11)last_valid_address |-> (2)__hli,
-        
-       heap list 
-       []
-       atoms:
-       emp,
-        
-        dwords:{seid:1, peid:0}[|-__hli+last_valid_address=0; has_initialized-1=0|]
 [mman] DF:ret_call: ibmInit(...)
 [mman] DF:Combine the callee return state vret with the caller state ...
-[mman] DF:vcall: {peid:3}
-       eshape: stack:(seid:0,peid:3) 
-        
-       heap list 
-       []
-       atoms:
-       emp,
-        
-        dwords:{seid:0, peid:3}top
-[mman] DF:returned_state: {peid:0}
-       eshape: stack:(seid:1,peid:0) 
-        (10)managed_memory_start |-> (2)__hli,
-        (11)last_valid_address |-> (2)__hli,
-        
-       heap list 
-       []
-       atoms:
-       emp,
-        
-        dwords:{seid:1, peid:0}[|-__hli+last_valid_address=0; has_initialized-1=0|]
 [mman] MEV:Unify penvs 3, 0
 [mman] unified penv_3 = (4,[17] 
        {	(0)__null;	(1)__hole;	(2)__hli;	(3)__hst;	(4)__fc_time;
@@ -458,49 +384,9 @@
        	(10)managed_memory_start;	(11)last_valid_address;	(12)man;	(13)p1;	(14)p2;
        	(15)p3;	(16)p4;} )
 [mman] DF:eid_common 3
-[mman] forget vars ... in 
-        {peid:3}
-       eshape: stack:(seid:0,peid:3) 
-        
-       heap list 
-       []
-       atoms:
-       emp,
-        
-        dwords:{seid:0, peid:3}top
-[mman] DF:state_caller_noglobs:
-        {peid:3}
-       eshape: stack:(seid:0,peid:3) 
-        
-       heap list 
-       []
-       atoms:
-       emp,
-        
-        dwords:{seid:0, peid:3}top
+[mman] MV:forget vars ...
 [mman] MV:change_env...
 [mman] MV:peid:3, old peid:3, new peid(eid common): 3
-[mman] DF:state_caller_extended:
-        {peid:3}
-       eshape: stack:(seid:0,peid:3) 
-        
-       heap list 
-       []
-       atoms:
-       emp,
-        
-        dwords:{seid:0, peid:3}top
-[mman] return state: {peid:0}
-       eshape: stack:(seid:1,peid:0) 
-        (10)managed_memory_start |-> (2)__hli,
-        (11)last_valid_address |-> (2)__hli,
-        
-       heap list 
-       []
-       atoms:
-       emp,
-        
-        dwords:{seid:1, peid:0}[|-__hli+last_valid_address=0; has_initialized-1=0|]
 [mman] MV:change_env...
 [mman] MV:peid:0, old peid:0, new peid(eid common): 3
 [mman] MEV:senv_change_pe, old senv:(seid:1,peid:0)
@@ -508,17 +394,9 @@
 [mman] MSH:change_env, project out...
 [mman] DW:change_env...
 [mman] DW: emvironment changed
-[mman] DF:caller state extended: {peid:3}
-       eshape: stack:(seid:0,peid:3) 
-        
-       heap list 
-       []
-       atoms:
-       emp,
-        
-        dwords:{seid:0, peid:3}top 
-        
-        callee state: {peid:3}
+[mman] MV:change_env...
+[mman] MV:peid:3, old peid:3, new peid(eid common): 3
+[mman] DF:ret_call state: {peid:3}
        eshape: stack:(seid:0,peid:3) 
         (10)managed_memory_start |-> (2)__hli,
         (11)last_valid_address |-> (2)__hli,
@@ -529,8 +407,6 @@
        emp,
         
         dwords:{seid:0, peid:3}[|-__hli+last_valid_address=0; has_initialized-1=0|]
-[mman] MV:change_env...
-[mman] MV:peid:3, old peid:3, new peid(eid common): 3
 [mman] -----------
         DF:transfer_stmt_main: sid:45 
         on{peid:3}
@@ -570,36 +446,11 @@
         
         dwords:{seid:0, peid:3}[|-__hli+last_valid_address=0; has_initialized-1=0|]
 [mman] DF:function called: ibmAlloc'
-[mman] DF:transfer_call...
 [mman] DF:do_call: ibmAlloc(...)
+[mman] DF:transfer_call...
 [mman] DF:compute_fun_init...
 [mman] DF:caller_penv:3, callee_penv:1, state.eid:3...
-[mman] forget vars ... in 
-        {peid:3}
-       eshape: stack:(seid:0,peid:3) 
-        (10)managed_memory_start |-> (2)__hli,
-        (11)last_valid_address |-> (2)__hli,
-        (12)man |-> (0)__null,
-        
-       heap list 
-       []
-       atoms:
-       emp,
-        
-        dwords:{seid:0, peid:3}[|-__hli+last_valid_address=0; has_initialized-1=0|]
-[mman] DF:call_state_forgot_retres:eid:3 
-       {peid:3}
-       eshape: stack:(seid:0,peid:3) 
-        (10)managed_memory_start |-> (2)__hli,
-        (11)last_valid_address |-> (2)__hli,
-        (12)man |-> (0)__null,
-        
-       heap list 
-       []
-       atoms:
-       emp,
-        
-        dwords:{seid:0, peid:3}[|-__hli+last_valid_address=0; has_initialized-1=0|]
+[mman] MV:forget vars ...
 [mman] MEV:Unify penvs 3, 1
 [mman] old pvar_12/16 -> pvar_17
 [mman] old pvar_13/16 -> pvar_18
@@ -611,13 +462,7 @@
        	(10)managed_memory_start;	(11)last_valid_address;	(12)man;	(13)p1;	(14)p2;
        	(15)p3;	(16)p4;	(17)f1084_numbytes;	(18)current_location;	(19)current_location_mcb;
        	(20)memory_location;} )
-[mman] DF:Unified env eid_common:4, 
-        penv_4 = (1,[21] 
-       {	(0)__null;	(1)__hole;	(2)__hli;	(3)__hst;	(4)__fc_time;
-       	(5)__fc_time_tm;	(6)__l5;	(7)__p_fc_time_tm;	(8)__fc_fds;	(9)has_initialized;
-       	(10)managed_memory_start;	(11)last_valid_address;	(12)man;	(13)p1;	(14)p2;
-       	(15)p3;	(16)p4;	(17)f1084_numbytes;	(18)current_location;	(19)current_location_mcb;
-       	(20)memory_location;} )
+[mman] DF:Unified env eid_common:4
 [mman] MV:change_env...
 [mman] MV:peid:3, old peid:3, new peid(eid common): 4
 [mman] MEV:senv_change_pe, old senv:(seid:0,peid:3)
@@ -647,19 +492,6 @@
                                                has_initialized-1=0;
                                                f1084_numbytes-20=0|])
 [mman] MV:finish do_assign.
-[mman] After formal args assign: {peid:4}
-       eshape: stack:(seid:2,peid:4) 
-        (10)managed_memory_start |-> (2)__hli,
-        (11)last_valid_address |-> (2)__hli,
-        (12)man |-> (0)__null,
-        
-       heap list 
-       []
-       atoms:
-       emp,
-        
-        dwords:{seid:2, peid:4}[|-__hli+last_valid_address=0; has_initialized-1=0;
-                         f1084_numbytes-20=0|]
 [mman] MV:change_env...
 [mman] MV:peid:4, old peid:4, new peid(eid common): 1
 [mman] MEV:senv_change_pe, old senv:(seid:2,peid:4)
@@ -670,18 +502,6 @@
        [0> __fc_fds:int 1> __fc_time:int 2> __fc_time_tm:int 3> __hli:int 4> __hole:int 5> __hst:int 6> __l5:int 7> __null:int 8> __p_fc_time_tm:int 9> current_location:int 10> current_location_mcb:int 11> f1084_numbytes:int 12> has_initialized:int 13> last_valid_address:int 14> managed_memory_start:int 15> memory_location:int]
 [mman] DW:change_env...
 [mman] DW: emvironment changed
-[mman] After project out caller locals: {peid:1}
-       eshape: stack:(seid:3,peid:1) 
-        (10)managed_memory_start |-> (2)__hli,
-        (11)last_valid_address |-> (2)__hli,
-        
-       heap list 
-       []
-       atoms:
-       emp,
-        
-        dwords:{seid:3, peid:1}[|-__hli+last_valid_address=0; has_initialized-1=0;
-                         f1084_numbytes-20=0|]
 [mman] DF:set_fun_locals....
 [mman] MV:meet_exp....
 [mman] MV:constraints:current_location>=0
@@ -1094,7 +914,7 @@
 [mman] s.skind: Instr1
 [mman] ASY:transform_lval2var: current_location_mcb->is_available
 [mman] failure: Unexpected exception.
-                Please submit bug report (Ref. "File "mman_asyn.ml", line 725, characters 10-16: Assertion failed").
+                Please submit bug report (Ref. "Log.FeatureRequest("mman", "logic term in abstraction")").
 [kernel] Current source was: /Users/yuezhuang/Documents/projects/mem copy/bench/ibm/ibmmalloc.c:135
          The full backtrace is:
          Raised at file "src/kernel_services/plugin_entry_points/log.ml", line 583, characters 30-31

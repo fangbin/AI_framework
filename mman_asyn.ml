@@ -1003,6 +1003,9 @@ let rec transform_exp_aux (exp: Cil_types.exp)
                        else algty) in
           transform_castE ae1 algty alge1
 
+      | AddrOf(Var(vi),off) -> 
+      	  AAddrOf(AVar(vi))
+
       | _ -> (* SizeOfE _, SizeOfString _, AlignOfE _,
                 AddrOf _, StartOf _, Info _ 
              *)
@@ -1263,7 +1266,7 @@ let transform_sbrk_dw
 *)
 let init_globals ()
   : alval list * aexp list * aconstr list
-  =
+  =  
   let v1_vn = ref [] in
   let e1_en = ref [] in
   let c1_cn = ref [] in
@@ -1296,7 +1299,7 @@ let init_globals ()
                   | Cil_types.SingleInit(ei) ->
                       begin
                         match ofs with
-                        | Field(fi,_) ->
+                        | Field(fi,_) -> 
                             let al, _ex = transform_field2exp vi fi in
                             let aex = transform_exp ei in
                             v1_vn := !v1_vn @ [al];

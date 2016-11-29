@@ -242,8 +242,7 @@ let rec get_feature_field feati fterm isPtr =
       else
         finfo2feat := Cil_datatype.Fieldinfo.Map.add fi (feati::fl) (!finfo2feat)
             
-  | TUnOp(_,t) | TCastE(_,t) | TCoerce(t,_) | TLogic_coerce(_,t)
-    ->
+  | TUnOp(_,t) | TCastE(_,t) | TCoerce(t,_) | TLogic_coerce(_,t) ->
       begin
         Mman_options.Self.debug ~level:2 ~dkey:dabs_dkey "Term UnOp %a:"
           Printer.pp_term fterm;
@@ -258,18 +257,20 @@ let rec get_feature_field feati fterm isPtr =
         get_feature_field feati t2 isPtr
       end
       
-  | TLval (TVar(_), _)
-    ->
+  | TLval (TVar(_), _) ->
       begin
         Mman_options.Self.debug ~level:2 ~dkey:dabs_dkey "Term TLval(TVar,_)";
         ()
       end
       
   | TConst _ 
+  
   | TSizeOf _ | TAlignOf _ | TAlignOfE _
-  | Tnull 
-    -> ()
+  
+  | Tnull -> ()
        
+  | TAddrOf _ -> () (**)
+  
   | _ ->
       begin
         Mman_options.Self.debug ~level:2 ~dkey:dabs_dkey "Term %a: "
@@ -280,11 +281,11 @@ let rec get_feature_field feati fterm isPtr =
 let get_field_feature fi =
   begin
     if Cil_datatype.Fieldinfo.Map.is_empty (!finfo2feat) then
-      (* build the map by going through each feature *)
+      (* build the map by going through each feature *)     
       Array.iteri (fun i b ->
           let deft = (snd b) in
           begin
-            Mman_options.Self.debug ~level:2 ~dkey:dabs_dkey
+            Mman_options.Self.debug ~level:2
               "Feature %s, term %a@: "
               (snd (List.nth feature_names i))
               Printer.pp_term deft;
@@ -529,7 +530,7 @@ let read_da_list_fld (kind:feature_kind) (lf:logic_info) =
  *  set {dabs}, if correct
 *)
 (** TODO: change to have a constant *)
-let read_da_cdat (lf:logic_info) =
+(*let read_da_cdat (lf:logic_info) =
   (* Name already checked *)
   let cdt = match lf.l_body with
     | LBterm t ->
@@ -550,8 +551,34 @@ let read_da_cdat (lf:logic_info) =
     (Array.set (!dabs.abs_term)
        (featurekind2int DA_CDAT)
        (Some(List.hd lf.l_profile),cdt);
-     Mman_options.Self.feedback "feature 'cdat': ok@.")
+     Mman_options.Self.feedback "feature 'cdat': ok@.")*)
     
+
+(** Read the annotation for feature {cdt} and
+ *  set {dabs}, if correct
+*)
+(** TODO: change to have a constant *)
+let read_da_cdat (lf:logic_info) =
+  (* Name already checked *)
+  let cdt = match lf.l_body with
+    | LBterm t -> logic_utils_drop_at t
+    | _ -> Mman_options.Self.fatal "feature 'cdt': definition not a term@."
+  in
+  let cdtv = match Logic_utils.constFoldTermToInt cdt with
+    | Some i -> i
+    | _ -> Mman_options.Self.fatal
+             "feature 'cdt': definition not a constant@."
+  in
+  if (not(is_fun_const "cdt" lf)) ||
+     (not(is_fun_result "cdt" lf (fun lt -> (lt == Linteger))))
+  then
+    Mman_options.Self.error "feature 'cdt': bad profile@."
+  else (* Typecheck to : -> int *)
+    (Array.set (!dabs.abs_term) (featurekind2int DA_CDAT) (None, cdt));
+     Mman_options.Self.feedback "feature 'cdt': ok@."
+
+
+
 (** Read the annotation for the free flag features and
  *  set the {dabs}, if correct.
 *)
@@ -581,6 +608,8 @@ let read_da_cflg (kind:feature_kind) (lf:logic_info) =
     Mman_options.Self.feedback "feature '%s': ok@." fname
   end
   
+
+
 (** Read the annotation for {cty} and 
  *  set in {dabs}, if correct
 *)

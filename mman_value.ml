@@ -632,8 +632,9 @@ module Model = struct
   let rec meet_exp (d: t) (c1_cn: Mman_asyn.aconstr list)
     : t
     =
-    let _ = Mman_options.Self.debug ~level:1 "MV:meet_exp....@."
-        in 
+    let _ = Mman_options.Self.debug ~level:1 "MV:meet_exp, value:%a....@."
+    		(pretty_code_intern Type.Basic) d 
+    in 
     let _ = 
       List.iter 
         (fun ac -> 
@@ -654,9 +655,9 @@ module Model = struct
         set = nmap
       }
     in 
-    (*let _ = Mman_options.Self.debug ~level:1 "MV:new eshape value: %a @."
+    let _ = Mman_options.Self.debug ~level:1 "MV:new eshape value: %a @."
                    (pretty_code_intern Type.Basic) nvalue 
-          in*) 
+          in 
       nvalue  
 
   and meet_exp_set (eid: MEV.t) (c1_cn: Mman_asyn.aconstr list) (m: sh2dw)
