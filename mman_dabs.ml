@@ -285,10 +285,10 @@ let get_field_feature fi =
       Array.iteri (fun i b ->
           let deft = (snd b) in
           begin
-            Mman_options.Self.debug ~level:2
+              (*Mman_options.Self.debug ~level:2
               "Feature %s, term %a@: "
               (snd (List.nth feature_names i))
-              Printer.pp_term deft;
+              Printer.pp_term deft;*)
             get_feature_field i deft 
               (Logic_utils.isLogicPointerType deft.term_type)
           end)

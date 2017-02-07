@@ -433,7 +433,7 @@ let penv_unify ei ej
   let mapj = ref (Array.init (penv_size ej) (fun i -> i)) in
   if ei == ej then
     ei, !mapi, !mapj
-  else
+  else 
     (* merge the two sets of variables to the least common list *)
     let penvi = penv_get ei in
     let penvj = penv_get ej in
@@ -452,8 +452,10 @@ let penv_unify ei ej
                   () (* found, do nothing *)
                 with Not_found ->
                   begin
-                    Mman_options.Self.debug ~level:2 "old pvar_%d/%d -> pvar_%d@."
-                      sv.id (Array.length !mapj) !lid;
+                    Mman_options.Self.debug ~level:2 "old pvar_%d(%a)/%d -> pvar_%d@."
+                      sv.id 
+                      Mman_svar.Svar.pretty sv
+                      (Array.length !mapj) !lid;
                     ssv := VidMap.add (!lid) { sv with id = !lid } !ssv;
                     Array.set (!mapj) svid !lid;
                     lid := !lid + 1
@@ -593,7 +595,8 @@ and penvs_init_from_kfun kf =
   let lvars = ref (copy_vidmap (Vector.get penvs 0).pvars) in
   let svid = ref (1 + (max_key_vidmap (Vector.get penvs 0).pvars)) in
   (* copy the formals, if any *)
-  let _ = List.iter (fun vi ->
+  let _ = List.iter 
+  	 (fun vi ->
       let idn, lv = sv_add_pvar vi !svid in
       begin
         svid := idn + 1; (* normally increments svid, no address taken on formals *)

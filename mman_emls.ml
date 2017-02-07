@@ -1655,7 +1655,7 @@ and mutate_meminfo (seid: MEV.t) (g: meminfo)
 	            end 
 
             | Chd(a,fl) ->            	  
-            	begin           	  
+            	begin            	
 	        	    let res = ref [] in 
 	        	    let inx = ref 0 in 
 	        	    (* search b1 after the a in mls *)
@@ -1689,6 +1689,19 @@ and mutate_meminfo (seid: MEV.t) (g: meminfo)
 		            	   *            [ng3,[],[g3]]
 		            	   *    
 		            	   *)
+		            	(*match eoff with
+		                 | ACst(c) ->
+		                    if Integer.is_one c 
+		                    then
+		                    	begin
+		                    		let nstack = MEV.EnvMap.add sviL b1 g.stack in
+		                    		let ng2 = { stack = nstack; 
+		  										mls = g.mls; 
+		  										atoms = g.atoms } in
+		                    	end*)
+
+
+
 
 		            	(* case2 *)
 		  				let _ = Mman_options.Self.debug ~level:1 "Atom:Chd(sv_%d)*... @." a in    		  			 		  				
@@ -1716,10 +1729,7 @@ and mutate_meminfo (seid: MEV.t) (g: meminfo)
       					let fkls = MEV.senv_get_feats b3 nseid2 in
 		  				let natoms2 = MEV.EnvMap.add b3 (Chd(b3,fkls)) natoms1 in
 		  				(* create a new svar of b4 *)
-		  				let nseid3, b4 = senv_add_saddr_1 nseid2 in
-		  				let _ = (Mman_options.Self.debug ~level:2 "MSH:new senv: %a @."
-                 		    	MEV.senv_print (MEV.senv_get nseid3))
-                 		    in  
+		  				let nseid3, b4 = senv_add_saddr_1 nseid2 in		  				 
 		  				(* add the new Blk(b3,b2) *)
 		  				let natoms3 = MEV.EnvMap.add b4 (Blk(b4,b2)) natoms2 in
 		  				(* add points to: sviL -> b3 *)
@@ -1851,10 +1861,6 @@ and mutate_hli_init (seid: MEV.t) (g: meminfo)
       (* create symbolic variable *)
       let sei, nvi = senv_add_saddr_1 seid' in 
 
-      let _ = (Mman_options.Self.debug ~level:2 "MSH:new senv(seid:%d,peid:%d)@."
-                 sei
-                 (MEV.senv_get sei).peid) 
-      in 
        (* get the features list of svil *)
       let fkls = MEV.senv_get_feats sviL sei in      
       let n_Chd = Chd(sviL, fkls) in 
@@ -2228,7 +2234,7 @@ let change_env (seid:MEV.t) (d:valinfo)
 	  else 
 	  	(* project out vars *)
       begin 
-          let _ = Mman_options.Self.debug ~level:1 " MSH:change_env, project out... @."  
+          let _ = Mman_options.Self.debug ~level:1 " MSH:change_env, project out vars ... @."  
       	  in 
 	      let svl = ref [] in 
 	      MEV.VidMap.iter 
@@ -2260,6 +2266,9 @@ let change_env (seid:MEV.t) (d:valinfo)
 	                 atoms = g.atoms
 	               }  
 	      in
+
+	      let _ = Mman_options.Self.debug ~level:1 " MSH:change_env done  ... @."  
+      	  in 
 	       { seid = seid; 
 	         mem = S(ng) 
 	       } 

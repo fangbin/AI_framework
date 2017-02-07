@@ -858,7 +858,7 @@ void warm_boot(char *str)
 {
   /* sid:1 */
   printf("%s\n",str);
-  /* sid:95 */
+  /* sid:91 */
   return;
 }
 
@@ -893,7 +893,7 @@ void laFree(void *ap)
       /* sid:15 */
       f->ptr = nxt;
     }
-    /* sid:97 */
+    /* sid:93 */
     goto return_label;
   }
   else {
@@ -939,7 +939,7 @@ void laFree(void *ap)
         else {
           
         }
-        /* sid:98 */
+        /* sid:94 */
         goto return_label;
       }
       else {
@@ -967,7 +967,7 @@ void laFree(void *ap)
     /* sid:47 */
     f->ptr = nxt;
   }
-  return_label: /* internal */ /* sid:99 */
+  return_label: /* internal */ /* sid:95 */
                                return;
 }
 
@@ -1023,7 +1023,7 @@ void *laAlloc(int nbytes)
         memleft = (short)((int)memleft - nunits);
         /* sid:71 */
         __retres = (void *)(nxt + 1);
-        /* sid:101 */
+        /* sid:97 */
         goto return_label;
       }
       else {
@@ -1038,7 +1038,7 @@ void *laAlloc(int nbytes)
   }
   /* sid:75 */
   __retres = (void *)0;
-  return_label: /* internal */ /* sid:102 */
+  return_label: /* internal */ /* sid:98 */
                                return __retres;
 }
 
@@ -1056,7 +1056,7 @@ void laInit(void)
   frhd->size = (unsigned int)((char *)_heapend.ptr - (char *)_heapstart.ptr) / sizeof(HEADER);
   /* sid:82 */
   memleft = (short)frhd->size;
-  /* sid:104 */
+  /* sid:100 */
   return;
 }
 
@@ -1081,13 +1081,12 @@ void laInit(void)
 /*@ logic char * free= "laFree";
 
 */
-int main(void)
+void *main(void)
 {
-  /* Locals: __retres, man, p1, p2 */
-  int __retres;
+  /* Locals: __retres, man, p1 */
+  void *__retres;
   void *man;
   void *p1;
-  void *p2;
   /* sid:85 */
   laInit();
   /* sid:86 */
@@ -1097,16 +1096,8 @@ int main(void)
   /* sid:88 */
   laAlloc(20);
   /* sid:89 */
-  p2 = laAlloc(20);
-  /* sid:90 */
-  laAlloc(20);
-  /* sid:91 */
-  laFree(p1);
-  /* sid:92 */
-  laFree(p2);
-  /* sid:93 */
-  __retres = 0;
-  /* sid:106 */
+  __retres = (void *)0;
+  /* sid:102 */
   return __retres;
 }
 

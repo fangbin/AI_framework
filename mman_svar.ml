@@ -171,7 +171,14 @@ let sv_equal sv1 sv2 =
     match sv1.kind, sv2.kind with
     | Null, Null | Hole, Hole | Hli, Hli | Hst, Hst -> true
     | PVar vi1, PVar vi2 ->
-        Cil_datatype.Varinfo.equal !vi1 !vi2
+        (*Cil_datatype.Varinfo.equal !vi1 !vi2 *)
+        (*let _ = Mman_options.Self.debug ~level:2 "v1:%s, v2:%s" 
+        		 !vi1.vname 
+        		 !vi2.vname
+    	in*) 
+        if !vi1.vname = !vi2.vname
+        then true 
+    	else false 
     | Loc svi1, Loc svi2 ->
         svi1 = svi2
     | SVar, SVar ->
@@ -378,8 +385,10 @@ let sv_mk_gghost () =
 let sv_add_pvar vinfo svid =
   let lid = ref svid in (* next index used *)
   let svl = ref [] in (* list of variables *)
-  if not (vinfo.vreferenced) &&
-     (String.compare vinfo.vname sv_hli_name != 0) then
+  if (*not (vinfo.vreferenced) &&*)  					(* to add __retres*)
+     not (String.compare vinfo.vname sv_hli_name != 0) then
+     let _ = Mman_options.Self.debug ~level:2 "dot add ... "
+ 	 in
     !lid-1, !svl
   else
     begin
