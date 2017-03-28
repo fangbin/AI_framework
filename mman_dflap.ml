@@ -597,8 +597,6 @@ let compute_fun_aux stack s kf_callee init_callee
   let _ = Mman_options.Self.debug ~level:1 "DF:compute_fun_aux....@." 
       in
 
-
-
   let _ = set_call_state s init_callee  in (* added by FB *)
   (* start of callee is at its first statement *)
   let stmt_init = (Kernel_function.find_first_stmt kf_callee) in

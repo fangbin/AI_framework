@@ -851,19 +851,18 @@ extern int ferror_unlocked(FILE *stream);
     assigns \result \from *stream; */
 extern int fileno_unlocked(FILE *stream);
 
-/*@ ghost int isfree; */
-static HEADER _heapstart = {.ptr = (struct hdr *)0, .size = (unsigned int)0};
-static HEADER _heapend = {.ptr = (struct hdr *)0, .size = (unsigned int)0};
+HEADER _heapstart = {.ptr = (struct hdr *)0, .size = (unsigned int)0};
+HEADER _heapend = {.ptr = (struct hdr *)0, .size = (unsigned int)0};
 void warm_boot(char *str)
 {
   /* sid:1 */
   printf("%s\n",str);
-  /* sid:91 */
+  /* sid:96 */
   return;
 }
 
 HEADER *frhd;
-static short memleft = (short)0;
+static short memleft;
 void laFree(void *ap)
 {
   /* Locals: nxt, prev, f */
@@ -893,7 +892,7 @@ void laFree(void *ap)
       /* sid:15 */
       f->ptr = nxt;
     }
-    /* sid:93 */
+    /* sid:98 */
     goto return_label;
   }
   else {
@@ -939,7 +938,7 @@ void laFree(void *ap)
         else {
           
         }
-        /* sid:94 */
+        /* sid:99 */
         goto return_label;
       }
       else {
@@ -967,7 +966,7 @@ void laFree(void *ap)
     /* sid:47 */
     f->ptr = nxt;
   }
-  return_label: /* internal */ /* sid:95 */
+  return_label: /* internal */ /* sid:100 */
                                return;
 }
 
@@ -1023,7 +1022,7 @@ void *laAlloc(int nbytes)
         memleft = (short)((int)memleft - nunits);
         /* sid:71 */
         __retres = (void *)(nxt + 1);
-        /* sid:97 */
+        /* sid:102 */
         goto return_label;
       }
       else {
@@ -1037,26 +1036,28 @@ void *laAlloc(int nbytes)
     nxt = nxt->ptr;
   }
   /* sid:75 */
+  warm_boot((char *)"Allocation Failed!");
+  /* sid:76 */
   __retres = (void *)0;
-  return_label: /* internal */ /* sid:98 */
+  return_label: /* internal */ /* sid:103 */
                                return __retres;
 }
 
 void laInit(void)
 {
-  /* sid:77 */
-  _heapstart.ptr = (struct hdr *)sbrk(65360);
   /* sid:78 */
-  _heapend.ptr = (struct hdr *)sbrk(0);
+  _heapstart.ptr = (struct hdr *)sbrk(65360);
   /* sid:79 */
-  frhd = _heapstart.ptr;
+  _heapend.ptr = (struct hdr *)sbrk(0);
   /* sid:80 */
-  frhd->ptr = (struct hdr *)0;
+  frhd = _heapstart.ptr;
   /* sid:81 */
-  frhd->size = (unsigned int)((char *)_heapend.ptr - (char *)_heapstart.ptr) / sizeof(HEADER);
+  frhd->ptr = (struct hdr *)0;
   /* sid:82 */
+  frhd->size = (unsigned int)((char *)_heapend.ptr - (char *)_heapstart.ptr) / sizeof(HEADER);
+  /* sid:83 */
   memleft = (short)frhd->size;
-  /* sid:100 */
+  /* sid:105 */
   return;
 }
 
@@ -1081,23 +1082,32 @@ void laInit(void)
 /*@ logic char * free= "laFree";
 
 */
-void *main(void)
+int main(void)
 {
-  /* Locals: __retres, man, p1 */
-  void *__retres;
+  /* Locals: __retres, man, p1, p2 */
+  int __retres;
   void *man;
   void *p1;
-  /* sid:85 */
-  laInit();
+  void *p2;
   /* sid:86 */
-  man = (void *)0;
+  laInit();
   /* sid:87 */
-  p1 = laAlloc(20);
+  man = (void *)0;
   /* sid:88 */
-  laAlloc(20);
+  p1 = laAlloc(20);
   /* sid:89 */
-  __retres = (void *)0;
-  /* sid:102 */
+  laAlloc(20);
+  /* sid:90 */
+  p2 = laAlloc(20);
+  /* sid:91 */
+  laAlloc(20);
+  /* sid:92 */
+  laFree(p1);
+  /* sid:93 */
+  laFree(p2);
+  /* sid:94 */
+  __retres = 0;
+  /* sid:107 */
   return __retres;
 }
 
