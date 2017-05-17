@@ -27,12 +27,8 @@ mman_dflow.cmo : mman_value.cmo mman_svar.cmo mman_options.cmo mman_env.cmo \
     mman_dabs.cmo mman_asyn.cmo
 mman_dflow.cmx : mman_value.cmx mman_svar.cmx mman_options.cmx mman_env.cmx \
     mman_dabs.cmx mman_asyn.cmx
-mman_core.cmo : mman_options.cmo mman_env.cmo mman_dflow.cmo mman_dflap.cmo \
-    mman_dabs.cmo
-mman_core.cmx : mman_options.cmx mman_env.cmx mman_dflow.cmx mman_dflap.cmx \
-    mman_dabs.cmx
+mman_core.cmo : mman_options.cmo mman_env.cmo mman_dflap.cmo mman_dabs.cmo
+mman_core.cmx : mman_options.cmx mman_env.cmx mman_dflap.cmx mman_dabs.cmx
 mman_register.cmo : mman_options.cmo mman_core.cmo
 mman_register.cmx : mman_options.cmx mman_core.cmx
-mman_gui.cmo : mman_options.cmo mman_core.cmo
-mman_gui.cmx : mman_options.cmx mman_core.cmx
 Mman.cmi :

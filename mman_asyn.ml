@@ -1346,7 +1346,7 @@ let init_globals ()
                                       ALval(ASVar(Mman_svar.sv_mk_hst.id))), aexp_zero) in        (* FB *)
    let _ = (c1_cn := !c1_cn @ [hli_ge_0; hst_eq_hli]) in
     begin
-      (Mman_options.Self.debug ~level:1 "Global inits: %a := %a\nmeet %a @."
+      (Mman_options.Self.debug ~level:1 "ASY: %a := %a \n meet constriants:%a @."
          (fun fmt lv -> (List.iter (fun vi -> pp_alval fmt vi) lv)) !v1_vn
          (fun fmt le -> (List.iter (fun ei -> pp_aexp fmt ei) le)) !e1_en
          (fun fmt lc -> (List.iter (fun ei -> pp_aconstr fmt ei) lc)) !c1_cn);

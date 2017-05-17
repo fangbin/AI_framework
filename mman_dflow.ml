@@ -107,7 +107,7 @@ let init_glv : Mman_asyn.alval list ref = ref []
 let init_gexp : Mman_asyn.aexp list ref = ref []
 let init_gcnd : Mman_asyn.aconstr list ref = ref []
 
-let rec init_globals () 
+let init_globals () 
   : unit
   =
   let _ = Mman_options.Self.feedback "DF:running init globals@." in 
@@ -183,7 +183,7 @@ let rec compute_fun_init s kf_caller kf_callee argl state =
   let eid_caller = Mman_env.penv_of_stmt s in
   let stmt_callee = Kernel_function.find_first_stmt kf_callee in
   let eid_callee = Mman_env.penv_of_stmt stmt_callee in
-  let eid = state.MV.Model.eid in  
+  
   (* o unconstrain __retres from the caller environment *)
   let call_state_forgot_retres = (* if caller does not return void,
                                     unconstrain __retres in eid_call *)
@@ -378,7 +378,7 @@ module Compute(AnPar: ComputeArg) = struct
         map_on_all_succs s (transfer_assign s lv exp aval)
           
     | Instr(Call(lv, fe, argl,_)) ->             
-        let sei = aval.eid in 
+         
         let kf =
           (match Kernel_function.get_called fe with
            | Some(f) -> f

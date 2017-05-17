@@ -219,8 +219,22 @@ let sv_tostring (sv:svarinfo) =
   | Hst -> sv_hst_name
 
   | PVar vi ->
-      (if (!vi).vformal then "f"^(string_of_int (!vi).vid)^"_"
-       else "")^(!vi).vname
+      begin 
+        match sv.typ with
+        | SVInt   -> (if (!vi).vformal 
+                      then  "f"^(string_of_int (!vi).vid)^"_"
+                      else   "")^"i"^(!vi).vname
+
+        | SVPtr (ty) -> (if (!vi).vformal 
+                          then  "f"^(string_of_int (!vi).vid)^"_"
+                          else  "")^"p"^(!vi).vname
+        
+        | _ ->  (if (!vi).vformal 
+                  then  "f"^(string_of_int (!vi).vid)^"_"
+                  else   "")^(!vi).vname
+
+        
+      end 
                   
   | SVar ->
       "__s"^(string_of_int sv.id)
@@ -401,8 +415,12 @@ let sv_add_pvar vinfo svid =
            svl := !svl @ [(!lid, sv_mk_loc ~svid:(!lid) svid (svtype vinfo))]
           end
        );
-       (* if type of variable is chunk, add features *)
-       (if is_chunk_struct vinfo.Cil_types.vtype then
+       (* if type of variable is chunk, add features 
+        * if type of variable if chunk pointer, add features [added by FB]
+       *) 
+       (if (is_chunk_struct vinfo.Cil_types.vtype) ||
+           (is_chunk_ptr  vinfo.Cil_types.vtype)
+        then
           let lidf, svfl = sv_add_feat svid !lid in
           begin
             lid := lidf;

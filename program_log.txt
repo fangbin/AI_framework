@@ -3,12 +3,20 @@ V-20161116
 
 update:
 1. penv is changed during the procedure, 
-2. 
-3.
 
 =====================================
 
 
+
+V-20170516
+
+TODO:
+
+Error: Apron.Environment.make 
+same variable name with different types, e.g.,
+
+int __retres 
+void* __retres
 
 
 

@@ -44,16 +44,17 @@ let run_compute () =
     File.pretty_ast
       ~fmt:(Format.formatter_of_out_channel (open_out "full.c")) ();
     Mman_env.penvs_init (); 
+	(*Mman_env.senvs_init (); *)
 
     Mman_options.Self.feedback "--------------------------------------------";
 
     (* Step 1: compute from the generic entry point *)
-    (*Mman_options.Self.feedback "Analysing the application starting at 'MAIN'@.";*)
-    (*Mman_dflap.compute_from_entry_point ();*)
+    Mman_options.Self.feedback "Analysing the application starting at 'MAIN'@.";
+    Mman_dflap.compute_from_entry_point ();
     
     Mman_options.Self.feedback "--------------------------------------------";
-    Mman_options.Self.feedback "Analysing the application starting at 'MAIN'@.";
-    Mman_dflow.compute_from_entry_point ();
+    (*Mman_options.Self.feedback "Analysing the application starting at 'MAIN'@.";*)
+    (*Mman_dflow.compute_from_entry_point ();*)
     
     (* Step 2: compute specs using previous results for each function *)
     (* 2a: for minit *)

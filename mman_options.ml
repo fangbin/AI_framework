@@ -2,7 +2,7 @@
 (*                                                                        *)
 (*  This file is part of CELIA.                                           *)
 (*                                                                        *)
-(*  Copyright (C) 2015-2016 *)
+(*  Copyright (C) 2015-2016 											  *)
 (*    IRIF  (University of Paris Diderot and CNRS)                        *)
 (*                                                                        *)
 (*                                                                        *)

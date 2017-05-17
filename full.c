@@ -853,14 +853,6 @@ extern int fileno_unlocked(FILE *stream);
 
 HEADER _heapstart = {.ptr = (struct hdr *)0, .size = (unsigned int)0};
 HEADER _heapend = {.ptr = (struct hdr *)0, .size = (unsigned int)0};
-void warm_boot(char *str)
-{
-  /* sid:1 */
-  printf("%s\n",str);
-  /* sid:96 */
-  return;
-}
-
 HEADER *frhd;
 static short memleft;
 void laFree(void *ap)
@@ -869,76 +861,76 @@ void laFree(void *ap)
   HEADER *nxt;
   HEADER *prev;
   HEADER *f;
-  /* sid:4 */
+  /* sid:1 */
   f = (HEADER *)ap - 1;
-  /* sid:5 */
+  /* sid:2 */
   memleft = (short)((unsigned int)memleft + f->size);
-  /* sid:7 */
+  /* sid:4 */
   if (frhd > f) {
-    /* sid:8 */
+    /* sid:5 */
     nxt = frhd;
-    /* sid:9 */
+    /* sid:6 */
     frhd = f;
-    /* sid:10 */
+    /* sid:7 */
     prev = f + f->size;
-    /* sid:12 */
+    /* sid:9 */
     if (prev == nxt) {
-      /* sid:13 */
+      /* sid:10 */
       f->size += nxt->size;
-      /* sid:14 */
+      /* sid:11 */
       f->ptr = nxt->ptr;
     }
     else {
-      /* sid:15 */
+      /* sid:12 */
       f->ptr = nxt;
     }
-    /* sid:98 */
+    /* sid:93 */
     goto return_label;
   }
   else {
     
   }
-  /* sid:18 */
+  /* sid:15 */
   prev = (HEADER *)0;
-  /* sid:19 */
+  /* sid:16 */
   nxt = frhd;
-  /* sid:20 */
+  /* sid:17 */
   while (1) {
-    /* sid:22 */
+    /* sid:19 */
     if (nxt) {
-      /* sid:24 */
+      /* sid:21 */
       if (nxt < f) {
         
       }
       else {
-        /* sid:25 */
+        /* sid:22 */
         break;
       }
     }
     else {
-      /* sid:26 */
+      /* sid:23 */
       break;
     }
-    /* sid:27 */
+    /* sid:24 */
     /*block:begin*/
       {
-      /* sid:29 */
+      /* sid:26 */
       if (nxt + nxt->size == f) {
-        /* sid:30 */
+        /* sid:27 */
         nxt->size += f->size;
-        /* sid:31 */
+        /* sid:28 */
         f = nxt + nxt->size;
-        /* sid:33 */
+        /* sid:30 */
         if (f == nxt->ptr) {
-          /* sid:34 */
+          /* sid:31 */
           nxt->size += f->size;
-          /* sid:35 */
+          /* sid:32 */
           nxt->ptr = f->ptr;
         }
         else {
           
         }
-        /* sid:99 */
+        /* sid:94 */
         goto return_label;
       }
       else {
@@ -946,27 +938,27 @@ void laFree(void *ap)
       }
     }
     /*block:end*/
-    /* sid:39 */
+    /* sid:36 */
     prev = nxt;
-    /* sid:40 */
+    /* sid:37 */
     nxt = nxt->ptr;
   }
-  /* sid:41 */
+  /* sid:38 */
   prev->ptr = f;
-  /* sid:42 */
+  /* sid:39 */
   prev = f + f->size;
-  /* sid:44 */
+  /* sid:41 */
   if (prev == nxt) {
-    /* sid:45 */
+    /* sid:42 */
     f->size += nxt->size;
-    /* sid:46 */
+    /* sid:43 */
     f->ptr = nxt->ptr;
   }
   else {
-    /* sid:47 */
+    /* sid:44 */
     f->ptr = nxt;
   }
-  return_label: /* internal */ /* sid:100 */
+  return_label: /* internal */ /* sid:95 */
                                return;
 }
 
@@ -977,52 +969,52 @@ void *laAlloc(int nbytes)
   HEADER *nxt;
   HEADER *prev;
   int nunits;
-  /* sid:50 */
+  /* sid:47 */
   nunits = (int)((((unsigned int)nbytes + sizeof(HEADER)) - (unsigned int)1) / sizeof(HEADER) + (unsigned int)1);
-  /* sid:51 */
+  /* sid:48 */
   prev = (HEADER *)0;
-  /* sid:52 */
+  /* sid:49 */
   nxt = frhd;
-  /* sid:53 */
+  /* sid:50 */
   while (1) {
-    /* sid:55 */
+    /* sid:52 */
     if (nxt) {
       
     }
     else {
-      /* sid:56 */
+      /* sid:53 */
       break;
     }
-    /* sid:57 */
+    /* sid:54 */
     /*block:begin*/
       {
-      /* sid:59 */
+      /* sid:56 */
       if (nxt->size >= (unsigned int)nunits) {
-        /* sid:61 */
+        /* sid:58 */
         if (nxt->size > (unsigned int)nunits) {
-          /* sid:62 */
+          /* sid:59 */
           nxt->size -= (unsigned int)nunits;
-          /* sid:63 */
+          /* sid:60 */
           nxt += nxt->size;
-          /* sid:64 */
+          /* sid:61 */
           nxt->size = (unsigned int)nunits;
         }
         else {
-          /* sid:66 */
+          /* sid:63 */
           if (prev == (HEADER *)0) {
-            /* sid:67 */
+            /* sid:64 */
             frhd = nxt->ptr;
           }
           else {
-            /* sid:68 */
+            /* sid:65 */
             prev->ptr = nxt->ptr;
           }
         }
-        /* sid:69 */
+        /* sid:66 */
         memleft = (short)((int)memleft - nunits);
-        /* sid:71 */
+        /* sid:68 */
         __retres = (void *)(nxt + 1);
-        /* sid:102 */
+        /* sid:97 */
         goto return_label;
       }
       else {
@@ -1030,34 +1022,34 @@ void *laAlloc(int nbytes)
       }
     }
     /*block:end*/
-    /* sid:73 */
+    /* sid:70 */
     prev = nxt;
-    /* sid:74 */
+    /* sid:71 */
     nxt = nxt->ptr;
   }
-  /* sid:75 */
-  warm_boot((char *)"Allocation Failed!");
-  /* sid:76 */
+  /* sid:72 */
+  printf("Allocation Failed!\n");
+  /* sid:73 */
   __retres = (void *)0;
-  return_label: /* internal */ /* sid:103 */
+  return_label: /* internal */ /* sid:98 */
                                return __retres;
 }
 
 void laInit(void)
 {
-  /* sid:78 */
+  /* sid:75 */
   _heapstart.ptr = (struct hdr *)sbrk(65360);
-  /* sid:79 */
+  /* sid:76 */
   _heapend.ptr = (struct hdr *)sbrk(0);
-  /* sid:80 */
+  /* sid:77 */
   frhd = _heapstart.ptr;
-  /* sid:81 */
+  /* sid:78 */
   frhd->ptr = (struct hdr *)0;
-  /* sid:82 */
+  /* sid:79 */
   frhd->size = (unsigned int)((char *)_heapend.ptr - (char *)_heapstart.ptr) / sizeof(HEADER);
-  /* sid:83 */
+  /* sid:80 */
   memleft = (short)frhd->size;
-  /* sid:105 */
+  /* sid:100 */
   return;
 }
 
@@ -1089,25 +1081,25 @@ int main(void)
   void *man;
   void *p1;
   void *p2;
-  /* sid:86 */
+  /* sid:83 */
   laInit();
-  /* sid:87 */
+  /* sid:84 */
   man = (void *)0;
-  /* sid:88 */
+  /* sid:85 */
   p1 = laAlloc(20);
-  /* sid:89 */
+  /* sid:86 */
   laAlloc(20);
-  /* sid:90 */
+  /* sid:87 */
   p2 = laAlloc(20);
-  /* sid:91 */
+  /* sid:88 */
   laAlloc(20);
-  /* sid:92 */
+  /* sid:89 */
   laFree(p1);
-  /* sid:93 */
+  /* sid:90 */
   laFree(p2);
-  /* sid:94 */
+  /* sid:91 */
   __retres = 0;
-  /* sid:107 */
+  /* sid:102 */
   return __retres;
 }
 
