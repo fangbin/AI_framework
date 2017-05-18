@@ -414,12 +414,12 @@ module Compute(AnPar: ComputeArg) = struct
   (* The forward abstract transfer *)
   (* See pattern in plugins/from/from_compute.ml *)
   let rec transfer_stmt_main (s: Cil_types.stmt) (aval: t) =
-    let _ = (Mman_options.Self.debug  ~level:1
-               "\nDF:transfer_stmt_main: sid:%a@. \n   on %a@."
+    (*let _ = (Mman_options.Self.debug  ~level:1
+               "\nDF:transfer_stmt_main: sid:%a\non\n%a@."
                Cil_datatype.Stmt.pretty_sid s
                (*Printer.pp_stmt s*)
                MV.Model.pretty aval)
-    in
+    in*)
     match s.skind with
     | Instr(Set (lv, exp, _)) ->
         map_on_all_succs s (transfer_assign s lv exp aval)
@@ -491,7 +491,7 @@ module Compute(AnPar: ComputeArg) = struct
   and transfer_assign (s: Cil_types.stmt) lv exp (aval: t) =
     (* Translate lv and exp in Apron *)
     let _ = (Mman_options.Self.debug ~dkey:dflw_dkey
-               "transfer_assign: %a@.on %a@."
+               "DF:transfer_assign: %a@.on %a@."
                Printer.pp_stmt s
                MV.Model.pretty aval)
     in
@@ -903,7 +903,7 @@ and compute kf init =
        Cil_datatype.Stmt.Hashtbl.replace res_states stmt v
     )
   ;
-  Mman_options.Self.feedback "DF:End general analysis"
+  Mman_options.Self.feedback "DF:End general analysis\n============================================== @."
 
     
 

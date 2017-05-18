@@ -737,7 +737,8 @@ module Model = struct
 				        )
 				       nc1_ncn
 				    in
-				  let  ndw = MDW.meet_exp esh.seid dw nc1_ncn in
+				    (*let ndw = MDW.meet_exp esh.seid dw nc1_ncn in*)
+            let ndw = MDW.meet_exp dw.eid dw nc1_ncn in   
                   if MDW.is_bottom ndw
                   then
                     let _ = Mman_options.Self.debug ~level:1 "MV:new dw is Bot...@."
@@ -766,7 +767,7 @@ module Model = struct
     (*TODO bug Failure("hd") => llv is empty *)
     if (List.length llv == 0 ) then d
     else
-    (*let _ =
+    let _ =
         List.iter2
         ( fun lv le ->
              Mman_options.Self.debug ~level:2 "MV:do_assign: %a:=%a, peid:%d @."
@@ -774,7 +775,7 @@ module Model = struct
         )
         llv
         lexp
-    in*)
+    in
     let nmap =
       match d.set with
       | None -> None
@@ -865,8 +866,29 @@ module Model = struct
     let isin = ref false in
     let on_dw = ref false in
     let on_sha = ref false in
+    let _ = (
+            List.iter2 (
+              fun lv e -> 
+                  Mman_options.Self.debug ~level:1 "MV: %a := %a @."  
+                  Mman_asyn.pp_alval (lv)
+                  Mman_asyn.pp_aexp (e)
+            )
+            (llv) (lexp)
+            )
+        in 
+    let _ = (
+            List.iter2 (
+              fun lv e -> 
+                  Mman_options.Self.debug ~level:1 "MV: %a := %a (DW)@." 
+                  Mman_asyn.pp_alval (lv)
+                  Mman_asyn.pp_aexp (e)
+            )
+            llv_dw
+            lexp_dw
+            )
+        in 
     begin
-      (* evaluate left *)
+      (* evaluate left and right *)
       List.iter (fun lv ->
                     (
                       (* check  eval in shape or only do assign on data *)
@@ -879,12 +901,13 @@ module Model = struct
 
                       | Some(lv') ->
                             begin
+                               let _ = Mman_options.Self.feedback "after evaL" in
                                let _ = Mman_options.Self.debug ~level:1 "MV:after evaL:%a@."
                                        Mman_asyn.pp_alval lv'
                                in
                                nllv := lv' :: (!nllv);
                                if (rvf != []) then
-                                let _ = Mman_options.Self.debug ~level:2 "MV:evaL, need unfold @."  in
+                                let _ = Mman_options.Self.debug ~level:1 "MV:evaL, need unfold @."  in
                                vf := rvf @ (!vf)
                             end
                     )
@@ -896,12 +919,12 @@ module Model = struct
                       let re, rvf = MSH.evalE e esh in
                       match re with
                       | None ->
-                      		let _ = Mman_options.Self.debug ~level:1 "MV:after evaE,None@." in
+                      		let _ = Mman_options.Self.debug ~level:1 "MV:after evalE if None@." in
                       		l := true;
 
                       | Some(e') ->
                            begin
-                             let _ = Mman_options.Self.debug ~level:1 "MV:after evaE:%a@."
+                             let _ = Mman_options.Self.debug ~level:1 "MV:after evalE:%a@."
                                        Mman_asyn.pp_aexp e'
                                in
                              nlexp := (e') :: (!nlexp);
@@ -915,18 +938,21 @@ module Model = struct
                 )
                 lexp
       ;
-
       let nm = ref (ModelMap.empty) in
+     
+      (* special case for sbrk *)
       if (((List.length llv) != (List.length llv_dw)))
   	  then
   	  	(
   	  	begin
+          let _ = Mman_options.Self.debug ~level:1 "MV:do_assign (DW)@."in 
   	  		let ndw = MDW.do_assign dw llv_dw lexp_dw  in
   	  		  	on_dw := true;
-			List.iter2
+			    List.iter2
             (
               fun lv e ->
-              if (not !r) then (* *)
+              if (not !r) (* left is not None *)
+              then 
                (
                 begin
                   let _ =
@@ -958,8 +984,8 @@ module Model = struct
                       t1_tn
                   )
             	end
-            	)
-           )
+            	) 
+            )
             (List.rev !nllv)
             (List.rev !nlexp)
             ;
@@ -970,22 +996,37 @@ module Model = struct
   	  	)
 
       else if ((!r) && (!l)) ||
-         ((List.length !nllv) != (List.length !nlexp)) ||
-         ((!r)&&(!l))
-      then (* the assignment only apllied on data *)
-          (
-               if (!nllv == []) && (!nlexp == [])
+              ((List.length !nllv) != (List.length !nlexp))  
+            then (* the assignment only apllied on data *)
+            ( let _ = Mman_options.Self.feedback "MV:do assginment on data, dw.eid:%d..." dw.eid in 
+              if MDW.is_bottom dw then (* if data is bottom *)
+                begin
+                    nm :=  (ModelMap.singleton esh dw);
+                    Some (!nm)
+                end
+              else if (!nllv == []) && (!nlexp == [])
                then
                 begin
                     let nm = ref (ModelMap.empty) in
                     let ndw = MDW.do_assign dw llv lexp  in
-                    nm :=  (ModelMap.singleton esh ndw)
+                    nm := (ModelMap.singleton esh ndw)
                     ;
                     Some (!nm)
                 end
               else if (!nllv == []) && (!nlexp != [])
               then
                 begin
+                    let _ = (
+                        List.iter2 (
+                          fun lv e -> 
+                              Mman_options.Self.debug ~level:1 "MV:do assginment on data %a := %a (DW)@." 
+                              Mman_asyn.pp_alval (lv)
+                              Mman_asyn.pp_aexp (e)
+                        )
+                        llv
+                        !nlexp
+                        )
+                    in 
                     let nm = ref (ModelMap.empty) in
                     let ndw = MDW.do_assign dw llv !nlexp  in
                     nm :=  (ModelMap.singleton esh ndw)
@@ -1001,10 +1042,9 @@ module Model = struct
                     ;
                     Some (!nm)
                 end
-              else
-              		None
-          )
-  	  else
+              else None
+            )     
+  	  else  
         begin
           (* do not need to unfold*)
           if (!vf == []) &&
@@ -1058,6 +1098,7 @@ module Model = struct
                 ;
                 if (!r)
                 then
+                      let _ = Mman_options.Self.feedback "MV: left is None" in 
                       None
                 else
                       Some (!nm)
@@ -1066,7 +1107,6 @@ module Model = struct
              let _ = Mman_options.Self.debug ~level:1 "MV:need unfolding....@." in
              let m = unfold_one esh dw (!vf) in
               do_assign_set eid llv lexp llv_dw lexp_dw m
-
         end
   end
 
@@ -1267,38 +1307,37 @@ module Model = struct
   (** Project out the list of variables.
    *  Mainly used in the inter-procedural analysis *)
   let forget_list (d: t) (llv: Mman_asyn.alval list)
-  :t
+   :t
    =
     let _ = (Mman_options.Self.debug ~level:2 "MV:forget vars ... @."
     		 (*pretty d*) )
-	in
+	  in
     (*if llv == []
     	then d
 		else d (* TODO *)
-	*)
-
-	match d.set with
-	| None -> copy_intern d
-	| Some (m) ->
-		begin
-			if llv == []
-			then copy_intern d
-			else
-				begin
-					let mres = ref ModelMap.empty in
-					ModelMap.iter
-					(
-						fun sh dw ->
-							let ndw = MDW.forget_list dw llv in
-							let nsh = sh in (* TODO *)
-							mres := ModelMap.add nsh ndw !mres
-					)
-					m;
-					{ eid = d.eid;
-                 	  set = Some(!mres)
-                	}
-				end
-		end
+  	*)
+  	match d.set with
+  	| None -> copy_intern d
+  	| Some (m) ->
+  		begin
+  			if llv == []
+  			then copy_intern d
+  			else
+  				begin
+  					let mres = ref ModelMap.empty in
+  					ModelMap.iter
+  					(
+  						fun sh dw ->
+  							let ndw = MDW.forget_list dw llv in
+  							let nsh = sh in (* TODO *)
+  							mres := ModelMap.add nsh ndw !mres
+  					)
+  					m;
+  					{ eid = d.eid;
+                   	  set = Some(!mres)
+                  	}
+  				end
+  		end
 
 
   (** Change from environment [envi] to [envj] by adding and projecting vars. *)
@@ -1324,7 +1363,7 @@ module Model = struct
                     let sh' = MSH.change_env seid' sh in
 
                     (* add the mapping between (seid', einew) and new apei *)
-                    (*let napenv = Mman_valap.env2apron seid' in*)
+                    let napenv = Mman_valap.env2apron seid' in
 
                     (* change the dw(seid) into dw(seid') *)
 

@@ -789,8 +789,8 @@ let seid_new () = (SEnvMap.cardinal (!senvs))
  * Get environment at position ei
 *)
 let senv_get eid =
-  let _ = Mman_options.Self.debug ~level:2
-          "ENV:senv_get@." in
+  (*let _ = Mman_options.Self.debug ~level:2
+          "ENV:senv_get@." in*)
   SEnvMap.find eid (!senvs)
 
 (**
@@ -831,7 +831,7 @@ let senv_vars ei =
 
 
 (**
- * Get list of symbolic variables and program variables in senv(ei)
+ * Get list of symbolic variables and program variables in senv(peid,seid)
 *)
 let senv_vars2 (eid:int )
   :Mman_svar.Svar.t list

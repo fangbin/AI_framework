@@ -370,15 +370,16 @@ module Compute(AnPar: ComputeArg) = struct
     let _ = (Mman_options.Self.debug ~level:2
              "DF:transfer_stmt_main: sid:%a \n@."
              Cil_datatype.Stmt.pretty_sid s
-               (*Printer.pp_stmt s*)
+              (*Printer.pp_stmt s*)
                (*MV.Model.pretty aval*) )
     in 
     match s.skind with
     | Instr(Set (lv, exp, _)) ->
+        let _ = Mman_options.Self.feedback "DF:transfer_assign..."  
+        in 
         map_on_all_succs s (transfer_assign s lv exp aval)
           
-    | Instr(Call(lv, fe, argl,_)) ->             
-         
+    | Instr(Call(lv, fe, argl,_)) ->                 
         let kf =
           (match Kernel_function.get_called fe with
            | Some(f) -> f
@@ -453,7 +454,7 @@ module Compute(AnPar: ComputeArg) = struct
   and transfer_assign (s: Cil_types.stmt) lv exp (aval: t) =
     (* Translate lv and exp in Apron *)
     let _ = (Mman_options.Self.debug ~dkey:dflw_dkey
-               "transfer_assign: %a@.on %a@."
+               "DF:transfer_assign: %a@.on %a@."
                Printer.pp_stmt s
                MV.Model.pretty aval)
     in
@@ -744,10 +745,9 @@ and get_init_state kf =
   let eid_stmt = Mman_env.penv_of_stmt init_stmt in
   let _ = Mman_options.Self.feedback "DF:Computing initial state@." in
   let _ = Mman_options.Self.feedback "DF:Initial_state_stmt (sid:%a,%a, peid:%d) @."
-                Cil_datatype.Stmt.pretty_sid init_stmt  
-                Printer.pp_stmt init_stmt 
-                eid_stmt
-
+          Cil_datatype.Stmt.pretty_sid init_stmt  
+          Printer.pp_stmt init_stmt 
+          eid_stmt
   in 
   let _ = init_globals () in  
   let init_state = try
@@ -755,8 +755,7 @@ and get_init_state kf =
     with Not_found -> (
         (* compute initials from inital globals and restricted locals *)
         let _ = Mman_options.Self.feedback "DF:Computing global values@." in
-        let glb_state = MV.init_globals eid_stmt !init_glv !init_gexp !init_gcnd in
-         
+        let glb_state = MV.init_globals eid_stmt !init_glv !init_gexp !init_gcnd in         
         let glb_loc_state = set_fun_locals kf eid_stmt glb_state in
         glb_loc_state
       )
