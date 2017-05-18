@@ -187,7 +187,6 @@
 [mman] MV:initialize shape...
 [mman] MEV:initialise symbolic environment, seid:0
 [mman] ENV:get list of symbolic variables and program variables eid: 0,
-[mman] ENV:senv vars done
 [mman] DW:env2apron: 
         seid_0 -> [1]
        [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> _heapend:int 5> _heapstart:int 6> c10__csz:int 7> c10__fn:int 8> c4__csz:int 9> c4__fn:int 10> c7__csz:int 11> c7__fn:int 12> i__retres:int 13> imemleft:int 14> pfrhd:int 15> pman:int 16> pp1:int 17> pp2:int]
@@ -195,7 +194,6 @@
 [mman] DW:do_assign: c4__csz:=0 (DW)
 [mman] DW:do_assign: c7__fn:=0 (DW)
 [mman] DW:do_assign: c7__csz:=0 (DW)
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:3}
        eshape: stack:(seid:0,peid:3) 
@@ -217,16 +215,8 @@
 [mman] MV:constraints:(sv_2 - sv_3)=0
 [mman] MV:meet_exp_one, peid:0, esh.seid:0....
 [mman] MSH:do guard, seid:0...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_10>=0
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_2>=0
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:(sv_2 - sv_3)=0
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:sv_10>=0
@@ -247,14 +237,8 @@
 [mman] MV:constraints:p2>=0
 [mman] MV:meet_exp_one, peid:0, esh.seid:0....
 [mman] MSH:do guard, seid:0...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_14>=0
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_15>=0
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_16>=0
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:sv_14>=0
@@ -282,7 +266,8 @@
         
         dwords:{eid_0}[|-__hli+__hst=0; c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0; pp2>=0;
                 pp1>=0; pman>=0; pfrhd>=0; __hli>=0|]
-[mman] DF:transfer_stmt_main: sid:83
+[mman] ==============
+       DF:transfer_stmt_main: sid:83
 [mman] DF:function called: laInit'
 [mman] DF:transfer_call...
 [mman] DF:compute_fun_init...
@@ -298,7 +283,6 @@
 [mman] MSH:change_env, project out vars ...
 [mman] MSH:change_env done  ...
 [mman] ENV:get list of symbolic variables and program variables eid: 1,
-[mman] ENV:senv vars done
 [mman] DW:env2apron: 
         seid_1 -> [2]
        [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> _heapend:int 5> _heapstart:int 6> c10__csz:int 7> c10__fn:int 8> c4__csz:int 9> c4__fn:int 10> c7__csz:int 11> c7__fn:int 12> imemleft:int 13> pfrhd:int]
@@ -327,7 +311,8 @@
         dwords:{eid_1}[|-__hli+__hst=0; c7__fn=0; c7__csz=0; c4__fn=0; c4__csz=0; pfrhd>=0;
                 __hli>=0|]
 [mman] DF:compute_fun_aux....
-[mman] DF:transfer_stmt_main: sid:75
+[mman] ==============
+       DF:transfer_stmt_main: sid:75
 [mman] DF:function called: sbrk'
 [mman] DF:transfer_sbrk: /* sid:75 */
                          _heapstart.ptr = (struct hdr *)sbrk(65360);
@@ -342,19 +327,7 @@
 [mman] MV: fn(_heapstart) := sbrk(65360)
 [mman] MV: fn(_heapstart) := __hli (DW)
 [mman] MV: __hli := (__hli + 65360) (DW)
-[mman] MSH:evalL(fn(_heapstart)) .....
-[mman] MSH:evalL afeat(fk, al)
-[mman] MSH:evalL(_heapstart) .....
-[mman] MSH:evalL,AVar, lv:_heapstart...
-[mman] MSH:evalL,AVar, slv:sv_4...
-[mman] MSH:evalL afeat, []
-[mman] MSH:stack
-[mman] (4)_heapstart |-> (4)_heapstart,
-[mman] (7)_heapend |-> (7)_heapend,
-[mman] MSH:location to which sv_4 points is sv_4...
-[mman] after evaL
 [mman] MV:after evaL:fn(sv_4)
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sbrk(65360)
 [mman] MV:do_assign (DW)
 [mman] DW:do_assign: c4__fn:=__hli (DW)
@@ -367,13 +340,10 @@
 [mman] MV:eshape mutate done, old esh.seid:1
 [mman] DW:change_env...
 [mman] ENV:get list of symbolic variables and program variables eid: 3,
-[mman] ENV:senv vars done
 [mman] DW:env2apron: 
         seid_3 -> [3]
        [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> __s32:int 5> _heapend:int 6> _heapstart:int 7> c10__csz:int 8> c10__fn:int 9> c4__csz:int 10> c4__fn:int 11> c6__csz:int 12> c6__fn:int 13> c7__csz:int 14> c7__fn:int 15> imemleft:int 16> pfrhd:int]
 [mman] DW:emvironment changed
-[mman] 0, 3.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:0}
        eshape: stack:(seid:3,peid:0) 
@@ -393,7 +363,8 @@
         dwords:{eid_3}[|-__hli+c4__fn+65360=0; -__hli+__hst+65360=0; c7__fn=0; c7__csz=0;
                 c4__csz=0; pfrhd>=0; __hli-65360>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:76
+[mman] ==============
+       DF:transfer_stmt_main: sid:76
 [mman] DF:function called: sbrk'
 [mman] DF:transfer_sbrk: /* sid:76 */
                          _heapend.ptr = (struct hdr *)sbrk(0);
@@ -408,20 +379,7 @@
 [mman] MV: fn(_heapend) := sbrk(0)
 [mman] MV: fn(_heapend) := __hli (DW)
 [mman] MV: __hli := (__hli + 0) (DW)
-[mman] MSH:evalL(fn(_heapend)) .....
-[mman] MSH:evalL afeat(fk, al)
-[mman] MSH:evalL(_heapend) .....
-[mman] MSH:evalL,AVar, lv:_heapend...
-[mman] MSH:evalL,AVar, slv:sv_7...
-[mman] MSH:evalL afeat, []
-[mman] MSH:stack
-[mman] (4)_heapstart |-> (4)_heapstart,
-[mman] (6)c4__fn |-> (6)c4__fn,
-[mman] (7)_heapend |-> (7)_heapend,
-[mman] MSH:location to which sv_7 points is sv_7...
-[mman] after evaL
 [mman] MV:after evaL:fn(sv_7)
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sbrk(0)
 [mman] MV:do_assign (DW)
 [mman] DW:do_assign: c7__fn:=__hli (DW)
@@ -429,8 +387,6 @@
 [mman] MV:do_assign: fn(sv_7):=sbrk(0) (SHAPE)
 [mman] MV:eshape mutate
 [mman] MV:eshape mutate done, old esh.seid:3
-[mman] 0, 3.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:0}
        eshape: stack:(seid:3,peid:0) 
@@ -451,7 +407,8 @@
         dwords:{eid_3}[|-__hli+c7__fn=0; -__hli+c4__fn+65360=0; -__hli+__hst+65360=0;
                 c7__csz=0; c4__csz=0; pfrhd>=0; __hli-65360>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:77
+[mman] ==============
+       DF:transfer_stmt_main: sid:77
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: frhd
 [mman] transform_assign: frhd:=__hole[_heapstart.ptr]
@@ -460,20 +417,13 @@
 [mman] MV:do_assign: frhd:=fn(_heapstart), peid:0
 [mman] MV: frhd := fn(_heapstart)
 [mman] MV: frhd := fn(_heapstart) (DW)
-[mman] MSH:evalL(frhd) .....
-[mman] MSH:evalL,AVar, lv:frhd...
-[mman] MSH:evalL,AVar, slv:sv_10...
-[mman] after evaL
 [mman] MV:after evaL:sv_10
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_6
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (6)c4__fn
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:3
-[mman] 0, 3.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:0}
        eshape: stack:(seid:3,peid:0) 
@@ -495,7 +445,8 @@
         dwords:{eid_3}[|-__hli+c7__fn=0; -__hli+c4__fn+65360=0; -__hli+__hst+65360=0;
                 c7__csz=0; c4__csz=0; pfrhd>=0; __hli-65360>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:78
+[mman] ==============
+       DF:transfer_stmt_main: sid:78
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: frhd->ptr
 [mman] transform_assign: fn(frhd):=__hole[(struct hdr *)0]
@@ -504,27 +455,10 @@
 [mman] MV:do_assign: fn(frhd):=0, peid:0
 [mman] MV: fn(frhd) := 0
 [mman] MV: fn(frhd) := 0 (DW)
-[mman] MSH:evalL(fn(frhd)) .....
-[mman] MSH:evalL afeat(fk, al)
-[mman] MSH:evalL(frhd) .....
-[mman] MSH:evalL,AVar, lv:frhd...
-[mman] MSH:evalL,AVar, slv:sv_10...
-[mman] MSH:evalL afeat, []
-[mman] MSH:stack
-[mman] (4)_heapstart |-> (4)_heapstart,
-[mman] (6)c4__fn |-> (6)c4__fn,
-[mman] (7)_heapend |-> (7)_heapend,
-[mman] (9)c7__fn |-> (2)__hli,
-[mman] (10)pfrhd |-> (6)c4__fn,
-[mman] MSH:location to which sv_10 points is sv_6...
-[mman] after evaL
 [mman] MV:after evaL:fn(sv_6)
-[mman] MSH:evalE ...
 [mman] MV:after evalE:0
 [mman] MV:left is feature, do assign only on data
 [mman] DW:do_assign: c6__fn:=0 (DW)
-[mman] 0, 3.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:0}
        eshape: stack:(seid:3,peid:0) 
@@ -546,7 +480,8 @@
         dwords:{eid_3}[|-__hli+c7__fn=0; -__hli+c4__fn+65360=0; -__hli+__hst+65360=0;
                 c7__csz=0; c6__fn=0; c4__csz=0; pfrhd>=0; __hli-65360>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:79
+[mman] ==============
+       DF:transfer_stmt_main: sid:79
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: frhd->size
 [mman] transform_assign: csz(frhd):=(__hole * 8)[(unsigned int)((char *)_heapend.ptr - (char *)_heapstart.ptr) / sizeof(HEADER)]
@@ -559,33 +494,10 @@
 [mman] MV:do_assign: csz(frhd):=(((fn(_heapend) - fn(_heapstart)) / 8) * 8), peid:0
 [mman] MV: csz(frhd) := (((fn(_heapend) - fn(_heapstart)) / 8) * 8)
 [mman] MV: csz(frhd) := (((fn(_heapend) - fn(_heapstart)) / 8) * 8) (DW)
-[mman] MSH:evalL(csz(frhd)) .....
-[mman] MSH:evalL afeat(fk, al)
-[mman] MSH:evalL(frhd) .....
-[mman] MSH:evalL,AVar, lv:frhd...
-[mman] MSH:evalL,AVar, slv:sv_10...
-[mman] MSH:evalL afeat, []
-[mman] MSH:stack
-[mman] (4)_heapstart |-> (4)_heapstart,
-[mman] (6)c4__fn |-> (6)c4__fn,
-[mman] (7)_heapend |-> (7)_heapend,
-[mman] (9)c7__fn |-> (2)__hli,
-[mman] (10)pfrhd |-> (6)c4__fn,
-[mman] MSH:location to which sv_10 points is sv_6...
-[mman] after evaL
 [mman] MV:after evaL:csz(sv_6)
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(((sv_9 - sv_6) / 8) * 8)
 [mman] MV:left is feature, do assign only on data
 [mman] DW:do_assign: c6__csz:=(c7__fn -_i,0 c4__fn) /_i,0 8 *_i,0 8 (DW)
-[mman] 0, 3.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:0}
        eshape: stack:(seid:3,peid:0) 
@@ -608,7 +520,8 @@
                 c7__csz=0; c6__fn=0; c4__csz=0; -c6__csz+65368>=0; pfrhd>=0;
                 c6__csz-65352>=0; __hli-65360>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:80
+[mman] ==============
+       DF:transfer_stmt_main: sid:80
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: memleft
 [mman] transform_assign: memleft:=__hole[(short)frhd->size]
@@ -620,18 +533,11 @@
 [mman] MV:do_assign: memleft:=(csz(frhd) / 8), peid:0
 [mman] MV: memleft := (csz(frhd) / 8)
 [mman] MV: memleft := (csz(frhd) / 8) (DW)
-[mman] MSH:evalL(memleft) .....
-[mman] MSH:evalL,AVar, lv:memleft...
 [mman] MV:after evaL, None
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(sv_30 / 8)
 [mman] MV:do assginment on data, dw.eid:3...
 [mman] MV:do assginment on data memleft := (sv_30 / 8) (DW)
 [mman] DW:do_assign: imemleft:=c6__csz /_i,0 8 (DW)
-[mman] 0, 3.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:0}
        eshape: stack:(seid:3,peid:0) 
@@ -655,7 +561,8 @@
                 -c6__csz+8imemleft+8>=0; pfrhd>=0; c6__csz-8imemleft>=0;
                 c6__csz-65352>=0; __hli-65360>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:100
+[mman] ==============
+       DF:transfer_stmt_main: sid:100
 [mman] compute_fun_aux done 
        {peid:0}
        eshape: stack:(seid:3,peid:0) 
@@ -750,7 +657,6 @@
 [mman] MSH:change_env, project out vars ...
 [mman] MSH:change_env done  ...
 [mman] ENV:get list of symbolic variables and program variables eid: 4,
-[mman] ENV:senv vars done
 [mman] DW:env2apron: 
         seid_4 -> [4]
        [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> __s32:int 5> _heapend:int 6> _heapstart:int 7> c10__csz:int 8> c10__fn:int 9> c4__csz:int 10> c4__fn:int 11> c6__csz:int 12> c6__fn:int 13> c7__csz:int 14> c7__fn:int 15> i__retres:int 16> imemleft:int 17> pfrhd:int 18> pman:int 19> pp1:int 20> pp2:int]
@@ -778,7 +684,8 @@
                 c7__csz=0; c6__fn=0; c4__csz=0; -c6__csz+65368>=0;
                 -c6__csz+8imemleft+8>=0; pfrhd>=0; c6__csz-8imemleft>=0;
                 c6__csz-65352>=0; __hli-65360>=0|]
-[mman] DF:transfer_stmt_main: sid:84
+[mman] ==============
+       DF:transfer_stmt_main: sid:84
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: man
 [mman] transform_assign: man:=__hole[(void *)0]
@@ -787,17 +694,11 @@
 [mman] MV:do_assign: man:=0, peid:3
 [mman] MV: man := 0
 [mman] MV: man := 0 (DW)
-[mman] MSH:evalL(man) .....
-[mman] MSH:evalL,AVar, lv:man...
-[mman] after evaL
 [mman] MV:after evaL:sv_14
-[mman] MSH:evalE ...
 [mman] MV:after evalE:0
 [mman] MV:eshape mutate
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:4
-[mman] 3, 4.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:3}
        eshape: stack:(seid:4,peid:3) 
@@ -822,7 +723,8 @@
                 -c6__csz+8imemleft+8>=0; pfrhd>=0; c6__csz-8imemleft>=0;
                 c6__csz-65352>=0; __hli-65360>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:85
+[mman] ==============
+       DF:transfer_stmt_main: sid:85
 [mman] DF:function called: laAlloc'
 [mman] DF:transfer_call...
 [mman] DF:compute_fun_init...
@@ -848,7 +750,6 @@
 [mman] MSH:change_env, project out vars ...
 [mman] MSH:change_env done  ...
 [mman] ENV:get list of symbolic variables and program variables eid: 5,
-[mman] ENV:senv vars done
 [mman] DW:env2apron: 
         seid_5 -> [5]
        [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> __s32:int 5> _heapend:int 6> _heapstart:int 7> c10__csz:int 8> c10__fn:int 9> c19__csz:int 10> c19__fn:int 11> c20__csz:int 12> c20__fn:int 13> c4__csz:int 14> c4__fn:int 15> c6__csz:int 16> c6__fn:int 17> c7__csz:int 18> c7__fn:int 19> f1673_inbytes:int 20> i__retres:int 21> imemleft:int 22> inunits:int 23> p__retres:int 24> pfrhd:int 25> pman:int 26> pnxt:int 27> pp1:int 28> pp2:int 29> pprev:int]
@@ -857,16 +758,11 @@
 [mman] MV:do_assign: nbytes:=20, peid:4
 [mman] MV: nbytes := 20
 [mman] MV: nbytes := 20 (DW)
-[mman] MSH:evalL(nbytes) .....
-[mman] MSH:evalL,AVar, lv:nbytes...
 [mman] MV:after evaL, None
-[mman] MSH:evalE ...
 [mman] MV:after evalE:20
 [mman] MV:do assginment on data, dw.eid:5...
 [mman] MV:do assginment on data nbytes := 20 (DW)
 [mman] DW:do_assign: f1673_inbytes:=20 (DW)
-[mman] 4, 5.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:4}
        eshape: stack:(seid:5,peid:4) 
@@ -897,7 +793,6 @@
 [mman] MSH:change_env, project out vars ...
 [mman] MSH:change_env done  ...
 [mman] ENV:get list of symbolic variables and program variables eid: 6,
-[mman] ENV:senv vars done
 [mman] DW:env2apron: 
         seid_6 -> [6]
        [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> __s32:int 5> _heapend:int 6> _heapstart:int 7> c10__csz:int 8> c10__fn:int 9> c15__csz:int 10> c15__fn:int 11> c18__csz:int 12> c18__fn:int 13> c4__csz:int 14> c4__fn:int 15> c6__csz:int 16> c6__fn:int 17> c7__csz:int 18> c7__fn:int 19> f1673_inbytes:int 20> imemleft:int 21> inunits:int 22> p__retres:int 23> pfrhd:int 24> pnxt:int 25> pprev:int]
@@ -910,14 +805,8 @@
 [mman] MV:constraints:__retres>=0
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_15>=0
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_18>=0
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_22>=0
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:sv_15>=0
@@ -958,7 +847,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65360>=0|]
 [mman] DF:compute_fun_aux....
-[mman] DF:transfer_stmt_main: sid:47
+[mman] ==============
+       DF:transfer_stmt_main: sid:47
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nunits
 [mman] transform_assign: nunits:=__hole[(int)((((unsigned int)nbytes + sizeof(HEADER)) - (unsigned int)1) / sizeof(HEADER) + (unsigned int)1)]
@@ -971,24 +861,11 @@
 [mman] MV:do_assign: nunits:=((((nbytes + 8) - 1) / 8) + 1), peid:1
 [mman] MV: nunits := ((((nbytes + 8) - 1) / 8) + 1)
 [mman] MV: nunits := ((((nbytes + 8) - 1) / 8) + 1) (DW)
-[mman] MSH:evalL(nunits) .....
-[mman] MSH:evalL,AVar, lv:nunits...
 [mman] MV:after evaL, None
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:((((sv_14 + 8) - 1) / 8) + 1)
 [mman] MV:do assginment on data, dw.eid:6...
 [mman] MV:do assginment on data nunits := ((((sv_14 + 8) - 1) / 8) + 1) (DW)
 [mman] DW:do_assign: inunits:=(f1673_inbytes +_i,0 8 -_i,0 1) /_i,0 8 +_i,0 1 (DW)
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -1013,7 +890,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65360>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:48
+[mman] ==============
+       DF:transfer_stmt_main: sid:48
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: prev
 [mman] transform_assign: prev:=__hole[(HEADER *)0]
@@ -1022,18 +900,11 @@
 [mman] MV:do_assign: prev:=0, peid:1
 [mman] MV: prev := 0
 [mman] MV: prev := 0 (DW)
-[mman] MSH:evalL(prev) .....
-[mman] MSH:evalL,AVar, lv:prev...
-[mman] MSH:evalL,AVar, slv:sv_18...
-[mman] after evaL
 [mman] MV:after evaL:sv_18
-[mman] MSH:evalE ...
 [mman] MV:after evalE:0
 [mman] MV:eshape mutate
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:6
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -1059,7 +930,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65360>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:49
+[mman] ==============
+       DF:transfer_stmt_main: sid:49
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nxt
 [mman] transform_assign: nxt:=__hole[frhd]
@@ -1068,20 +940,13 @@
 [mman] MV:do_assign: nxt:=frhd, peid:1
 [mman] MV: nxt := frhd
 [mman] MV: nxt := frhd (DW)
-[mman] MSH:evalL(nxt) .....
-[mman] MSH:evalL,AVar, lv:nxt...
-[mman] MSH:evalL,AVar, slv:sv_15...
-[mman] after evaL
 [mman] MV:after evaL:sv_15
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_6
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (6)c4__fn
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:6
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -1108,8 +973,10 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65360>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:50
-[mman] DF:transfer_stmt_main: sid:52
+[mman] ==============
+       DF:transfer_stmt_main: sid:50
+[mman] ==============
+       DF:transfer_stmt_main: sid:52
 [mman] s.skind: If
 [mman] transform guard nxt
 [mman] transform guard: (HEADER *) nxt (op) 0
@@ -1120,8 +987,6 @@
 [mman] MV:constraints:nxt=0
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_6=0
 [mman] MSH:guard return is None...
 [mman] MV:MSH.guard done...
@@ -1131,8 +996,6 @@
 [mman] MV:constraints:nxt!=0
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_6>0
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:sv_6>0
@@ -1145,8 +1008,10 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|]
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:54
-[mman] DF:transfer_stmt_main: sid:56
+[mman] ==============
+       DF:transfer_stmt_main: sid:54
+[mman] ==============
+       DF:transfer_stmt_main: sid:56
 [mman] s.skind: If
 [mman] transform guard nxt->size >= (unsigned int)nunits
 [mman] transform guard: (int) nxt->size (op) (unsigned int)nunits
@@ -1161,10 +1026,6 @@
 [mman] MV:constraints:(csz(nxt) / 8)>nunits
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:(sv_30 / 8)>sv_21
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:(sv_30 / 8)>sv_21
@@ -1181,10 +1042,6 @@
 [mman] MV:constraints:(csz(nxt) / 8)>=nunits
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:(sv_30 / 8)>=sv_21
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:(sv_30 / 8)>=sv_21
@@ -1197,7 +1054,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|]
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:70
+[mman] ==============
+       DF:transfer_stmt_main: sid:70
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: prev
 [mman] transform_assign: prev:=__hole[nxt]
@@ -1206,20 +1064,13 @@
 [mman] MV:do_assign: prev:=nxt, peid:1
 [mman] MV: prev := nxt
 [mman] MV: prev := nxt (DW)
-[mman] MSH:evalL(prev) .....
-[mman] MSH:evalL,AVar, lv:prev...
-[mman] MSH:evalL,AVar, slv:sv_18...
-[mman] after evaL
 [mman] MV:after evaL:sv_18
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_6
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (6)c4__fn
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:6
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -1246,7 +1097,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:71
+[mman] ==============
+       DF:transfer_stmt_main: sid:71
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nxt
 [mman] transform_assign: nxt:=__hole[nxt->ptr]
@@ -1255,20 +1107,13 @@
 [mman] MV:do_assign: nxt:=fn(nxt), peid:1
 [mman] MV: nxt := fn(nxt)
 [mman] MV: nxt := fn(nxt) (DW)
-[mman] MSH:evalL(nxt) .....
-[mman] MSH:evalL,AVar, lv:nxt...
-[mman] MSH:evalL,AVar, slv:sv_15...
-[mman] after evaL
 [mman] MV:after evaL:sv_15
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_31
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (31)c6__fn
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:6
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -1296,8 +1141,10 @@
                 __hli-65361>=0|] 
        )
 [mman] failure: Incomparable heap graphs
-[mman] DF:transfer_stmt_main: sid:50
-[mman] DF:transfer_stmt_main: sid:58
+[mman] ==============
+       DF:transfer_stmt_main: sid:50
+[mman] ==============
+       DF:transfer_stmt_main: sid:58
 [mman] s.skind: If
 [mman] transform guard nxt->size > (unsigned int)nunits
 [mman] transform guard: (int) nxt->size (op) (unsigned int)nunits
@@ -1312,10 +1159,6 @@
 [mman] MV:constraints:(csz(nxt) / 8)>=nunits
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:(sv_30 / 8)>=sv_21
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:(sv_30 / 8)>=sv_21
@@ -1332,10 +1175,6 @@
 [mman] MV:constraints:(csz(nxt) / 8)>nunits
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:(sv_30 / 8)>sv_21
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:(sv_30 / 8)>sv_21
@@ -1348,7 +1187,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|]
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:59
+[mman] ==============
+       DF:transfer_stmt_main: sid:59
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nxt->size
 [mman] transform_assign: csz(nxt):=(__hole * 8)[nxt->size - (unsigned int)nunits]
@@ -1361,35 +1201,10 @@
 [mman] MV:do_assign: csz(nxt):=(((csz(nxt) / 8) - nunits) * 8), peid:1
 [mman] MV: csz(nxt) := (((csz(nxt) / 8) - nunits) * 8)
 [mman] MV: csz(nxt) := (((csz(nxt) / 8) - nunits) * 8) (DW)
-[mman] MSH:evalL(csz(nxt)) .....
-[mman] MSH:evalL afeat(fk, al)
-[mman] MSH:evalL(nxt) .....
-[mman] MSH:evalL,AVar, lv:nxt...
-[mman] MSH:evalL,AVar, slv:sv_15...
-[mman] MSH:evalL afeat, []
-[mman] MSH:stack
-[mman] (4)_heapstart |-> (4)_heapstart,
-[mman] (6)c4__fn |-> (6)c4__fn,
-[mman] (7)_heapend |-> (7)_heapend,
-[mman] (9)c7__fn |-> (2)__hli,
-[mman] (10)pfrhd |-> (6)c4__fn,
-[mman] (15)pnxt |-> (6)c4__fn,
-[mman] (18)pprev |-> (0)__null,
-[mman] MSH:location to which sv_15 points is sv_6...
-[mman] after evaL
 [mman] MV:after evaL:csz(sv_6)
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(((sv_30 / 8) - sv_21) * 8)
 [mman] MV:left is feature, do assign only on data
 [mman] DW:do_assign: c6__csz:=(c6__csz /_i,0 8 -_i,0 inunits) *_i,0 8 (DW)
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -1416,7 +1231,8 @@
                 pprev>=0; pnxt>=0; pfrhd>=0; p__retres>=0; imemleft-8168>=0;
                 c6__csz-8imemleft+40>=0; c6__csz-65312>=0; __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:63
+[mman] ==============
+       DF:transfer_stmt_main: sid:63
 [mman] s.skind: If
 [mman] transform guard prev == (HEADER *)0
 [mman] transform guard: (int) prev (op) (HEADER *)0
@@ -1428,8 +1244,6 @@
 [mman] MV:constraints:prev!=0
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:false
 [mman] MSH:guard return is None...
 [mman] MV:MSH.guard done...
@@ -1439,8 +1253,6 @@
 [mman] MV:constraints:prev=0
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:0=0
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:0=0
@@ -1453,7 +1265,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|]
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:60
+[mman] ==============
+       DF:transfer_stmt_main: sid:60
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nxt
 [mman] transform_assign: nxt:=__hole[nxt + nxt->size]
@@ -1465,18 +1278,7 @@
 [mman] MV:do_assign: nxt:=(nxt + ((csz(nxt) / 8) * 8)), peid:1
 [mman] MV: nxt := (nxt + ((csz(nxt) / 8) * 8))
 [mman] MV: nxt := (nxt + ((csz(nxt) / 8) * 8)) (DW)
-[mman] MSH:evalL(nxt) .....
-[mman] MSH:evalL,AVar, lv:nxt...
-[mman] MSH:evalL,AVar, slv:sv_15...
-[mman] after evaL
 [mman] MV:after evaL:sv_15
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(sv_6 + ((sv_30 / 8) * 8))
 [mman] MV:eshape mutate
 [mman] Atom:Chd(sv_6)*Blk(32)...
@@ -1508,13 +1310,10 @@
 [mman] MV:eshape mutate done, old esh.seid:6
 [mman] DW:change_env...
 [mman] ENV:get list of symbolic variables and program variables eid: 9,
-[mman] ENV:senv vars done
 [mman] DW:env2apron: 
         seid_9 -> [7]
        [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> __s32:int 5> __s33:int 6> __s36:int 7> _heapend:int 8> _heapstart:int 9> c10__csz:int 10> c10__fn:int 11> c15__csz:int 12> c15__fn:int 13> c18__csz:int 14> c18__fn:int 15> c33__csz:int 16> c33__fn:int 17> c4__csz:int 18> c4__fn:int 19> c6__csz:int 20> c6__fn:int 21> c7__csz:int 22> c7__fn:int 23> f1673_inbytes:int 24> imemleft:int 25> inunits:int 26> p__retres:int 27> pfrhd:int 28> pnxt:int 29> pprev:int]
 [mman] DW:emvironment changed
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -1541,7 +1340,8 @@
                 pprev>=0; pnxt>=0; pfrhd>=0; p__retres>=0; imemleft-8168>=0;
                 c6__csz-8imemleft+40>=0; c6__csz-65312>=0; __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:64
+[mman] ==============
+       DF:transfer_stmt_main: sid:64
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: frhd
 [mman] transform_assign: frhd:=__hole[nxt->ptr]
@@ -1550,20 +1350,13 @@
 [mman] MV:do_assign: frhd:=fn(nxt), peid:1
 [mman] MV: frhd := fn(nxt)
 [mman] MV: frhd := fn(nxt) (DW)
-[mman] MSH:evalL(frhd) .....
-[mman] MSH:evalL,AVar, lv:frhd...
-[mman] MSH:evalL,AVar, slv:sv_10...
-[mman] after evaL
 [mman] MV:after evaL:sv_10
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_31
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (31)c6__fn
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:6
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -1590,7 +1383,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:61
+[mman] ==============
+       DF:transfer_stmt_main: sid:61
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nxt->size
 [mman] transform_assign: csz(nxt):=(__hole * 8)[(unsigned int)nunits]
@@ -1600,31 +1394,10 @@
 [mman] MV:do_assign: csz(nxt):=(nunits * 8), peid:1
 [mman] MV: csz(nxt) := (nunits * 8)
 [mman] MV: csz(nxt) := (nunits * 8) (DW)
-[mman] MSH:evalL(csz(nxt)) .....
-[mman] MSH:evalL afeat(fk, al)
-[mman] MSH:evalL(nxt) .....
-[mman] MSH:evalL,AVar, lv:nxt...
-[mman] MSH:evalL,AVar, slv:sv_15...
-[mman] MSH:evalL afeat, []
-[mman] MSH:stack
-[mman] (4)_heapstart |-> (4)_heapstart,
-[mman] (6)c4__fn |-> (6)c4__fn,
-[mman] (7)_heapend |-> (7)_heapend,
-[mman] (9)c7__fn |-> (2)__hli,
-[mman] (10)pfrhd |-> (6)c4__fn,
-[mman] (15)pnxt |-> (6)c4__fn,
-[mman] (18)pprev |-> (0)__null,
-[mman] MSH:location to which sv_15 points is sv_6...
-[mman] after evaL
 [mman] MV:after evaL:csz(sv_6)
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(sv_21 * 8)
 [mman] MV:left is feature, do assign only on data
 [mman] DW:do_assign: c6__csz:=inunits *_i,0 8 (DW)
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -1651,7 +1424,8 @@
                 p__retres>=0; imemleft-8168>=0; __hli-65361>=0|] 
        )
 [mman] failure: Incomparable heap graphs
-[mman] DF:transfer_stmt_main: sid:66
+[mman] ==============
+       DF:transfer_stmt_main: sid:66
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: memleft
 [mman] transform_assign: memleft:=__hole[(short)((int)memleft - nunits)]
@@ -1663,18 +1437,11 @@
 [mman] MV:do_assign: memleft:=(memleft - nunits), peid:1
 [mman] MV: memleft := (memleft - nunits)
 [mman] MV: memleft := (memleft - nunits) (DW)
-[mman] MSH:evalL(memleft) .....
-[mman] MSH:evalL,AVar, lv:memleft...
 [mman] MV:after evaL, None
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(sv_13 - sv_21)
 [mman] MV:do assginment on data, dw.eid:6...
 [mman] MV:do assginment on data memleft := (sv_13 - sv_21) (DW)
 [mman] DW:do_assign: imemleft:=imemleft -_i,0 inunits (DW)
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -1701,7 +1468,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft-32>=0; c6__csz-65352>=0;
                 __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:68
+[mman] ==============
+       DF:transfer_stmt_main: sid:68
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: __retres
 [mman] transform_assign: __retres:=__hole[(void *)(nxt + 1)]
@@ -1711,15 +1479,7 @@
 [mman] MV:do_assign: __retres:=(nxt + (1 * 8)), peid:1
 [mman] MV: __retres := (nxt + (1 * 8))
 [mman] MV: __retres := (nxt + (1 * 8)) (DW)
-[mman] MSH:evalL(__retres) .....
-[mman] MSH:evalL,AVar, lv:__retres...
-[mman] after evaL
 [mman] MV:after evaL:sv_22
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(sv_6 + (1 * 8))
 [mman] MV:eshape mutate
 [mman] Atom:Chd(sv_6)*Blk(32)...
@@ -1752,8 +1512,6 @@
 [mman] MV:eshape mutate done, old esh.seid:6
 [mman] DW:change_env...
 [mman] DW:emvironment changed
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -1781,8 +1539,10 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft-32>=0; c6__csz-65352>=0;
                 __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:97
-[mman] DF:transfer_stmt_main: sid:98
+[mman] ==============
+       DF:transfer_stmt_main: sid:97
+[mman] ==============
+       DF:transfer_stmt_main: sid:98
 [mman] compute_fun_aux done 
        {peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -1912,19 +1672,13 @@
 [mman] MV:do_assign: __hole:=__retres, peid:1
 [mman] MV: __hole := __retres
 [mman] MV: __hole := __retres (DW)
-[mman] MSH:evalL(__hole) .....
-[mman] MSH:evalL,AVar, lv:__hole...
-[mman] after evaL
 [mman] MV:after evaL:sv_1
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_6
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (6)c4__fn
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:6
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -1981,18 +1735,12 @@
 [mman] MV:do_assign: p1:=__hole, peid:3
 [mman] MV: p1 := __hole
 [mman] MV: p1 := __hole (DW)
-[mman] MSH:evalL(p1) .....
-[mman] MSH:evalL,AVar, lv:p1...
-[mman] after evaL
 [mman] MV:after evaL:sv_15
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_1
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (1)__hole
 [mman] MV:eshape mutate done, old esh.seid:4
-[mman] 3, 4.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:3}
        eshape: stack:(seid:4,peid:3) 
@@ -2047,7 +1795,8 @@
                 c7__csz=0; c6__fn=0; c4__csz=0; -c6__csz+65368>=0;
                 -c6__csz+8imemleft+40>=0; pfrhd>=0; c6__csz-8imemleft-32>=0;
                 c6__csz-65352>=0; __hli-65361>=0|]
-[mman] DF:transfer_stmt_main: sid:86
+[mman] ==============
+       DF:transfer_stmt_main: sid:86
 [mman] DF:function called: laAlloc'
 [mman] DF:transfer_call...
 [mman] DF:compute_fun_init...
@@ -2077,16 +1826,11 @@
 [mman] MV:do_assign: nbytes:=20, peid:4
 [mman] MV: nbytes := 20
 [mman] MV: nbytes := 20 (DW)
-[mman] MSH:evalL(nbytes) .....
-[mman] MSH:evalL,AVar, lv:nbytes...
 [mman] MV:after evaL, None
-[mman] MSH:evalE ...
 [mman] MV:after evalE:20
 [mman] MV:do assginment on data, dw.eid:5...
 [mman] MV:do assginment on data nbytes := 20 (DW)
 [mman] DW:do_assign: f1673_inbytes:=20 (DW)
-[mman] 4, 5.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:4}
        eshape: stack:(seid:5,peid:4) 
@@ -2126,14 +1870,8 @@
 [mman] MV:constraints:__retres>=0
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_15>=0
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_18>=0
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_22>=0
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:sv_15>=0
@@ -2175,7 +1913,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft-32>=0; c6__csz-65352>=0;
                 __hli-65361>=0|]
 [mman] DF:compute_fun_aux....
-[mman] DF:transfer_stmt_main: sid:47
+[mman] ==============
+       DF:transfer_stmt_main: sid:47
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nunits
 [mman] transform_assign: nunits:=__hole[(int)((((unsigned int)nbytes + sizeof(HEADER)) - (unsigned int)1) / sizeof(HEADER) + (unsigned int)1)]
@@ -2183,24 +1922,11 @@
 [mman] MV:do_assign: nunits:=((((nbytes + 8) - 1) / 8) + 1), peid:1
 [mman] MV: nunits := ((((nbytes + 8) - 1) / 8) + 1)
 [mman] MV: nunits := ((((nbytes + 8) - 1) / 8) + 1) (DW)
-[mman] MSH:evalL(nunits) .....
-[mman] MSH:evalL,AVar, lv:nunits...
 [mman] MV:after evaL, None
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:((((sv_14 + 8) - 1) / 8) + 1)
 [mman] MV:do assginment on data, dw.eid:6...
 [mman] MV:do assginment on data nunits := ((((sv_14 + 8) - 1) / 8) + 1) (DW)
 [mman] DW:do_assign: inunits:=(f1673_inbytes +_i,0 8 -_i,0 1) /_i,0 8 +_i,0 1 (DW)
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -2225,7 +1951,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65360>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:48
+[mman] ==============
+       DF:transfer_stmt_main: sid:48
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: prev
 [mman] transform_assign: prev:=__hole[(HEADER *)0]
@@ -2233,18 +1960,11 @@
 [mman] MV:do_assign: prev:=0, peid:1
 [mman] MV: prev := 0
 [mman] MV: prev := 0 (DW)
-[mman] MSH:evalL(prev) .....
-[mman] MSH:evalL,AVar, lv:prev...
-[mman] MSH:evalL,AVar, slv:sv_18...
-[mman] after evaL
 [mman] MV:after evaL:sv_18
-[mman] MSH:evalE ...
 [mman] MV:after evalE:0
 [mman] MV:eshape mutate
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:6
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -2270,7 +1990,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65360>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:49
+[mman] ==============
+       DF:transfer_stmt_main: sid:49
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nxt
 [mman] transform_assign: nxt:=__hole[frhd]
@@ -2278,20 +1999,13 @@
 [mman] MV:do_assign: nxt:=frhd, peid:1
 [mman] MV: nxt := frhd
 [mman] MV: nxt := frhd (DW)
-[mman] MSH:evalL(nxt) .....
-[mman] MSH:evalL,AVar, lv:nxt...
-[mman] MSH:evalL,AVar, slv:sv_15...
-[mman] after evaL
 [mman] MV:after evaL:sv_15
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_6
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (6)c4__fn
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:6
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -2318,16 +2032,16 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65360>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:50
-[mman] DF:transfer_stmt_main: sid:52
+[mman] ==============
+       DF:transfer_stmt_main: sid:50
+[mman] ==============
+       DF:transfer_stmt_main: sid:52
 [mman] s.skind: If
 [mman] transform guard nxt
 [mman] MV:meet_exp....
 [mman] MV:constraints:nxt=0
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_6=0
 [mman] MSH:guard return is None...
 [mman] MV:MSH.guard done...
@@ -2337,8 +2051,6 @@
 [mman] MV:constraints:nxt!=0
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_6>0
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:sv_6>0
@@ -2351,18 +2063,16 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|]
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:54
-[mman] DF:transfer_stmt_main: sid:56
+[mman] ==============
+       DF:transfer_stmt_main: sid:54
+[mman] ==============
+       DF:transfer_stmt_main: sid:56
 [mman] s.skind: If
 [mman] transform guard nxt->size >= (unsigned int)nunits
 [mman] MV:meet_exp....
 [mman] MV:constraints:(csz(nxt) / 8)>nunits
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:(sv_30 / 8)>sv_21
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:(sv_30 / 8)>sv_21
@@ -2379,10 +2089,6 @@
 [mman] MV:constraints:(csz(nxt) / 8)>=nunits
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:(sv_30 / 8)>=sv_21
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:(sv_30 / 8)>=sv_21
@@ -2395,7 +2101,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|]
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:70
+[mman] ==============
+       DF:transfer_stmt_main: sid:70
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: prev
 [mman] transform_assign: prev:=__hole[nxt]
@@ -2403,20 +2110,13 @@
 [mman] MV:do_assign: prev:=nxt, peid:1
 [mman] MV: prev := nxt
 [mman] MV: prev := nxt (DW)
-[mman] MSH:evalL(prev) .....
-[mman] MSH:evalL,AVar, lv:prev...
-[mman] MSH:evalL,AVar, slv:sv_18...
-[mman] after evaL
 [mman] MV:after evaL:sv_18
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_6
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (6)c4__fn
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:6
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -2443,7 +2143,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:71
+[mman] ==============
+       DF:transfer_stmt_main: sid:71
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nxt
 [mman] transform_assign: nxt:=__hole[nxt->ptr]
@@ -2451,20 +2152,13 @@
 [mman] MV:do_assign: nxt:=fn(nxt), peid:1
 [mman] MV: nxt := fn(nxt)
 [mman] MV: nxt := fn(nxt) (DW)
-[mman] MSH:evalL(nxt) .....
-[mman] MSH:evalL,AVar, lv:nxt...
-[mman] MSH:evalL,AVar, slv:sv_15...
-[mman] after evaL
 [mman] MV:after evaL:sv_15
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_31
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (31)c6__fn
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:6
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -2492,18 +2186,16 @@
                 __hli-65361>=0|] 
        )
 [mman] failure: Incomparable heap graphs
-[mman] DF:transfer_stmt_main: sid:50
-[mman] DF:transfer_stmt_main: sid:58
+[mman] ==============
+       DF:transfer_stmt_main: sid:50
+[mman] ==============
+       DF:transfer_stmt_main: sid:58
 [mman] s.skind: If
 [mman] transform guard nxt->size > (unsigned int)nunits
 [mman] MV:meet_exp....
 [mman] MV:constraints:(csz(nxt) / 8)>=nunits
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:(sv_30 / 8)>=sv_21
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:(sv_30 / 8)>=sv_21
@@ -2520,10 +2212,6 @@
 [mman] MV:constraints:(csz(nxt) / 8)>nunits
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:(sv_30 / 8)>sv_21
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:(sv_30 / 8)>sv_21
@@ -2536,7 +2224,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|]
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:59
+[mman] ==============
+       DF:transfer_stmt_main: sid:59
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nxt->size
 [mman] transform_assign: csz(nxt):=(__hole * 8)[nxt->size - (unsigned int)nunits]
@@ -2544,35 +2233,10 @@
 [mman] MV:do_assign: csz(nxt):=(((csz(nxt) / 8) - nunits) * 8), peid:1
 [mman] MV: csz(nxt) := (((csz(nxt) / 8) - nunits) * 8)
 [mman] MV: csz(nxt) := (((csz(nxt) / 8) - nunits) * 8) (DW)
-[mman] MSH:evalL(csz(nxt)) .....
-[mman] MSH:evalL afeat(fk, al)
-[mman] MSH:evalL(nxt) .....
-[mman] MSH:evalL,AVar, lv:nxt...
-[mman] MSH:evalL,AVar, slv:sv_15...
-[mman] MSH:evalL afeat, []
-[mman] MSH:stack
-[mman] (4)_heapstart |-> (4)_heapstart,
-[mman] (6)c4__fn |-> (6)c4__fn,
-[mman] (7)_heapend |-> (7)_heapend,
-[mman] (9)c7__fn |-> (2)__hli,
-[mman] (10)pfrhd |-> (6)c4__fn,
-[mman] (15)pnxt |-> (6)c4__fn,
-[mman] (18)pprev |-> (0)__null,
-[mman] MSH:location to which sv_15 points is sv_6...
-[mman] after evaL
 [mman] MV:after evaL:csz(sv_6)
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(((sv_30 / 8) - sv_21) * 8)
 [mman] MV:left is feature, do assign only on data
 [mman] DW:do_assign: c6__csz:=(c6__csz /_i,0 8 -_i,0 inunits) *_i,0 8 (DW)
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -2599,15 +2263,14 @@
                 pprev>=0; pnxt>=0; pfrhd>=0; p__retres>=0; imemleft-8168>=0;
                 c6__csz-8imemleft+40>=0; c6__csz-65312>=0; __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:63
+[mman] ==============
+       DF:transfer_stmt_main: sid:63
 [mman] s.skind: If
 [mman] transform guard prev == (HEADER *)0
 [mman] MV:meet_exp....
 [mman] MV:constraints:prev!=0
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:false
 [mman] MSH:guard return is None...
 [mman] MV:MSH.guard done...
@@ -2617,8 +2280,6 @@
 [mman] MV:constraints:prev=0
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:0=0
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:0=0
@@ -2631,7 +2292,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|]
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:60
+[mman] ==============
+       DF:transfer_stmt_main: sid:60
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nxt
 [mman] transform_assign: nxt:=__hole[nxt + nxt->size]
@@ -2639,18 +2301,7 @@
 [mman] MV:do_assign: nxt:=(nxt + ((csz(nxt) / 8) * 8)), peid:1
 [mman] MV: nxt := (nxt + ((csz(nxt) / 8) * 8))
 [mman] MV: nxt := (nxt + ((csz(nxt) / 8) * 8)) (DW)
-[mman] MSH:evalL(nxt) .....
-[mman] MSH:evalL,AVar, lv:nxt...
-[mman] MSH:evalL,AVar, slv:sv_15...
-[mman] after evaL
 [mman] MV:after evaL:sv_15
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(sv_6 + ((sv_30 / 8) * 8))
 [mman] MV:eshape mutate
 [mman] Atom:Chd(sv_6)*Blk(32)...
@@ -2682,8 +2333,6 @@
 [mman] MV:eshape mutate done, old esh.seid:6
 [mman] DW:change_env...
 [mman] DW:emvironment changed
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -2710,7 +2359,8 @@
                 pprev>=0; pnxt>=0; pfrhd>=0; p__retres>=0; imemleft-8168>=0;
                 c6__csz-8imemleft+40>=0; c6__csz-65312>=0; __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:64
+[mman] ==============
+       DF:transfer_stmt_main: sid:64
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: frhd
 [mman] transform_assign: frhd:=__hole[nxt->ptr]
@@ -2718,20 +2368,13 @@
 [mman] MV:do_assign: frhd:=fn(nxt), peid:1
 [mman] MV: frhd := fn(nxt)
 [mman] MV: frhd := fn(nxt) (DW)
-[mman] MSH:evalL(frhd) .....
-[mman] MSH:evalL,AVar, lv:frhd...
-[mman] MSH:evalL,AVar, slv:sv_10...
-[mman] after evaL
 [mman] MV:after evaL:sv_10
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_31
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (31)c6__fn
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:6
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -2758,7 +2401,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:61
+[mman] ==============
+       DF:transfer_stmt_main: sid:61
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nxt->size
 [mman] transform_assign: csz(nxt):=(__hole * 8)[(unsigned int)nunits]
@@ -2766,31 +2410,10 @@
 [mman] MV:do_assign: csz(nxt):=(nunits * 8), peid:1
 [mman] MV: csz(nxt) := (nunits * 8)
 [mman] MV: csz(nxt) := (nunits * 8) (DW)
-[mman] MSH:evalL(csz(nxt)) .....
-[mman] MSH:evalL afeat(fk, al)
-[mman] MSH:evalL(nxt) .....
-[mman] MSH:evalL,AVar, lv:nxt...
-[mman] MSH:evalL,AVar, slv:sv_15...
-[mman] MSH:evalL afeat, []
-[mman] MSH:stack
-[mman] (4)_heapstart |-> (4)_heapstart,
-[mman] (6)c4__fn |-> (6)c4__fn,
-[mman] (7)_heapend |-> (7)_heapend,
-[mman] (9)c7__fn |-> (2)__hli,
-[mman] (10)pfrhd |-> (6)c4__fn,
-[mman] (15)pnxt |-> (6)c4__fn,
-[mman] (18)pprev |-> (0)__null,
-[mman] MSH:location to which sv_15 points is sv_6...
-[mman] after evaL
 [mman] MV:after evaL:csz(sv_6)
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(sv_21 * 8)
 [mman] MV:left is feature, do assign only on data
 [mman] DW:do_assign: c6__csz:=inunits *_i,0 8 (DW)
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -2817,7 +2440,8 @@
                 p__retres>=0; imemleft-8168>=0; __hli-65361>=0|] 
        )
 [mman] failure: Incomparable heap graphs
-[mman] DF:transfer_stmt_main: sid:66
+[mman] ==============
+       DF:transfer_stmt_main: sid:66
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: memleft
 [mman] transform_assign: memleft:=__hole[(short)((int)memleft - nunits)]
@@ -2825,18 +2449,11 @@
 [mman] MV:do_assign: memleft:=(memleft - nunits), peid:1
 [mman] MV: memleft := (memleft - nunits)
 [mman] MV: memleft := (memleft - nunits) (DW)
-[mman] MSH:evalL(memleft) .....
-[mman] MSH:evalL,AVar, lv:memleft...
 [mman] MV:after evaL, None
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(sv_13 - sv_21)
 [mman] MV:do assginment on data, dw.eid:6...
 [mman] MV:do assginment on data memleft := (sv_13 - sv_21) (DW)
 [mman] DW:do_assign: imemleft:=imemleft -_i,0 inunits (DW)
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -2863,7 +2480,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft-32>=0; c6__csz-65352>=0;
                 __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:68
+[mman] ==============
+       DF:transfer_stmt_main: sid:68
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: __retres
 [mman] transform_assign: __retres:=__hole[(void *)(nxt + 1)]
@@ -2871,15 +2489,7 @@
 [mman] MV:do_assign: __retres:=(nxt + (1 * 8)), peid:1
 [mman] MV: __retres := (nxt + (1 * 8))
 [mman] MV: __retres := (nxt + (1 * 8)) (DW)
-[mman] MSH:evalL(__retres) .....
-[mman] MSH:evalL,AVar, lv:__retres...
-[mman] after evaL
 [mman] MV:after evaL:sv_22
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(sv_6 + (1 * 8))
 [mman] MV:eshape mutate
 [mman] Atom:Chd(sv_6)*Blk(32)...
@@ -2912,8 +2522,6 @@
 [mman] MV:eshape mutate done, old esh.seid:6
 [mman] DW:change_env...
 [mman] DW:emvironment changed
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -2941,8 +2549,10 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft-32>=0; c6__csz-65352>=0;
                 __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:97
-[mman] DF:transfer_stmt_main: sid:98
+[mman] ==============
+       DF:transfer_stmt_main: sid:97
+[mman] ==============
+       DF:transfer_stmt_main: sid:98
 [mman] compute_fun_aux done 
        {peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -3113,7 +2723,8 @@
                 c7__csz=0; c6__fn=0; c4__csz=0; -c6__csz+65368>=0;
                 -c6__csz+8imemleft+40>=0; pfrhd>=0; c6__csz-8imemleft-32>=0;
                 c6__csz-65352>=0; __hli-65361>=0|]
-[mman] DF:transfer_stmt_main: sid:87
+[mman] ==============
+       DF:transfer_stmt_main: sid:87
 [mman] DF:function called: laAlloc'
 [mman] DF:transfer_call...
 [mman] DF:compute_fun_init...
@@ -3143,16 +2754,11 @@
 [mman] MV:do_assign: nbytes:=20, peid:4
 [mman] MV: nbytes := 20
 [mman] MV: nbytes := 20 (DW)
-[mman] MSH:evalL(nbytes) .....
-[mman] MSH:evalL,AVar, lv:nbytes...
 [mman] MV:after evaL, None
-[mman] MSH:evalE ...
 [mman] MV:after evalE:20
 [mman] MV:do assginment on data, dw.eid:5...
 [mman] MV:do assginment on data nbytes := 20 (DW)
 [mman] DW:do_assign: f1673_inbytes:=20 (DW)
-[mman] 4, 5.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:4}
        eshape: stack:(seid:5,peid:4) 
@@ -3191,14 +2797,8 @@
 [mman] MV:constraints:__retres>=0
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_15>=0
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_18>=0
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_22>=0
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:sv_15>=0
@@ -3240,7 +2840,8 @@
                 __hli-65361>=0|]
 [mman] DF:compute_fun_aux....
 [mman] failure: Incomparable heap graphs
-[mman] DF:transfer_stmt_main: sid:47
+[mman] ==============
+       DF:transfer_stmt_main: sid:47
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nunits
 [mman] transform_assign: nunits:=__hole[(int)((((unsigned int)nbytes + sizeof(HEADER)) - (unsigned int)1) / sizeof(HEADER) + (unsigned int)1)]
@@ -3248,24 +2849,11 @@
 [mman] MV:do_assign: nunits:=((((nbytes + 8) - 1) / 8) + 1), peid:1
 [mman] MV: nunits := ((((nbytes + 8) - 1) / 8) + 1)
 [mman] MV: nunits := ((((nbytes + 8) - 1) / 8) + 1) (DW)
-[mman] MSH:evalL(nunits) .....
-[mman] MSH:evalL,AVar, lv:nunits...
 [mman] MV:after evaL, None
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:((((sv_14 + 8) - 1) / 8) + 1)
 [mman] MV:do assginment on data, dw.eid:6...
 [mman] MV:do assginment on data nunits := ((((sv_14 + 8) - 1) / 8) + 1) (DW)
 [mman] DW:do_assign: inunits:=(f1673_inbytes +_i,0 8 -_i,0 1) /_i,0 8 +_i,0 1 (DW)
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -3290,7 +2878,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65360>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:48
+[mman] ==============
+       DF:transfer_stmt_main: sid:48
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: prev
 [mman] transform_assign: prev:=__hole[(HEADER *)0]
@@ -3298,18 +2887,11 @@
 [mman] MV:do_assign: prev:=0, peid:1
 [mman] MV: prev := 0
 [mman] MV: prev := 0 (DW)
-[mman] MSH:evalL(prev) .....
-[mman] MSH:evalL,AVar, lv:prev...
-[mman] MSH:evalL,AVar, slv:sv_18...
-[mman] after evaL
 [mman] MV:after evaL:sv_18
-[mman] MSH:evalE ...
 [mman] MV:after evalE:0
 [mman] MV:eshape mutate
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:6
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -3335,7 +2917,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65360>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:49
+[mman] ==============
+       DF:transfer_stmt_main: sid:49
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nxt
 [mman] transform_assign: nxt:=__hole[frhd]
@@ -3343,20 +2926,13 @@
 [mman] MV:do_assign: nxt:=frhd, peid:1
 [mman] MV: nxt := frhd
 [mman] MV: nxt := frhd (DW)
-[mman] MSH:evalL(nxt) .....
-[mman] MSH:evalL,AVar, lv:nxt...
-[mman] MSH:evalL,AVar, slv:sv_15...
-[mman] after evaL
 [mman] MV:after evaL:sv_15
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_6
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (6)c4__fn
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:6
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -3383,16 +2959,16 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65360>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:50
-[mman] DF:transfer_stmt_main: sid:52
+[mman] ==============
+       DF:transfer_stmt_main: sid:50
+[mman] ==============
+       DF:transfer_stmt_main: sid:52
 [mman] s.skind: If
 [mman] transform guard nxt
 [mman] MV:meet_exp....
 [mman] MV:constraints:nxt=0
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_6=0
 [mman] MSH:guard return is None...
 [mman] MV:MSH.guard done...
@@ -3402,8 +2978,6 @@
 [mman] MV:constraints:nxt!=0
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_6>0
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:sv_6>0
@@ -3416,18 +2990,16 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|]
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:54
-[mman] DF:transfer_stmt_main: sid:56
+[mman] ==============
+       DF:transfer_stmt_main: sid:54
+[mman] ==============
+       DF:transfer_stmt_main: sid:56
 [mman] s.skind: If
 [mman] transform guard nxt->size >= (unsigned int)nunits
 [mman] MV:meet_exp....
 [mman] MV:constraints:(csz(nxt) / 8)>nunits
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:(sv_30 / 8)>sv_21
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:(sv_30 / 8)>sv_21
@@ -3444,10 +3016,6 @@
 [mman] MV:constraints:(csz(nxt) / 8)>=nunits
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:(sv_30 / 8)>=sv_21
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:(sv_30 / 8)>=sv_21
@@ -3460,7 +3028,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|]
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:70
+[mman] ==============
+       DF:transfer_stmt_main: sid:70
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: prev
 [mman] transform_assign: prev:=__hole[nxt]
@@ -3468,20 +3037,13 @@
 [mman] MV:do_assign: prev:=nxt, peid:1
 [mman] MV: prev := nxt
 [mman] MV: prev := nxt (DW)
-[mman] MSH:evalL(prev) .....
-[mman] MSH:evalL,AVar, lv:prev...
-[mman] MSH:evalL,AVar, slv:sv_18...
-[mman] after evaL
 [mman] MV:after evaL:sv_18
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_6
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (6)c4__fn
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:6
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -3508,7 +3070,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:71
+[mman] ==============
+       DF:transfer_stmt_main: sid:71
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nxt
 [mman] transform_assign: nxt:=__hole[nxt->ptr]
@@ -3516,20 +3079,13 @@
 [mman] MV:do_assign: nxt:=fn(nxt), peid:1
 [mman] MV: nxt := fn(nxt)
 [mman] MV: nxt := fn(nxt) (DW)
-[mman] MSH:evalL(nxt) .....
-[mman] MSH:evalL,AVar, lv:nxt...
-[mman] MSH:evalL,AVar, slv:sv_15...
-[mman] after evaL
 [mman] MV:after evaL:sv_15
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_31
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (31)c6__fn
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:6
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -3557,18 +3113,16 @@
                 __hli-65361>=0|] 
        )
 [mman] failure: Incomparable heap graphs
-[mman] DF:transfer_stmt_main: sid:50
-[mman] DF:transfer_stmt_main: sid:58
+[mman] ==============
+       DF:transfer_stmt_main: sid:50
+[mman] ==============
+       DF:transfer_stmt_main: sid:58
 [mman] s.skind: If
 [mman] transform guard nxt->size > (unsigned int)nunits
 [mman] MV:meet_exp....
 [mman] MV:constraints:(csz(nxt) / 8)>=nunits
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:(sv_30 / 8)>=sv_21
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:(sv_30 / 8)>=sv_21
@@ -3585,10 +3139,6 @@
 [mman] MV:constraints:(csz(nxt) / 8)>nunits
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:(sv_30 / 8)>sv_21
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:(sv_30 / 8)>sv_21
@@ -3601,7 +3151,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|]
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:59
+[mman] ==============
+       DF:transfer_stmt_main: sid:59
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nxt->size
 [mman] transform_assign: csz(nxt):=(__hole * 8)[nxt->size - (unsigned int)nunits]
@@ -3609,35 +3160,10 @@
 [mman] MV:do_assign: csz(nxt):=(((csz(nxt) / 8) - nunits) * 8), peid:1
 [mman] MV: csz(nxt) := (((csz(nxt) / 8) - nunits) * 8)
 [mman] MV: csz(nxt) := (((csz(nxt) / 8) - nunits) * 8) (DW)
-[mman] MSH:evalL(csz(nxt)) .....
-[mman] MSH:evalL afeat(fk, al)
-[mman] MSH:evalL(nxt) .....
-[mman] MSH:evalL,AVar, lv:nxt...
-[mman] MSH:evalL,AVar, slv:sv_15...
-[mman] MSH:evalL afeat, []
-[mman] MSH:stack
-[mman] (4)_heapstart |-> (4)_heapstart,
-[mman] (6)c4__fn |-> (6)c4__fn,
-[mman] (7)_heapend |-> (7)_heapend,
-[mman] (9)c7__fn |-> (2)__hli,
-[mman] (10)pfrhd |-> (6)c4__fn,
-[mman] (15)pnxt |-> (6)c4__fn,
-[mman] (18)pprev |-> (0)__null,
-[mman] MSH:location to which sv_15 points is sv_6...
-[mman] after evaL
 [mman] MV:after evaL:csz(sv_6)
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(((sv_30 / 8) - sv_21) * 8)
 [mman] MV:left is feature, do assign only on data
 [mman] DW:do_assign: c6__csz:=(c6__csz /_i,0 8 -_i,0 inunits) *_i,0 8 (DW)
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -3664,15 +3190,14 @@
                 pprev>=0; pnxt>=0; pfrhd>=0; p__retres>=0; imemleft-8168>=0;
                 c6__csz-8imemleft+40>=0; c6__csz-65312>=0; __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:63
+[mman] ==============
+       DF:transfer_stmt_main: sid:63
 [mman] s.skind: If
 [mman] transform guard prev == (HEADER *)0
 [mman] MV:meet_exp....
 [mman] MV:constraints:prev!=0
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:false
 [mman] MSH:guard return is None...
 [mman] MV:MSH.guard done...
@@ -3682,8 +3207,6 @@
 [mman] MV:constraints:prev=0
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:0=0
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:0=0
@@ -3696,7 +3219,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|]
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:60
+[mman] ==============
+       DF:transfer_stmt_main: sid:60
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nxt
 [mman] transform_assign: nxt:=__hole[nxt + nxt->size]
@@ -3704,18 +3228,7 @@
 [mman] MV:do_assign: nxt:=(nxt + ((csz(nxt) / 8) * 8)), peid:1
 [mman] MV: nxt := (nxt + ((csz(nxt) / 8) * 8))
 [mman] MV: nxt := (nxt + ((csz(nxt) / 8) * 8)) (DW)
-[mman] MSH:evalL(nxt) .....
-[mman] MSH:evalL,AVar, lv:nxt...
-[mman] MSH:evalL,AVar, slv:sv_15...
-[mman] after evaL
 [mman] MV:after evaL:sv_15
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(sv_6 + ((sv_30 / 8) * 8))
 [mman] MV:eshape mutate
 [mman] Atom:Chd(sv_6)*Blk(32)...
@@ -3747,8 +3260,6 @@
 [mman] MV:eshape mutate done, old esh.seid:6
 [mman] DW:change_env...
 [mman] DW:emvironment changed
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -3775,7 +3286,8 @@
                 pprev>=0; pnxt>=0; pfrhd>=0; p__retres>=0; imemleft-8168>=0;
                 c6__csz-8imemleft+40>=0; c6__csz-65312>=0; __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:64
+[mman] ==============
+       DF:transfer_stmt_main: sid:64
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: frhd
 [mman] transform_assign: frhd:=__hole[nxt->ptr]
@@ -3783,20 +3295,13 @@
 [mman] MV:do_assign: frhd:=fn(nxt), peid:1
 [mman] MV: frhd := fn(nxt)
 [mman] MV: frhd := fn(nxt) (DW)
-[mman] MSH:evalL(frhd) .....
-[mman] MSH:evalL,AVar, lv:frhd...
-[mman] MSH:evalL,AVar, slv:sv_10...
-[mman] after evaL
 [mman] MV:after evaL:sv_10
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_31
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (31)c6__fn
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:6
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -3823,7 +3328,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:61
+[mman] ==============
+       DF:transfer_stmt_main: sid:61
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nxt->size
 [mman] transform_assign: csz(nxt):=(__hole * 8)[(unsigned int)nunits]
@@ -3831,31 +3337,10 @@
 [mman] MV:do_assign: csz(nxt):=(nunits * 8), peid:1
 [mman] MV: csz(nxt) := (nunits * 8)
 [mman] MV: csz(nxt) := (nunits * 8) (DW)
-[mman] MSH:evalL(csz(nxt)) .....
-[mman] MSH:evalL afeat(fk, al)
-[mman] MSH:evalL(nxt) .....
-[mman] MSH:evalL,AVar, lv:nxt...
-[mman] MSH:evalL,AVar, slv:sv_15...
-[mman] MSH:evalL afeat, []
-[mman] MSH:stack
-[mman] (4)_heapstart |-> (4)_heapstart,
-[mman] (6)c4__fn |-> (6)c4__fn,
-[mman] (7)_heapend |-> (7)_heapend,
-[mman] (9)c7__fn |-> (2)__hli,
-[mman] (10)pfrhd |-> (6)c4__fn,
-[mman] (15)pnxt |-> (6)c4__fn,
-[mman] (18)pprev |-> (0)__null,
-[mman] MSH:location to which sv_15 points is sv_6...
-[mman] after evaL
 [mman] MV:after evaL:csz(sv_6)
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(sv_21 * 8)
 [mman] MV:left is feature, do assign only on data
 [mman] DW:do_assign: c6__csz:=inunits *_i,0 8 (DW)
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -3882,7 +3367,8 @@
                 p__retres>=0; imemleft-8168>=0; __hli-65361>=0|] 
        )
 [mman] failure: Incomparable heap graphs
-[mman] DF:transfer_stmt_main: sid:66
+[mman] ==============
+       DF:transfer_stmt_main: sid:66
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: memleft
 [mman] transform_assign: memleft:=__hole[(short)((int)memleft - nunits)]
@@ -3890,18 +3376,11 @@
 [mman] MV:do_assign: memleft:=(memleft - nunits), peid:1
 [mman] MV: memleft := (memleft - nunits)
 [mman] MV: memleft := (memleft - nunits) (DW)
-[mman] MSH:evalL(memleft) .....
-[mman] MSH:evalL,AVar, lv:memleft...
 [mman] MV:after evaL, None
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(sv_13 - sv_21)
 [mman] MV:do assginment on data, dw.eid:6...
 [mman] MV:do assginment on data memleft := (sv_13 - sv_21) (DW)
 [mman] DW:do_assign: imemleft:=imemleft -_i,0 inunits (DW)
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -3928,7 +3407,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft-32>=0; c6__csz-65352>=0;
                 __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:68
+[mman] ==============
+       DF:transfer_stmt_main: sid:68
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: __retres
 [mman] transform_assign: __retres:=__hole[(void *)(nxt + 1)]
@@ -3936,15 +3416,7 @@
 [mman] MV:do_assign: __retres:=(nxt + (1 * 8)), peid:1
 [mman] MV: __retres := (nxt + (1 * 8))
 [mman] MV: __retres := (nxt + (1 * 8)) (DW)
-[mman] MSH:evalL(__retres) .....
-[mman] MSH:evalL,AVar, lv:__retres...
-[mman] after evaL
 [mman] MV:after evaL:sv_22
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(sv_6 + (1 * 8))
 [mman] MV:eshape mutate
 [mman] Atom:Chd(sv_6)*Blk(32)...
@@ -3977,8 +3449,6 @@
 [mman] MV:eshape mutate done, old esh.seid:6
 [mman] DW:change_env...
 [mman] DW:emvironment changed
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -4006,8 +3476,10 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft-32>=0; c6__csz-65352>=0;
                 __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:97
-[mman] DF:transfer_stmt_main: sid:98
+[mman] ==============
+       DF:transfer_stmt_main: sid:97
+[mman] ==============
+       DF:transfer_stmt_main: sid:98
 [mman] compute_fun_aux done 
        {peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -4137,19 +3609,13 @@
 [mman] MV:do_assign: __hole:=__retres, peid:1
 [mman] MV: __hole := __retres
 [mman] MV: __hole := __retres (DW)
-[mman] MSH:evalL(__hole) .....
-[mman] MSH:evalL,AVar, lv:__hole...
-[mman] after evaL
 [mman] MV:after evaL:sv_1
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_6
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (6)c4__fn
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:6
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -4206,18 +3672,12 @@
 [mman] MV:do_assign: p2:=__hole, peid:3
 [mman] MV: p2 := __hole
 [mman] MV: p2 := __hole (DW)
-[mman] MSH:evalL(p2) .....
-[mman] MSH:evalL,AVar, lv:p2...
-[mman] after evaL
 [mman] MV:after evaL:sv_16
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_1
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (1)__hole
 [mman] MV:eshape mutate done, old esh.seid:4
-[mman] 3, 4.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:3}
        eshape: stack:(seid:4,peid:3) 
@@ -4272,7 +3732,8 @@
                 c7__csz=0; c6__fn=0; c4__csz=0; -c6__csz+65368>=0;
                 -c6__csz+8imemleft+40>=0; pfrhd>=0; c6__csz-8imemleft-32>=0;
                 c6__csz-65352>=0; __hli-65361>=0|]
-[mman] DF:transfer_stmt_main: sid:88
+[mman] ==============
+       DF:transfer_stmt_main: sid:88
 [mman] DF:function called: laAlloc'
 [mman] DF:transfer_call...
 [mman] DF:compute_fun_init...
@@ -4302,16 +3763,11 @@
 [mman] MV:do_assign: nbytes:=20, peid:4
 [mman] MV: nbytes := 20
 [mman] MV: nbytes := 20 (DW)
-[mman] MSH:evalL(nbytes) .....
-[mman] MSH:evalL,AVar, lv:nbytes...
 [mman] MV:after evaL, None
-[mman] MSH:evalE ...
 [mman] MV:after evalE:20
 [mman] MV:do assginment on data, dw.eid:5...
 [mman] MV:do assginment on data nbytes := 20 (DW)
 [mman] DW:do_assign: f1673_inbytes:=20 (DW)
-[mman] 4, 5.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:4}
        eshape: stack:(seid:5,peid:4) 
@@ -4351,14 +3807,8 @@
 [mman] MV:constraints:__retres>=0
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_15>=0
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_18>=0
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_22>=0
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:sv_15>=0
@@ -4400,7 +3850,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft-32>=0; c6__csz-65352>=0;
                 __hli-65361>=0|]
 [mman] DF:compute_fun_aux....
-[mman] DF:transfer_stmt_main: sid:47
+[mman] ==============
+       DF:transfer_stmt_main: sid:47
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nunits
 [mman] transform_assign: nunits:=__hole[(int)((((unsigned int)nbytes + sizeof(HEADER)) - (unsigned int)1) / sizeof(HEADER) + (unsigned int)1)]
@@ -4408,24 +3859,11 @@
 [mman] MV:do_assign: nunits:=((((nbytes + 8) - 1) / 8) + 1), peid:1
 [mman] MV: nunits := ((((nbytes + 8) - 1) / 8) + 1)
 [mman] MV: nunits := ((((nbytes + 8) - 1) / 8) + 1) (DW)
-[mman] MSH:evalL(nunits) .....
-[mman] MSH:evalL,AVar, lv:nunits...
 [mman] MV:after evaL, None
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:((((sv_14 + 8) - 1) / 8) + 1)
 [mman] MV:do assginment on data, dw.eid:6...
 [mman] MV:do assginment on data nunits := ((((sv_14 + 8) - 1) / 8) + 1) (DW)
 [mman] DW:do_assign: inunits:=(f1673_inbytes +_i,0 8 -_i,0 1) /_i,0 8 +_i,0 1 (DW)
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -4450,7 +3888,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65360>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:48
+[mman] ==============
+       DF:transfer_stmt_main: sid:48
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: prev
 [mman] transform_assign: prev:=__hole[(HEADER *)0]
@@ -4458,18 +3897,11 @@
 [mman] MV:do_assign: prev:=0, peid:1
 [mman] MV: prev := 0
 [mman] MV: prev := 0 (DW)
-[mman] MSH:evalL(prev) .....
-[mman] MSH:evalL,AVar, lv:prev...
-[mman] MSH:evalL,AVar, slv:sv_18...
-[mman] after evaL
 [mman] MV:after evaL:sv_18
-[mman] MSH:evalE ...
 [mman] MV:after evalE:0
 [mman] MV:eshape mutate
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:6
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -4495,7 +3927,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65360>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:49
+[mman] ==============
+       DF:transfer_stmt_main: sid:49
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nxt
 [mman] transform_assign: nxt:=__hole[frhd]
@@ -4503,20 +3936,13 @@
 [mman] MV:do_assign: nxt:=frhd, peid:1
 [mman] MV: nxt := frhd
 [mman] MV: nxt := frhd (DW)
-[mman] MSH:evalL(nxt) .....
-[mman] MSH:evalL,AVar, lv:nxt...
-[mman] MSH:evalL,AVar, slv:sv_15...
-[mman] after evaL
 [mman] MV:after evaL:sv_15
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_6
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (6)c4__fn
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:6
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -4543,16 +3969,16 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65360>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:50
-[mman] DF:transfer_stmt_main: sid:52
+[mman] ==============
+       DF:transfer_stmt_main: sid:50
+[mman] ==============
+       DF:transfer_stmt_main: sid:52
 [mman] s.skind: If
 [mman] transform guard nxt
 [mman] MV:meet_exp....
 [mman] MV:constraints:nxt=0
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_6=0
 [mman] MSH:guard return is None...
 [mman] MV:MSH.guard done...
@@ -4562,8 +3988,6 @@
 [mman] MV:constraints:nxt!=0
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_6>0
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:sv_6>0
@@ -4576,18 +4000,16 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|]
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:54
-[mman] DF:transfer_stmt_main: sid:56
+[mman] ==============
+       DF:transfer_stmt_main: sid:54
+[mman] ==============
+       DF:transfer_stmt_main: sid:56
 [mman] s.skind: If
 [mman] transform guard nxt->size >= (unsigned int)nunits
 [mman] MV:meet_exp....
 [mman] MV:constraints:(csz(nxt) / 8)>nunits
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:(sv_30 / 8)>sv_21
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:(sv_30 / 8)>sv_21
@@ -4604,10 +4026,6 @@
 [mman] MV:constraints:(csz(nxt) / 8)>=nunits
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:(sv_30 / 8)>=sv_21
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:(sv_30 / 8)>=sv_21
@@ -4620,7 +4038,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|]
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:70
+[mman] ==============
+       DF:transfer_stmt_main: sid:70
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: prev
 [mman] transform_assign: prev:=__hole[nxt]
@@ -4628,20 +4047,13 @@
 [mman] MV:do_assign: prev:=nxt, peid:1
 [mman] MV: prev := nxt
 [mman] MV: prev := nxt (DW)
-[mman] MSH:evalL(prev) .....
-[mman] MSH:evalL,AVar, lv:prev...
-[mman] MSH:evalL,AVar, slv:sv_18...
-[mman] after evaL
 [mman] MV:after evaL:sv_18
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_6
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (6)c4__fn
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:6
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -4668,7 +4080,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:71
+[mman] ==============
+       DF:transfer_stmt_main: sid:71
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nxt
 [mman] transform_assign: nxt:=__hole[nxt->ptr]
@@ -4676,20 +4089,13 @@
 [mman] MV:do_assign: nxt:=fn(nxt), peid:1
 [mman] MV: nxt := fn(nxt)
 [mman] MV: nxt := fn(nxt) (DW)
-[mman] MSH:evalL(nxt) .....
-[mman] MSH:evalL,AVar, lv:nxt...
-[mman] MSH:evalL,AVar, slv:sv_15...
-[mman] after evaL
 [mman] MV:after evaL:sv_15
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_31
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (31)c6__fn
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:6
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -4717,18 +4123,16 @@
                 __hli-65361>=0|] 
        )
 [mman] failure: Incomparable heap graphs
-[mman] DF:transfer_stmt_main: sid:50
-[mman] DF:transfer_stmt_main: sid:58
+[mman] ==============
+       DF:transfer_stmt_main: sid:50
+[mman] ==============
+       DF:transfer_stmt_main: sid:58
 [mman] s.skind: If
 [mman] transform guard nxt->size > (unsigned int)nunits
 [mman] MV:meet_exp....
 [mman] MV:constraints:(csz(nxt) / 8)>=nunits
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:(sv_30 / 8)>=sv_21
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:(sv_30 / 8)>=sv_21
@@ -4745,10 +4149,6 @@
 [mman] MV:constraints:(csz(nxt) / 8)>nunits
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:(sv_30 / 8)>sv_21
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:(sv_30 / 8)>sv_21
@@ -4761,7 +4161,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|]
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:59
+[mman] ==============
+       DF:transfer_stmt_main: sid:59
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nxt->size
 [mman] transform_assign: csz(nxt):=(__hole * 8)[nxt->size - (unsigned int)nunits]
@@ -4769,35 +4170,10 @@
 [mman] MV:do_assign: csz(nxt):=(((csz(nxt) / 8) - nunits) * 8), peid:1
 [mman] MV: csz(nxt) := (((csz(nxt) / 8) - nunits) * 8)
 [mman] MV: csz(nxt) := (((csz(nxt) / 8) - nunits) * 8) (DW)
-[mman] MSH:evalL(csz(nxt)) .....
-[mman] MSH:evalL afeat(fk, al)
-[mman] MSH:evalL(nxt) .....
-[mman] MSH:evalL,AVar, lv:nxt...
-[mman] MSH:evalL,AVar, slv:sv_15...
-[mman] MSH:evalL afeat, []
-[mman] MSH:stack
-[mman] (4)_heapstart |-> (4)_heapstart,
-[mman] (6)c4__fn |-> (6)c4__fn,
-[mman] (7)_heapend |-> (7)_heapend,
-[mman] (9)c7__fn |-> (2)__hli,
-[mman] (10)pfrhd |-> (6)c4__fn,
-[mman] (15)pnxt |-> (6)c4__fn,
-[mman] (18)pprev |-> (0)__null,
-[mman] MSH:location to which sv_15 points is sv_6...
-[mman] after evaL
 [mman] MV:after evaL:csz(sv_6)
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(((sv_30 / 8) - sv_21) * 8)
 [mman] MV:left is feature, do assign only on data
 [mman] DW:do_assign: c6__csz:=(c6__csz /_i,0 8 -_i,0 inunits) *_i,0 8 (DW)
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -4824,15 +4200,14 @@
                 pprev>=0; pnxt>=0; pfrhd>=0; p__retres>=0; imemleft-8168>=0;
                 c6__csz-8imemleft+40>=0; c6__csz-65312>=0; __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:63
+[mman] ==============
+       DF:transfer_stmt_main: sid:63
 [mman] s.skind: If
 [mman] transform guard prev == (HEADER *)0
 [mman] MV:meet_exp....
 [mman] MV:constraints:prev!=0
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:false
 [mman] MSH:guard return is None...
 [mman] MV:MSH.guard done...
@@ -4842,8 +4217,6 @@
 [mman] MV:constraints:prev=0
 [mman] MV:meet_exp_one, peid:6, esh.seid:6....
 [mman] MSH:do guard, seid:6...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:0=0
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:0=0
@@ -4856,7 +4229,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|]
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:60
+[mman] ==============
+       DF:transfer_stmt_main: sid:60
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nxt
 [mman] transform_assign: nxt:=__hole[nxt + nxt->size]
@@ -4864,18 +4238,7 @@
 [mman] MV:do_assign: nxt:=(nxt + ((csz(nxt) / 8) * 8)), peid:1
 [mman] MV: nxt := (nxt + ((csz(nxt) / 8) * 8))
 [mman] MV: nxt := (nxt + ((csz(nxt) / 8) * 8)) (DW)
-[mman] MSH:evalL(nxt) .....
-[mman] MSH:evalL,AVar, lv:nxt...
-[mman] MSH:evalL,AVar, slv:sv_15...
-[mman] after evaL
 [mman] MV:after evaL:sv_15
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(sv_6 + ((sv_30 / 8) * 8))
 [mman] MV:eshape mutate
 [mman] Atom:Chd(sv_6)*Blk(32)...
@@ -4907,8 +4270,6 @@
 [mman] MV:eshape mutate done, old esh.seid:6
 [mman] DW:change_env...
 [mman] DW:emvironment changed
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -4935,7 +4296,8 @@
                 pprev>=0; pnxt>=0; pfrhd>=0; p__retres>=0; imemleft-8168>=0;
                 c6__csz-8imemleft+40>=0; c6__csz-65312>=0; __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:64
+[mman] ==============
+       DF:transfer_stmt_main: sid:64
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: frhd
 [mman] transform_assign: frhd:=__hole[nxt->ptr]
@@ -4943,20 +4305,13 @@
 [mman] MV:do_assign: frhd:=fn(nxt), peid:1
 [mman] MV: frhd := fn(nxt)
 [mman] MV: frhd := fn(nxt) (DW)
-[mman] MSH:evalL(frhd) .....
-[mman] MSH:evalL,AVar, lv:frhd...
-[mman] MSH:evalL,AVar, slv:sv_10...
-[mman] after evaL
 [mman] MV:after evaL:sv_10
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_31
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (31)c6__fn
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:6
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -4983,7 +4338,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft>=0; c6__csz-65352>=0;
                 __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:61
+[mman] ==============
+       DF:transfer_stmt_main: sid:61
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nxt->size
 [mman] transform_assign: csz(nxt):=(__hole * 8)[(unsigned int)nunits]
@@ -4991,31 +4347,10 @@
 [mman] MV:do_assign: csz(nxt):=(nunits * 8), peid:1
 [mman] MV: csz(nxt) := (nunits * 8)
 [mman] MV: csz(nxt) := (nunits * 8) (DW)
-[mman] MSH:evalL(csz(nxt)) .....
-[mman] MSH:evalL afeat(fk, al)
-[mman] MSH:evalL(nxt) .....
-[mman] MSH:evalL,AVar, lv:nxt...
-[mman] MSH:evalL,AVar, slv:sv_15...
-[mman] MSH:evalL afeat, []
-[mman] MSH:stack
-[mman] (4)_heapstart |-> (4)_heapstart,
-[mman] (6)c4__fn |-> (6)c4__fn,
-[mman] (7)_heapend |-> (7)_heapend,
-[mman] (9)c7__fn |-> (2)__hli,
-[mman] (10)pfrhd |-> (6)c4__fn,
-[mman] (15)pnxt |-> (6)c4__fn,
-[mman] (18)pprev |-> (0)__null,
-[mman] MSH:location to which sv_15 points is sv_6...
-[mman] after evaL
 [mman] MV:after evaL:csz(sv_6)
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(sv_21 * 8)
 [mman] MV:left is feature, do assign only on data
 [mman] DW:do_assign: c6__csz:=inunits *_i,0 8 (DW)
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -5042,7 +4377,8 @@
                 p__retres>=0; imemleft-8168>=0; __hli-65361>=0|] 
        )
 [mman] failure: Incomparable heap graphs
-[mman] DF:transfer_stmt_main: sid:66
+[mman] ==============
+       DF:transfer_stmt_main: sid:66
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: memleft
 [mman] transform_assign: memleft:=__hole[(short)((int)memleft - nunits)]
@@ -5050,18 +4386,11 @@
 [mman] MV:do_assign: memleft:=(memleft - nunits), peid:1
 [mman] MV: memleft := (memleft - nunits)
 [mman] MV: memleft := (memleft - nunits) (DW)
-[mman] MSH:evalL(memleft) .....
-[mman] MSH:evalL,AVar, lv:memleft...
 [mman] MV:after evaL, None
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(sv_13 - sv_21)
 [mman] MV:do assginment on data, dw.eid:6...
 [mman] MV:do assginment on data memleft := (sv_13 - sv_21) (DW)
 [mman] DW:do_assign: imemleft:=imemleft -_i,0 inunits (DW)
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -5088,7 +4417,8 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft-32>=0; c6__csz-65352>=0;
                 __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:68
+[mman] ==============
+       DF:transfer_stmt_main: sid:68
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: __retres
 [mman] transform_assign: __retres:=__hole[(void *)(nxt + 1)]
@@ -5096,15 +4426,7 @@
 [mman] MV:do_assign: __retres:=(nxt + (1 * 8)), peid:1
 [mman] MV: __retres := (nxt + (1 * 8))
 [mman] MV: __retres := (nxt + (1 * 8)) (DW)
-[mman] MSH:evalL(__retres) .....
-[mman] MSH:evalL,AVar, lv:__retres...
-[mman] after evaL
 [mman] MV:after evaL:sv_22
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(sv_6 + (1 * 8))
 [mman] MV:eshape mutate
 [mman] Atom:Chd(sv_6)*Blk(32)...
@@ -5137,8 +4459,6 @@
 [mman] MV:eshape mutate done, old esh.seid:6
 [mman] DW:change_env...
 [mman] DW:emvironment changed
-[mman] 1, 6.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -5166,8 +4486,10 @@
                 pfrhd>=0; p__retres>=0; c6__csz-8imemleft-32>=0; c6__csz-65352>=0;
                 __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:97
-[mman] DF:transfer_stmt_main: sid:98
+[mman] ==============
+       DF:transfer_stmt_main: sid:97
+[mman] ==============
+       DF:transfer_stmt_main: sid:98
 [mman] compute_fun_aux done 
        {peid:1}
        eshape: stack:(seid:6,peid:1) 
@@ -5338,7 +4660,8 @@
                 c7__csz=0; c6__fn=0; c4__csz=0; -c6__csz+65368>=0;
                 -c6__csz+8imemleft+40>=0; pfrhd>=0; c6__csz-8imemleft-32>=0;
                 c6__csz-65352>=0; __hli-65361>=0|]
-[mman] DF:transfer_stmt_main: sid:89
+[mman] ==============
+       DF:transfer_stmt_main: sid:89
 [mman] DF:function called: laFree'
 [mman] DF:transfer_call...
 [mman] DF:compute_fun_init...
@@ -5363,7 +4686,6 @@
 [mman] MSH:change_env, project out vars ...
 [mman] MSH:change_env done  ...
 [mman] ENV:get list of symbolic variables and program variables eid: 10,
-[mman] ENV:senv vars done
 [mman] DW:env2apron: 
         seid_10 -> [8]
        [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> __s32:int 5> _heapend:int 6> _heapstart:int 7> c10__csz:int 8> c10__fn:int 9> c19__csz:int 10> c19__fn:int 11> c20__csz:int 12> c20__fn:int 13> c4__csz:int 14> c4__fn:int 15> c6__csz:int 16> c6__fn:int 17> c7__csz:int 18> c7__fn:int 19> f1667_pap:int 20> i__retres:int 21> imemleft:int 22> pf:int 23> pfrhd:int 24> pman:int 25> pnxt:int 26> pp1:int 27> pp2:int 28> pprev:int]
@@ -5373,19 +4695,13 @@
 [mman] MV:do_assign: ap:=p1, peid:5
 [mman] MV: ap := p1
 [mman] MV: ap := p1 (DW)
-[mman] MSH:evalL(ap) .....
-[mman] MSH:evalL,AVar, lv:ap...
-[mman] after evaL
 [mman] MV:after evaL:sv_18
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_6
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (6)c4__fn
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:10
-[mman] 5, 10.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:5}
        eshape: stack:(seid:10,peid:5) 
@@ -5417,7 +4733,6 @@
 [mman] MSH:change_env, project out vars ...
 [mman] MSH:change_env done  ...
 [mman] ENV:get list of symbolic variables and program variables eid: 11,
-[mman] ENV:senv vars done
 [mman] DW:env2apron: 
         seid_11 -> [9]
        [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> __s32:int 5> _heapend:int 6> _heapstart:int 7> c10__csz:int 8> c10__fn:int 9> c15__csz:int 10> c15__fn:int 11> c18__csz:int 12> c18__fn:int 13> c21__csz:int 14> c21__fn:int 15> c4__csz:int 16> c4__fn:int 17> c6__csz:int 18> c6__fn:int 19> c7__csz:int 20> c7__fn:int 21> f1667_pap:int 22> imemleft:int 23> pf:int 24> pfrhd:int 25> pnxt:int 26> pprev:int]
@@ -5430,14 +4745,8 @@
 [mman] MV:constraints:f>=0
 [mman] MV:meet_exp_one, peid:11, esh.seid:11....
 [mman] MSH:do guard, seid:11...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_15>=0
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_6>=0
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_21>=0
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:sv_15>=0
@@ -5477,7 +4786,8 @@
                  -c6__csz+8imemleft+40>=0; pnxt>=0; pfrhd>=0; pf>=0;
                  c6__csz-8imemleft-32>=0; c6__csz-65352>=0; __hli-65361>=0|]
 [mman] DF:compute_fun_aux....
-[mman] DF:transfer_stmt_main: sid:1
+[mman] ==============
+       DF:transfer_stmt_main: sid:1
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: f
 [mman] transform_assign: f:=__hole[(HEADER *)ap - 1]
@@ -5487,21 +4797,10 @@
 [mman] MV:do_assign: f:=(ap - (1 * 8)), peid:2
 [mman] MV: f := (ap - (1 * 8))
 [mman] MV: f := (ap - (1 * 8)) (DW)
-[mman] MSH:evalL(f) .....
-[mman] MSH:evalL,AVar, lv:f...
-[mman] MSH:evalL,AVar, slv:sv_21...
-[mman] after evaL
 [mman] MV:after evaL:sv_21
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(sv_14 - (1 * 8))
 [mman] MV:eshape mutate
 [mman] MV:eshape mutate done, old esh.seid:11
-[mman] 2, 11.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:2}
        eshape: stack:(seid:11,peid:2) 
@@ -5526,7 +4825,8 @@
                  -c6__csz+8imemleft+40>=0; pnxt>=0; pfrhd>=0; pf>=0;
                  c6__csz-8imemleft-32>=0; c6__csz-65352>=0; __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:2
+[mman] ==============
+       DF:transfer_stmt_main: sid:2
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: memleft
 [mman] transform_assign: memleft:=__hole[(short)((unsigned int)memleft + f->size)]
@@ -5540,19 +4840,10 @@
 [mman] MV:do_assign: memleft:=(memleft + (csz(f) / 8)), peid:2
 [mman] MV: memleft := (memleft + (csz(f) / 8))
 [mman] MV: memleft := (memleft + (csz(f) / 8)) (DW)
-[mman] MSH:evalL(memleft) .....
-[mman] MSH:evalL,AVar, lv:memleft...
 [mman] MV:after evaL, None
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE if None
 [mman] MV:do assginment on data, dw.eid:11...
 [mman] DW:do_assign: imemleft:=imemleft +_i,0 c21__csz /_i,0 8 (DW)
-[mman] 2, 11.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:2}
        eshape: stack:(seid:11,peid:2) 
@@ -5577,7 +4868,8 @@
                  -c6__csz+65368>=0; pnxt>=0; pfrhd>=0; pf>=0; c6__csz-65352>=0;
                  c21__csz+c6__csz-8imemleft-24>=0; __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:4
+[mman] ==============
+       DF:transfer_stmt_main: sid:4
 [mman] s.skind: If
 [mman] transform guard frhd > f
 [mman] transform guard: (int) frhd (op) f
@@ -5589,8 +4881,6 @@
 [mman] MV:constraints:frhd>=f
 [mman] MV:meet_exp_one, peid:11, esh.seid:11....
 [mman] MSH:do guard, seid:11...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_31>=sv_21
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:sv_31>=sv_21
@@ -5607,14 +4897,13 @@
 [mman] MV:constraints:frhd>f
 [mman] MV:meet_exp_one, peid:11, esh.seid:11....
 [mman] MSH:do guard, seid:11...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:false
 [mman] MSH:guard return is None...
 [mman] MV:MSH.guard done...
 [mman] MV:after guard is NONE.
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:15
+[mman] ==============
+       DF:transfer_stmt_main: sid:15
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: prev
 [mman] transform_assign: prev:=__hole[(HEADER *)0]
@@ -5623,18 +4912,11 @@
 [mman] MV:do_assign: prev:=0, peid:2
 [mman] MV: prev := 0
 [mman] MV: prev := 0 (DW)
-[mman] MSH:evalL(prev) .....
-[mman] MSH:evalL,AVar, lv:prev...
-[mman] MSH:evalL,AVar, slv:sv_18...
-[mman] after evaL
 [mman] MV:after evaL:sv_18
-[mman] MSH:evalE ...
 [mman] MV:after evalE:0
 [mman] MV:eshape mutate
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:11
-[mman] 2, 11.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:2}
        eshape: stack:(seid:11,peid:2) 
@@ -5660,7 +4942,8 @@
                  pfrhd>=0; c6__csz-65352>=0; c21__csz+c6__csz-8imemleft-24>=0;
                  __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:16
+[mman] ==============
+       DF:transfer_stmt_main: sid:16
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nxt
 [mman] transform_assign: nxt:=__hole[frhd]
@@ -5669,20 +4952,13 @@
 [mman] MV:do_assign: nxt:=frhd, peid:2
 [mman] MV: nxt := frhd
 [mman] MV: nxt := frhd (DW)
-[mman] MSH:evalL(nxt) .....
-[mman] MSH:evalL,AVar, lv:nxt...
-[mman] MSH:evalL,AVar, slv:sv_15...
-[mman] after evaL
 [mman] MV:after evaL:sv_15
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_31
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (31)c6__fn
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:11
-[mman] 2, 11.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:2}
        eshape: stack:(seid:11,peid:2) 
@@ -5709,8 +4985,10 @@
                  pfrhd>=0; c6__csz-65352>=0; c21__csz+c6__csz-8imemleft-24>=0;
                  __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:17
-[mman] DF:transfer_stmt_main: sid:19
+[mman] ==============
+       DF:transfer_stmt_main: sid:17
+[mman] ==============
+       DF:transfer_stmt_main: sid:19
 [mman] s.skind: If
 [mman] transform guard nxt
 [mman] transform guard: (HEADER *) nxt (op) 0
@@ -5721,8 +4999,6 @@
 [mman] MV:constraints:nxt=0
 [mman] MV:meet_exp_one, peid:11, esh.seid:11....
 [mman] MSH:do guard, seid:11...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_31=0
 [mman] MSH:guard return is None...
 [mman] MV:MSH.guard done...
@@ -5732,8 +5008,6 @@
 [mman] MV:constraints:nxt!=0
 [mman] MV:meet_exp_one, peid:11, esh.seid:11....
 [mman] MSH:do guard, seid:11...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_31>0
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:sv_31>0
@@ -5743,7 +5017,8 @@
        {eid_11}bottom
 [mman] MV:new dw is Bot...
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:21
+[mman] ==============
+       DF:transfer_stmt_main: sid:21
 [mman] s.skind: If
 [mman] transform guard nxt < f
 [mman] transform guard: (int) f (op) nxt
@@ -5755,8 +5030,6 @@
 [mman] MV:constraints:f>=nxt
 [mman] MV:meet_exp_one, peid:11, esh.seid:11....
 [mman] MSH:do guard, seid:11...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_21>=sv_31
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:sv_21>=sv_31
@@ -5766,15 +5039,15 @@
 [mman] MV:constraints:f>nxt
 [mman] MV:meet_exp_one, peid:11, esh.seid:11....
 [mman] MSH:do guard, seid:11...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:false
 [mman] MSH:guard return is None...
 [mman] MV:MSH.guard done...
 [mman] MV:after guard is NONE.
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:22
-[mman] DF:transfer_stmt_main: sid:38
+[mman] ==============
+       DF:transfer_stmt_main: sid:22
+[mman] ==============
+       DF:transfer_stmt_main: sid:38
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: prev->ptr
 [mman] transform_assign: fn(prev):=__hole[f]
@@ -5783,27 +5056,9 @@
 [mman] MV:do_assign: fn(prev):=f, peid:2
 [mman] MV: fn(prev) := f
 [mman] MV: fn(prev) := f (DW)
-[mman] MSH:evalL(fn(prev)) .....
-[mman] MSH:evalL afeat(fk, al)
-[mman] MSH:evalL(prev) .....
-[mman] MSH:evalL,AVar, lv:prev...
-[mman] MSH:evalL,AVar, slv:sv_18...
-[mman] MSH:evalL afeat, []
-[mman] MSH:stack
-[mman] (4)_heapstart |-> (4)_heapstart,
-[mman] (6)c4__fn |-> (6)c4__fn,
-[mman] (7)_heapend |-> (7)_heapend,
-[mman] (9)c7__fn |-> (2)__hli,
-[mman] (10)pfrhd |-> (31)c6__fn,
-[mman] (15)pnxt |-> (31)c6__fn,
-[mman] (18)pprev |-> (0)__null,
-[mman] MSH:location on stack not found
 [mman] MV:after evaL, None
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_21
 [mman] MV:do assginment on data, dw.eid:-1...
-[mman] 2, 11.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:2}
        eshape: stack:(seid:11,peid:2) 
@@ -5826,7 +5081,8 @@
         
         dwords:{eid_-1}bottom 
        )
-[mman] DF:transfer_stmt_main: sid:39
+[mman] ==============
+       DF:transfer_stmt_main: sid:39
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: prev
 [mman] transform_assign: prev:=__hole[f + f->size]
@@ -5838,22 +5094,9 @@
 [mman] MV:do_assign: prev:=(f + ((csz(f) / 8) * 8)), peid:2
 [mman] MV: prev := (f + ((csz(f) / 8) * 8))
 [mman] MV: prev := (f + ((csz(f) / 8) * 8)) (DW)
-[mman] MSH:evalL(prev) .....
-[mman] MSH:evalL,AVar, lv:prev...
-[mman] MSH:evalL,AVar, slv:sv_18...
-[mman] after evaL
 [mman] MV:after evaL:sv_18
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE if None
 [mman] MV:do assginment on data, dw.eid:-1...
-[mman] 2, 11.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:2}
        eshape: stack:(seid:11,peid:2) 
@@ -5876,7 +5119,8 @@
         
         dwords:{eid_-1}bottom 
        )
-[mman] DF:transfer_stmt_main: sid:41
+[mman] ==============
+       DF:transfer_stmt_main: sid:41
 [mman] s.skind: If
 [mman] transform guard prev == nxt
 [mman] transform guard: (int) prev (op) nxt
@@ -5888,8 +5132,6 @@
 [mman] MV:constraints:prev!=nxt
 [mman] MV:meet_exp_one, peid:11, esh.seid:11....
 [mman] MSH:do guard, seid:11...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_31>0
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:sv_31>0
@@ -5899,14 +5141,13 @@
 [mman] MV:constraints:prev=nxt
 [mman] MV:meet_exp_one, peid:11, esh.seid:11....
 [mman] MSH:do guard, seid:11...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:0=sv_31
 [mman] MSH:guard return is None...
 [mman] MV:MSH.guard done...
 [mman] MV:after guard is NONE.
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:44
+[mman] ==============
+       DF:transfer_stmt_main: sid:44
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: f->ptr
 [mman] transform_assign: fn(f):=__hole[nxt]
@@ -5915,26 +5156,9 @@
 [mman] MV:do_assign: fn(f):=nxt, peid:2
 [mman] MV: fn(f) := nxt
 [mman] MV: fn(f) := nxt (DW)
-[mman] MSH:evalL(fn(f)) .....
-[mman] MSH:evalL afeat(fk, al)
-[mman] MSH:evalL(f) .....
-[mman] MSH:evalL,AVar, lv:f...
-[mman] MSH:evalL,AVar, slv:sv_21...
-[mman] MSH:evalL afeat, []
-[mman] MSH:stack
-[mman] (4)_heapstart |-> (4)_heapstart,
-[mman] (6)c4__fn |-> (6)c4__fn,
-[mman] (7)_heapend |-> (7)_heapend,
-[mman] (9)c7__fn |-> (2)__hli,
-[mman] (10)pfrhd |-> (31)c6__fn,
-[mman] (15)pnxt |-> (31)c6__fn,
-[mman] (18)pprev |-> (0)__null,
 [mman] MV:after evaL, None
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_31
 [mman] MV:do assginment on data, dw.eid:-1...
-[mman] 2, 11.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:2}
        eshape: stack:(seid:11,peid:2) 
@@ -5957,7 +5181,8 @@
         
         dwords:{eid_-1}bottom 
        )
-[mman] DF:transfer_stmt_main: sid:95
+[mman] ==============
+       DF:transfer_stmt_main: sid:95
 [mman] compute_fun_aux done 
        {peid:2}
        eshape: stack:(seid:11,peid:2) 
@@ -6100,7 +5325,8 @@
        emp,
         
         dwords:{eid_4}bottom
-[mman] DF:transfer_stmt_main: sid:90
+[mman] ==============
+       DF:transfer_stmt_main: sid:90
 [mman] DF:function called: laFree'
 [mman] DF:transfer_call...
 [mman] DF:compute_fun_init...
@@ -6127,19 +5353,13 @@
 [mman] MV:do_assign: ap:=p2, peid:5
 [mman] MV: ap := p2
 [mman] MV: ap := p2 (DW)
-[mman] MSH:evalL(ap) .....
-[mman] MSH:evalL,AVar, lv:ap...
-[mman] after evaL
 [mman] MV:after evaL:sv_18
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_16
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (16)pp2
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:10
-[mman] 5, 10.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:5}
        eshape: stack:(seid:10,peid:5) 
@@ -6176,14 +5396,8 @@
 [mman] MV:constraints:f>=0
 [mman] MV:meet_exp_one, peid:11, esh.seid:11....
 [mman] MSH:do guard, seid:11...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_15>=0
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_16>=0
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_21>=0
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:sv_15>=0
@@ -6213,7 +5427,8 @@
         dwords:{eid_-1}bottom
 [mman] DF:compute_fun_aux....
 [mman] failure: Incomparable heap graphs
-[mman] DF:transfer_stmt_main: sid:1
+[mman] ==============
+       DF:transfer_stmt_main: sid:1
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: f
 [mman] transform_assign: f:=__hole[(HEADER *)ap - 1]
@@ -6221,21 +5436,10 @@
 [mman] MV:do_assign: f:=(ap - (1 * 8)), peid:2
 [mman] MV: f := (ap - (1 * 8))
 [mman] MV: f := (ap - (1 * 8)) (DW)
-[mman] MSH:evalL(f) .....
-[mman] MSH:evalL,AVar, lv:f...
-[mman] MSH:evalL,AVar, slv:sv_21...
-[mman] after evaL
 [mman] MV:after evaL:sv_21
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE:(sv_14 - (1 * 8))
 [mman] MV:eshape mutate
 [mman] MV:eshape mutate done, old esh.seid:11
-[mman] 2, 11.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:2}
        eshape: stack:(seid:11,peid:2) 
@@ -6260,7 +5464,8 @@
                  -c6__csz+8imemleft+40>=0; pnxt>=0; pfrhd>=0; pf>=0;
                  c6__csz-8imemleft-32>=0; c6__csz-65352>=0; __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:2
+[mman] ==============
+       DF:transfer_stmt_main: sid:2
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: memleft
 [mman] transform_assign: memleft:=__hole[(short)((unsigned int)memleft + f->size)]
@@ -6268,19 +5473,10 @@
 [mman] MV:do_assign: memleft:=(memleft + (csz(f) / 8)), peid:2
 [mman] MV: memleft := (memleft + (csz(f) / 8))
 [mman] MV: memleft := (memleft + (csz(f) / 8)) (DW)
-[mman] MSH:evalL(memleft) .....
-[mman] MSH:evalL,AVar, lv:memleft...
 [mman] MV:after evaL, None
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE if None
 [mman] MV:do assginment on data, dw.eid:11...
 [mman] DW:do_assign: imemleft:=imemleft +_i,0 c21__csz /_i,0 8 (DW)
-[mman] 2, 11.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:2}
        eshape: stack:(seid:11,peid:2) 
@@ -6305,15 +5501,14 @@
                  -c6__csz+65368>=0; pnxt>=0; pfrhd>=0; pf>=0; c6__csz-65352>=0;
                  c21__csz+c6__csz-8imemleft-24>=0; __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:4
+[mman] ==============
+       DF:transfer_stmt_main: sid:4
 [mman] s.skind: If
 [mman] transform guard frhd > f
 [mman] MV:meet_exp....
 [mman] MV:constraints:frhd>=f
 [mman] MV:meet_exp_one, peid:11, esh.seid:11....
 [mman] MSH:do guard, seid:11...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_31>=sv_21
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:sv_31>=sv_21
@@ -6330,14 +5525,13 @@
 [mman] MV:constraints:frhd>f
 [mman] MV:meet_exp_one, peid:11, esh.seid:11....
 [mman] MSH:do guard, seid:11...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:false
 [mman] MSH:guard return is None...
 [mman] MV:MSH.guard done...
 [mman] MV:after guard is NONE.
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:15
+[mman] ==============
+       DF:transfer_stmt_main: sid:15
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: prev
 [mman] transform_assign: prev:=__hole[(HEADER *)0]
@@ -6345,18 +5539,11 @@
 [mman] MV:do_assign: prev:=0, peid:2
 [mman] MV: prev := 0
 [mman] MV: prev := 0 (DW)
-[mman] MSH:evalL(prev) .....
-[mman] MSH:evalL,AVar, lv:prev...
-[mman] MSH:evalL,AVar, slv:sv_18...
-[mman] after evaL
 [mman] MV:after evaL:sv_18
-[mman] MSH:evalE ...
 [mman] MV:after evalE:0
 [mman] MV:eshape mutate
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:11
-[mman] 2, 11.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:2}
        eshape: stack:(seid:11,peid:2) 
@@ -6382,7 +5569,8 @@
                  pfrhd>=0; c6__csz-65352>=0; c21__csz+c6__csz-8imemleft-24>=0;
                  __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:16
+[mman] ==============
+       DF:transfer_stmt_main: sid:16
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: nxt
 [mman] transform_assign: nxt:=__hole[frhd]
@@ -6390,20 +5578,13 @@
 [mman] MV:do_assign: nxt:=frhd, peid:2
 [mman] MV: nxt := frhd
 [mman] MV: nxt := frhd (DW)
-[mman] MSH:evalL(nxt) .....
-[mman] MSH:evalL,AVar, lv:nxt...
-[mman] MSH:evalL,AVar, slv:sv_15...
-[mman] after evaL
 [mman] MV:after evaL:sv_15
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_31
 [mman] MV:eshape mutate
 [mman] MSH:mutate_meminfo, location in stack...
 [mman] MSH:location svR: (31)c6__fn
 [mman] MSH:mutate_stack
 [mman] MV:eshape mutate done, old esh.seid:11
-[mman] 2, 11.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:2}
        eshape: stack:(seid:11,peid:2) 
@@ -6430,16 +5611,16 @@
                  pfrhd>=0; c6__csz-65352>=0; c21__csz+c6__csz-8imemleft-24>=0;
                  __hli-65361>=0|] 
        )
-[mman] DF:transfer_stmt_main: sid:17
-[mman] DF:transfer_stmt_main: sid:19
+[mman] ==============
+       DF:transfer_stmt_main: sid:17
+[mman] ==============
+       DF:transfer_stmt_main: sid:19
 [mman] s.skind: If
 [mman] transform guard nxt
 [mman] MV:meet_exp....
 [mman] MV:constraints:nxt=0
 [mman] MV:meet_exp_one, peid:11, esh.seid:11....
 [mman] MSH:do guard, seid:11...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_31=0
 [mman] MSH:guard return is None...
 [mman] MV:MSH.guard done...
@@ -6449,8 +5630,6 @@
 [mman] MV:constraints:nxt!=0
 [mman] MV:meet_exp_one, peid:11, esh.seid:11....
 [mman] MSH:do guard, seid:11...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_31>0
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:sv_31>0
@@ -6460,15 +5639,14 @@
        {eid_11}bottom
 [mman] MV:new dw is Bot...
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:21
+[mman] ==============
+       DF:transfer_stmt_main: sid:21
 [mman] s.skind: If
 [mman] transform guard nxt < f
 [mman] MV:meet_exp....
 [mman] MV:constraints:f>=nxt
 [mman] MV:meet_exp_one, peid:11, esh.seid:11....
 [mman] MSH:do guard, seid:11...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_21>=sv_31
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:sv_21>=sv_31
@@ -6478,15 +5656,15 @@
 [mman] MV:constraints:f>nxt
 [mman] MV:meet_exp_one, peid:11, esh.seid:11....
 [mman] MSH:do guard, seid:11...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:false
 [mman] MSH:guard return is None...
 [mman] MV:MSH.guard done...
 [mman] MV:after guard is NONE.
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:22
-[mman] DF:transfer_stmt_main: sid:38
+[mman] ==============
+       DF:transfer_stmt_main: sid:22
+[mman] ==============
+       DF:transfer_stmt_main: sid:38
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: prev->ptr
 [mman] transform_assign: fn(prev):=__hole[f]
@@ -6494,27 +5672,9 @@
 [mman] MV:do_assign: fn(prev):=f, peid:2
 [mman] MV: fn(prev) := f
 [mman] MV: fn(prev) := f (DW)
-[mman] MSH:evalL(fn(prev)) .....
-[mman] MSH:evalL afeat(fk, al)
-[mman] MSH:evalL(prev) .....
-[mman] MSH:evalL,AVar, lv:prev...
-[mman] MSH:evalL,AVar, slv:sv_18...
-[mman] MSH:evalL afeat, []
-[mman] MSH:stack
-[mman] (4)_heapstart |-> (4)_heapstart,
-[mman] (6)c4__fn |-> (6)c4__fn,
-[mman] (7)_heapend |-> (7)_heapend,
-[mman] (9)c7__fn |-> (2)__hli,
-[mman] (10)pfrhd |-> (31)c6__fn,
-[mman] (15)pnxt |-> (31)c6__fn,
-[mman] (18)pprev |-> (0)__null,
-[mman] MSH:location on stack not found
 [mman] MV:after evaL, None
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_21
 [mman] MV:do assginment on data, dw.eid:-1...
-[mman] 2, 11.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:2}
        eshape: stack:(seid:11,peid:2) 
@@ -6537,7 +5697,8 @@
         
         dwords:{eid_-1}bottom 
        )
-[mman] DF:transfer_stmt_main: sid:39
+[mman] ==============
+       DF:transfer_stmt_main: sid:39
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: prev
 [mman] transform_assign: prev:=__hole[f + f->size]
@@ -6545,22 +5706,9 @@
 [mman] MV:do_assign: prev:=(f + ((csz(f) / 8) * 8)), peid:2
 [mman] MV: prev := (f + ((csz(f) / 8) * 8))
 [mman] MV: prev := (f + ((csz(f) / 8) * 8)) (DW)
-[mman] MSH:evalL(prev) .....
-[mman] MSH:evalL,AVar, lv:prev...
-[mman] MSH:evalL,AVar, slv:sv_18...
-[mman] after evaL
 [mman] MV:after evaL:sv_18
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MV:after evalE if None
 [mman] MV:do assginment on data, dw.eid:-1...
-[mman] 2, 11.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:2}
        eshape: stack:(seid:11,peid:2) 
@@ -6583,15 +5731,14 @@
         
         dwords:{eid_-1}bottom 
        )
-[mman] DF:transfer_stmt_main: sid:41
+[mman] ==============
+       DF:transfer_stmt_main: sid:41
 [mman] s.skind: If
 [mman] transform guard prev == nxt
 [mman] MV:meet_exp....
 [mman] MV:constraints:prev!=nxt
 [mman] MV:meet_exp_one, peid:11, esh.seid:11....
 [mman] MSH:do guard, seid:11...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:sv_31>0
 [mman] MV:MSH.guard done...
 [mman] MV:constraints returned from MSH:sv_31>0
@@ -6601,14 +5748,13 @@
 [mman] MV:constraints:prev=nxt
 [mman] MV:meet_exp_one, peid:11, esh.seid:11....
 [mman] MSH:do guard, seid:11...
-[mman] MSH:evalE ...
-[mman] MSH:evalE ...
 [mman] MSH:guard_one return constraint:0=sv_31
 [mman] MSH:guard return is None...
 [mman] MV:MSH.guard done...
 [mman] MV:after guard is NONE.
 [mman] MV:finish meet_exp.
-[mman] DF:transfer_stmt_main: sid:44
+[mman] ==============
+       DF:transfer_stmt_main: sid:44
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: f->ptr
 [mman] transform_assign: fn(f):=__hole[nxt]
@@ -6616,26 +5762,9 @@
 [mman] MV:do_assign: fn(f):=nxt, peid:2
 [mman] MV: fn(f) := nxt
 [mman] MV: fn(f) := nxt (DW)
-[mman] MSH:evalL(fn(f)) .....
-[mman] MSH:evalL afeat(fk, al)
-[mman] MSH:evalL(f) .....
-[mman] MSH:evalL,AVar, lv:f...
-[mman] MSH:evalL,AVar, slv:sv_21...
-[mman] MSH:evalL afeat, []
-[mman] MSH:stack
-[mman] (4)_heapstart |-> (4)_heapstart,
-[mman] (6)c4__fn |-> (6)c4__fn,
-[mman] (7)_heapend |-> (7)_heapend,
-[mman] (9)c7__fn |-> (2)__hli,
-[mman] (10)pfrhd |-> (31)c6__fn,
-[mman] (15)pnxt |-> (31)c6__fn,
-[mman] (18)pprev |-> (0)__null,
 [mman] MV:after evaL, None
-[mman] MSH:evalE ...
 [mman] MV:after evalE:sv_31
 [mman] MV:do assginment on data, dw.eid:-1...
-[mman] 2, 11.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:2}
        eshape: stack:(seid:11,peid:2) 
@@ -6658,7 +5787,8 @@
         
         dwords:{eid_-1}bottom 
        )
-[mman] DF:transfer_stmt_main: sid:95
+[mman] ==============
+       DF:transfer_stmt_main: sid:95
 [mman] compute_fun_aux done 
        {peid:2}
        eshape: stack:(seid:11,peid:2) 
@@ -6795,7 +5925,8 @@
        emp,
         
         dwords:{eid_4}bottom
-[mman] DF:transfer_stmt_main: sid:91
+[mman] ==============
+       DF:transfer_stmt_main: sid:91
 [mman] DF:transfer_assign...
 [mman] ASY:transform_lval2var: __retres
 [mman] transform_assign: __retres:=__hole[0]
@@ -6803,14 +5934,9 @@
 [mman] MV:do_assign: __retres:=0, peid:3
 [mman] MV: __retres := 0
 [mman] MV: __retres := 0 (DW)
-[mman] MSH:evalL(__retres) .....
-[mman] MSH:evalL,AVar, lv:__retres...
 [mman] MV:after evaL, None
-[mman] MSH:evalE ...
 [mman] MV:after evalE:0
 [mman] MV:do assginment on data, dw.eid:4...
-[mman] 3, 4.
-[mman] MV:finish do_assign.
 [mman] MV:finish do_assign, new eshape value:
         ({peid:3}
        eshape: stack:(seid:4,peid:3) 
@@ -6832,7 +5958,8 @@
         
         dwords:{eid_4}bottom 
        )
-[mman] DF:transfer_stmt_main: sid:102
+[mman] ==============
+       DF:transfer_stmt_main: sid:102
 [mman] (sid:64): {peid:1}
        eshape: stack:(seid:6,peid:1) 
         (4)_heapstart |-> (4)_heapstart,

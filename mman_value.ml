@@ -796,11 +796,10 @@ module Model = struct
 	                ModelMap.iter
 	               (fun exsh _dw ->
 	                      (*neid := exsh.seid;*)
-
 	                      let se = Mman_env.senv_get exsh.seid in
-	                      Mman_options.Self.debug ~level:1 "%d, %d.@."
+	                       (*Mman_options.Self.debug ~level:1 "%d, %d.@."
 	                      	se.peid
-	                      	exsh.seid;
+	                      	exsh.seid;*)
 	                      neid := se.peid
 	               )
 	               nmp
@@ -811,8 +810,6 @@ module Model = struct
       eid = !neid;
       set = nmap
     }
-    in
-    let _ = Mman_options.Self.debug ~level:1 "MV:finish do_assign.@."
     in
     let _ = Mman_options.Self.debug ~level:1 "MV:finish do_assign, new eshape value:\n %a @."
              (pretty_code_intern Type.Basic) nvalue
@@ -900,8 +897,7 @@ module Model = struct
                       			r := true;
 
                       | Some(lv') ->
-                            begin
-                               let _ = Mman_options.Self.feedback "after evaL" in
+                            begin 
                                let _ = Mman_options.Self.debug ~level:1 "MV:after evaL:%a@."
                                        Mman_asyn.pp_alval lv'
                                in
@@ -1240,9 +1236,7 @@ module Model = struct
       eid = env d;
       set = nmap
     }
-    in
-    let _ = Mman_options.Self.debug ~level:1 "MV:finish do_assign.@."
-    in
+    in 
     let _ = Mman_options.Self.debug ~level:1 "MV:finish do_assign, new eshape value:\n %a @."
              (pretty_code_intern Type.Basic) nvalue
     in

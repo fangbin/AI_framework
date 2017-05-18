@@ -368,7 +368,7 @@ module Compute(AnPar: ComputeArg) = struct
   (* See pattern in plugins/from/from_compute.ml *)
   let rec transfer_stmt_main (s: Cil_types.stmt) (aval: t) =
     let _ = (Mman_options.Self.debug ~level:2
-             "DF:transfer_stmt_main: sid:%a \n@."
+             "==============\nDF:transfer_stmt_main: sid:%a \n@."
              Cil_datatype.Stmt.pretty_sid s
               (*Printer.pp_stmt s*)
                (*MV.Model.pretty aval*) )

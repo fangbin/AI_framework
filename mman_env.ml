@@ -856,8 +856,6 @@ let senv_vars2 (eid:int )
     )
     se.svars
     ;
-    let _ = Mman_options.Self.debug ~level:2
-          "ENV:senv vars done@."in
     !svl
   end
 
