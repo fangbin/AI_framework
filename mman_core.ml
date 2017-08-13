@@ -20,7 +20,8 @@
 (*                                                                        *)
 (**************************************************************************)
 
-(** {1 Provides entry points for the analysis of free-list DMA} *)
+(** {1 Provides entry points for the analysis} *)
+
 
 (** State of the plugin *)
 module Mman_state = State_builder.Hashtbl
@@ -44,32 +45,27 @@ let run_compute () =
     File.pretty_ast
       ~fmt:(Format.formatter_of_out_channel (open_out "full.c")) ();
     Mman_env.penvs_init (); 
- 
     Mman_options.Self.feedback "--------------------------------------------";
 
     (* Step 1: compute from the generic entry point *)
     Mman_options.Self.feedback "Analysing the application starting at 'MAIN'@.";
     (*Mman_dflap.compute_from_entry_point ();*)
-    
-    Mman_options.Self.feedback "--------------------------------------------";
+     
     (*Mman_options.Self.feedback "Analysing the application starting at 'MAIN'@.";*)
     Mman_dflow.compute_from_entry_point ();
     
     (* Step 2: compute specs using previous results for each function *)
-    (* 2a: for minit *)
-    Mman_options.Self.feedback "--------------------------------------------";
+    (* 2a: for minit *) 
     Mman_options.Self.feedback "Analysing 'minit'";
     (*Mman_dflap.compute_for_minit ();*)
     (*Mman_dflow.compute_for_minit ();*)
 
-    (* 2b: for malloc *)
-    Mman_options.Self.feedback "--------------------------------------------";
+    (* 2b: for malloc *) 
     Mman_options.Self.feedback "Analysing 'malloc'";
     (*Mman_dflap.compute_for_malloc ();*)
     (*Mman_dflow.compute_for_malloc ();*)
 
-    (* 2c: for mfree *)
-    Mman_options.Self.feedback "--------------------------------------------";
+    (* 2c: for mfree *) 
     Mman_options.Self.feedback "Analysing 'mfree'";
     (*Mman_dflap.compute_for_mfree ();*)
     (*Mman_dflow.compute_for_mfree ();*)

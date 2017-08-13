@@ -57,13 +57,13 @@ let env_getvar (eid: Mman_env.t) (svi: Mman_svar.svarinfo)
 let env_vars (eid: Mman_env.t)
   : (int * Mman_svar.svarinfo) list
   =
-  let _= Mman_options.Self.debug ~level:1 "DW:env_vars , seid:%d@." eid in
+  (* let _= Mman_options.Self.debug ~level:1 "DW:env_vars , seid:%d@." eid in *)
     Mman_env.senv_vars eid
   (*if Mman_options.OptNumAnalysis.get() then  
     Mman_env.penv_vars eid
   else 
     Mman_env.senv_vars eid
-*)
+  *)
 
 
 let env_getvinfo (eid: Mman_env.t) (sid: Mman_svar.svid)
@@ -71,26 +71,26 @@ let env_getvinfo (eid: Mman_env.t) (sid: Mman_svar.svid)
   =
   Mman_env.senv_getvinfo eid sid
 
-  (*if Mman_options.OptNumAnalysis.get() then
+  (*
+  if Mman_options.OptNumAnalysis.get() then
       Mman_env.penv_getvinfo eid sid
   else
       Mman_env.senv_getvinfo eid sid
-*)
+  *)
 
-
-  (*let sv = Mman_env.penv_getvinfo eid sid in
+  (* 
+  let sv = Mman_env.penv_getvinfo eid sid in
   if (sv.id == Mman_svar.svid_hole)
     then
         Mman_env.senv_getvinfo eid sid
     else
         sv
-    *)
+  *)
 
 let env_size (eid: Mman_env.t)
   : int
   =
-
-   if Mman_options.OptNumAnalysis.get() then
+  if Mman_options.OptNumAnalysis.get() then
     Mman_env.penv_size eid
   else
     let psz, ssz = Mman_env.senv_size eid in
@@ -139,11 +139,11 @@ let env2apron (eid: Mman_env.t)
       Vector.get apronenvs apei
     with Not_found ->
       let svl =
-         	  (*let _ = Mman_options.Self.debug ~level:2 "DW:env2apron: not found, eid:%d @" eid in*)
-            if eid != -1
-            (*then (env_vars eid)*)
-            	then Mman_env.senv_vars2 eid 
-            else []
+         	(*let _ = Mman_options.Self.debug ~level:2 "DW:env2apron: not found, eid:%d @" eid in*)
+          if eid != -1
+          (*then (env_vars eid)*)
+            then Mman_env.senv_vars2 eid 
+          else []
       in
       let avl =
           List.map
@@ -187,7 +187,7 @@ let env2apron (eid: Mman_env.t)
 let update_env2apron (eid: Mman_env.t)
   =
     (
-      let _ = Mman_options.Self.debug ~level:2
+      (*let _ = Mman_options.Self.debug ~level:2
           "DW:update apron mapping, \n senv:%a...@."
           Mman_env.senv_print (Mman_env.senv_get eid)
         in
@@ -195,7 +195,7 @@ let update_env2apron (eid: Mman_env.t)
           "DW:update apron mapping, seid:%d, peid:%d...@. old aprons:@."
           eid
           (Mman_env.senv_get eid).peid
-        in
+        in*)
       let _ =
           EnvAPMap.iter
           (
@@ -380,7 +380,6 @@ let rec to_texpr (sei: Mman_env.t) (ae: Mman_asyn.aexp)
   : Apron.Texpr1.t
   =
   let apenv = env2apron sei  in
-
   match ae with
   | Mman_asyn.ACst (i) ->
       Apron.Texpr1.cst apenv (Apron.Coeff.s_of_int (Integer.to_int i))
@@ -478,7 +477,6 @@ let to_tcons (sei: Mman_env.t) (ac: Mman_asyn.aconstr)
  * Module defining the abstract value
 *)
 module Model = struct
-
   (**
    * Interface with Apron modules
   *)
@@ -820,7 +818,6 @@ module Model = struct
     else *)
 
     let eid = d.eid in (* eid is equal to the seid of shape *)
- 
     let apv1_apvn = List.map (fun lvi -> to_var eid lvi) llv
     in
     let ape1_apen = List.map (fun ei -> to_texpr eid ei) lexp
@@ -1031,3 +1028,4 @@ let init_globals (eid: Mman_env.t)
         global_state := v;
         v
       end
+s
