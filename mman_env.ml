@@ -952,12 +952,13 @@ let senv_addsvar (eid: t) (svl: Mman_svar.Svar.t list)
 
 
 (**
- * add a list of new variables bot do not build a new environment
+ * add a list of new variables but do not build a new environment
  * Return the identifier of the new environment and
  *        the list of varinfo added (successfully if vi != hole)
 *)
-let senv_addsvar_2 (eid: t) (svl: Mman_svar.Svar.t list)
+(*let senv_addsvar_2 (eid: t) (svl: Mman_svar.Svar.t list)
   =
+  begin 
   let se = senv_get eid in
   let pe_size = penv_size se.peid in
   let maxkey = (VidMap.cardinal se.svars) + pe_size -1  in
@@ -989,7 +990,7 @@ let senv_addsvar_2 (eid: t) (svl: Mman_svar.Svar.t list)
     ;
     senvs := SEnvMap.add eid {se with svars = !svars} (!senvs);
     eid
-
+    end *)
 
 (* initialise the symbolic environment,
  * id starts from a fixed number

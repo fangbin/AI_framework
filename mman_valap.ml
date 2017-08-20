@@ -1028,4 +1028,4 @@ let init_globals (eid: Mman_env.t)
         global_state := v;
         v
       end
-s
+      

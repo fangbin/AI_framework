@@ -20,7 +20,7 @@
 (*                                                                        *)
 (**************************************************************************)
 
-(*let mman_msg = "analyse the free-list based memory allocator in the input file"*)
+(* let mman_msg = "analyse the free-list based memory allocator in the input file"*)
 
 let mman_msg = "Analyse Concurrent DMA"
 

@@ -28,7 +28,7 @@ let cfg_selector
     (popup_factory:GMenu.menu GMenu.factory) main_ui ~button:_ localizable =
   match localizable with
   (* Matches global declarations that are functions. *)
-  | Pretty_source.PVDecl(_, ({vtype = TFun(_,_,_,_)} as vi)) ->
+  | Pretty_source.PVDecl(_, _, ({vtype = TFun(_,_,_,_)} as vi)) ->
       let callback () =
         let kf = Globals.Functions.get vi in
         let window:GWindow.window = main_ui#main_window in

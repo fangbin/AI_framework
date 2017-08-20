@@ -4,7 +4,7 @@ digraph cfg {
     s2 [label="g --;" fillcolor=pink style=filled]; s2 -> s16;
     s16 [label="<return>" fillcolor=pink style=filled]; }
   subgraph cluster_main { graph [label="main"];
-    s5 [label="i = 3;" fillcolor="#ccffcc" style=filled]; s5 -> s7;
+    s5 [label="int i = 3;" fillcolor="#ccffcc" style=filled]; s5 -> s7;
     s7 [label="if i > 0" fillcolor="#ccffcc" style=filled]; s7 -> s8;
     s7 -> s13; s8 [label="<loop>" fillcolor="#ccffcc" style=filled];
     s8 -> s9; s9 [label="i --;" fillcolor="#ccffcc" style=filled]; s9 -> s10;

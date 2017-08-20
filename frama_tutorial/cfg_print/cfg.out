@@ -1,74 +1,15 @@
 digraph cfg {
-  subgraph cluster_warm_boot { graph [label="warm_boot"];
-    s1 [label="printf(\"%s\\n\",str);" ]; s1 -> s96; s96 [label="<return>" ];
-    }
-  subgraph cluster_laFree { graph [label="laFree"];
-    s4 [label="f = (HEADER *)ap - 1;" ]; s4 -> s5;
-    s5 [label="memleft = (short)((unsigned int)memleft + f->size);" ];
-    s5 -> s7; s7 [label="if frhd > f" ]; s7 -> s8; s7 -> s18;
-    s8 [label="nxt = frhd;" ]; s8 -> s9; s9 [label="frhd = f;" ]; s9 -> s10;
-    s10 [label="prev = f + f->size;" ]; s10 -> s12;
-    s12 [label="if prev == nxt" ]; s12 -> s13; s12 -> s15;
-    s13 [label="f->size += nxt->size;" ]; s13 -> s14;
-    s14 [label="f->ptr = nxt->ptr;" ]; s14 -> s98;
-    s15 [label="f->ptr = nxt;" ]; s15 -> s98; s98 [label="<goto>" ];
-    s98 -> s100; s18 [label="prev = (HEADER *)0;" ]; s18 -> s19;
-    s19 [label="nxt = frhd;" ]; s19 -> s20; s20 [label="<loop>" ];
-    s20 -> s22; s22 [label="if nxt" ]; s22 -> s24; s22 -> s26;
-    s24 [label="if nxt < f" ]; s24 -> s27; s24 -> s25;
-    s25 [label="<break>" ]; s25 -> s41; s26 [label="<break>" ]; s26 -> s41;
-    s27 [label="<block>" ]; s27 -> s29;
-    s29 [label="if nxt + nxt->size == f" ]; s29 -> s30; s29 -> s39;
-    s30 [label="nxt->size += f->size;" ]; s30 -> s31;
-    s31 [label="f = nxt + nxt->size;" ]; s31 -> s33;
-    s33 [label="if f == nxt->ptr" ]; s33 -> s34; s33 -> s99;
-    s34 [label="nxt->size += f->size;" ]; s34 -> s35;
-    s35 [label="nxt->ptr = f->ptr;" ]; s35 -> s99; s99 [label="<goto>" ];
-    s99 -> s100; s39 [label="prev = nxt;" ]; s39 -> s40;
-    s40 [label="nxt = nxt->ptr;" ]; s40 -> s20;
-    s41 [label="prev->ptr = f;" ]; s41 -> s42;
-    s42 [label="prev = f + f->size;" ]; s42 -> s44;
-    s44 [label="if prev == nxt" ]; s44 -> s45; s44 -> s47;
-    s45 [label="f->size += nxt->size;" ]; s45 -> s46;
-    s46 [label="f->ptr = nxt->ptr;" ]; s46 -> s100;
-    s47 [label="f->ptr = nxt;" ]; s47 -> s100; s100 [label="<return>" ]; }
-  subgraph cluster_laAlloc { graph [label="laAlloc"];
-    s50
-    [label="nunits = (int)((((unsigned int)nbytes + sizeof(HEADER)) - (unsigned int)1) / sizeof(HEADER) + (unsigned int)1);" ];
-    s50 -> s51; s51 [label="prev = (HEADER *)0;" ]; s51 -> s52;
-    s52 [label="nxt = frhd;" ]; s52 -> s53; s53 [label="<loop>" ];
-    s53 -> s55; s55 [label="if nxt" ]; s55 -> s57; s55 -> s56;
-    s56 [label="<break>" ]; s56 -> s75; s57 [label="<block>" ]; s57 -> s59;
-    s59 [label="if nxt->size >= (unsigned int)nunits" ]; s59 -> s61;
-    s59 -> s73; s61 [label="if nxt->size > (unsigned int)nunits" ];
-    s61 -> s62; s61 -> s66;
-    s62 [label="nxt->size -= (unsigned int)nunits;" ]; s62 -> s63;
-    s63 [label="nxt += nxt->size;" ]; s63 -> s64;
-    s64 [label="nxt->size = (unsigned int)nunits;" ]; s64 -> s69;
-    s66 [label="if prev == (HEADER *)0" ]; s66 -> s67; s66 -> s68;
-    s67 [label="frhd = nxt->ptr;" ]; s67 -> s69;
-    s68 [label="prev->ptr = nxt->ptr;" ]; s68 -> s69;
-    s69 [label="memleft = (short)((int)memleft - nunits);" ]; s69 -> s71;
-    s71 [label="__retres = (void *)(nxt + 1);" ]; s71 -> s102;
-    s102 [label="<goto>" ]; s102 -> s103; s73 [label="prev = nxt;" ];
-    s73 -> s74; s74 [label="nxt = nxt->ptr;" ]; s74 -> s53;
-    s75 [label="warm_boot((char *)\"Allocation Failed!\");" ]; s75 -> s76;
-    s76 [label="__retres = (void *)0;" ]; s76 -> s103;
-    s103 [label="<return>" ]; }
-  subgraph cluster_laInit { graph [label="laInit"];
-    s78 [label="_heapstart.ptr = (struct hdr *)sbrk(0xFF50);" ]; s78 -> s79;
-    s79 [label="_heapend.ptr = (struct hdr *)sbrk(0);" ]; s79 -> s80;
-    s80 [label="frhd = _heapstart.ptr;" ]; s80 -> s81;
-    s81 [label="frhd->ptr = (struct hdr *)0;" ]; s81 -> s82;
-    s82
-    [label="frhd->size = (unsigned int)((char *)_heapend.ptr - (char *)_heapstart.ptr) / sizeof(HEADER);" ];
-    s82 -> s83; s83 [label="memleft = (short)frhd->size;" ]; s83 -> s105;
-    s105 [label="<return>" ]; }
-  subgraph cluster_main { graph [label="main"]; s86 [label="laInit();" ];
-    s86 -> s87; s87 [label="man = (void *)0;" ]; s87 -> s88;
-    s88 [label="p1 = laAlloc(20);" ]; s88 -> s89;
-    s89 [label="laAlloc(20);" ]; s89 -> s90;
-    s90 [label="p2 = laAlloc(20);" ]; s90 -> s91;
-    s91 [label="laAlloc(20);" ]; s91 -> s92; s92 [label="laFree(p1);" ];
-    s92 -> s93; s93 [label="laFree(p2);" ]; s93 -> s94;
-    s94 [label="__retres = 0;" ]; s94 -> s107; s107 [label="<return>" ]; } }
+  subgraph cluster_f { graph [label="f"];
+    s1 [label="g ++;" fillcolor=pink style=filled]; s1 -> s2;
+    s2 [label="g --;" fillcolor=pink style=filled]; s2 -> s16;
+    s16 [label="<return>" fillcolor=pink style=filled]; }
+  subgraph cluster_main { graph [label="main"];
+    s5 [label="int i = 3;" fillcolor="#ccffcc" style=filled]; s5 -> s7;
+    s7 [label="if i > 0" fillcolor="#ccffcc" style=filled]; s7 -> s8;
+    s7 -> s13; s8 [label="<loop>" fillcolor="#ccffcc" style=filled];
+    s8 -> s9; s9 [label="i --;" fillcolor="#ccffcc" style=filled]; s9 -> s10;
+    s10 [label="if i" fillcolor="#ccffcc" style=filled]; s10 -> s8;
+    s10 -> s11; s11 [label="<break>" fillcolor="#ccffcc" style=filled];
+    s11 -> s14; s13 [label="f(3);" fillcolor=pink style=filled]; s13 -> s14;
+    s14 [label="__retres = 0;" fillcolor="#ccffcc" style=filled]; s14 -> s18;
+    s18 [label="<return>" fillcolor="#ccffcc" style=filled]; } }

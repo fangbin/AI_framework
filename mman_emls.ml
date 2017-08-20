@@ -162,7 +162,7 @@ let pretty_stack fmt (sei: MEV.t) (s: MEV.envmap) =
     (MEV.VidMap.iter
        (fun vi ai ->
           begin  
-          MEV.pretty_senvs;           
+        (* MEV.pretty_senvs;*)           
           let vinfo = MEV.penv_getvinfo peid vi in
           let ainfo = MEV.senv_getvinfo sei ai in
           Format.fprintf fmt "%a |-> %a,\n "
