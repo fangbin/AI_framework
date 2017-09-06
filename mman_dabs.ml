@@ -22,12 +22,13 @@
 
 (** {1 Data abstraction utilities} *)
 
+
 open Cil_types
-    
+
 (* ********************************************************************** *)
 (** {2 Types} *)
 (* ********************************************************************** *)
-    
+
 (** Features of the abstraction *)
 type feature_kind =
   | DA_CTY         (** type of the ADDRESS of the chunk start *)
@@ -82,17 +83,17 @@ let method_names = [
 
 (** Stored abstraction *)
 type dabs_ty = {
-  (** Header type informations, it gives the minimal alignment 
-   *  of chunk start address 
+  (** Header type informations, it gives the minimal alignment
+   *  of chunk start address
   *)
   mutable cty: Cil_types.typ;
-  
+
   (** Feature DA_CAL, additional congruence property of chunk sizes *)
   mutable align: int;
-  
+
   (** Definition of abstract features in the data abstraction *)
   mutable abs_term: (Cil_types.logic_var option * Cil_types.term) array;
-  
+
   (** Definition of the methods of the interface *)
   mutable meth_name: string array;
 }
@@ -107,7 +108,7 @@ exception ErrorDataAbs of string
 
 (** Debug info *)
 let dabs_dkey = Mman_options.Self.register_category "mman:dabs"
-    
+
 (** Data abstraction used *)
 let dummy_term = List.hd Cil_datatype.Term.reprs
 let dabs : dabs_ty ref =
@@ -116,17 +117,17 @@ let dabs : dabs_ty ref =
         abs_term = (Array.make 14 (None, dummy_term));
         meth_name = (Array.make 4 "none");
       }
-    
+
 
 (* ********************************************************************** *)
 (** {2 Queries} *)
 (* ********************************************************************** *)
-    
+
 let int2featurekind (f:int) : feature_kind =
   if f <= 0 || f >= 14 then DA_OTHER
   else
     (fst (List.nth feature_names f))
-    
+
 let featurekind2int (f:feature_kind) : int =
   match f with
   | DA_CTY -> 0
@@ -144,7 +145,7 @@ let featurekind2int (f:feature_kind) : int =
   | DA_CFF -> 12
   | DA_CPF -> 13
   | DA_OTHER -> 14
-    
+
 let get_feature (fname:string) : feature_kind =
   let fk = ref DA_OTHER in
   let check_name = (fun kn ->
@@ -154,41 +155,41 @@ let get_feature (fname:string) : feature_kind =
   in (
     List.iter check_name feature_names;
     !fk)
-  
+
 let get_fname (fk: feature_kind) : string =
   List.assoc fk feature_names
-    
+
 let is_feature (fk:feature_kind) (s:string) =
   (String.compare (List.assoc fk feature_names) s) == 0
-  
+
 let logic_utils_drop_at (t:Cil_types.term) =
   match t.term_node with
   | Tat(t',_) -> t'
   | _ -> t
-    
-let get_feature_term (fk:feature_kind) 
+
+let get_feature_term (fk:feature_kind)
   : (Cil_types.logic_var option * Cil_types.term) =
-  Array.get (!dabs).abs_term (featurekind2int fk) 
-    
+  Array.get (!dabs).abs_term (featurekind2int fk)
+
 let is_active_feature (fk:feature_kind) : bool =
-  let _,t = get_feature_term fk in 
+  let _,t = get_feature_term fk in
   (t != dummy_term)
-  
+
 let get_active_features () : feature_kind list =
   let rs = ref [] in
   begin
-    List.iter (fun fkn -> if is_active_feature (fst fkn) then 
+    List.iter (fun fkn -> if is_active_feature (fst fkn) then
                   rs := (!rs) @ [(fst fkn)]
               )
       feature_names;
     !rs
   end
-  
+
 let is_chunk_feature (fk:feature_kind) : bool =
   match fk with
   | DA_CTY | DA_CAL | DA_CBE | DA_CEN | DA_FBE | DA_FEN | DA_OTHER -> false
   | _ -> is_active_feature fk
-           
+
 let get_chunk_features () : feature_kind list =
   let rs = ref [] in
   begin
@@ -198,7 +199,7 @@ let get_chunk_features () : feature_kind list =
       feature_names;
     !rs
   end
-  
+
 
  let is_chunk_struct (ty: Cil_types.typ) : bool =
    if !dabs.cty == Cil.voidType
@@ -208,31 +209,31 @@ let get_chunk_features () : feature_kind list =
      | TPtr(TComp (_,_,_) as sty,_) ->
          (Cil_datatype.Typ.equal sty ty)
      | _ -> false
-     
+
  let is_chunk_ptr (ty: Cil_types.typ) : bool =
    if !dabs.cty == Cil.voidType
    then false
    else Cil_datatype.Typ.equal !dabs.cty ty
- 
- 
+
+
 
 (* ********************************************************************** *)
 (** {2 Mapping of fields to features} *)
 (* ********************************************************************** *)
-  
-(** Module for the map from {!Cil_datatype.fieldinfo} to features identifiers *) 
+
+(** Module for the map from {!Cil_datatype.fieldinfo} to features identifiers *)
 module Finfo2feat = Cil_datatype.Fieldinfo.Map.Make(Datatype.Int)
-    
+
 (** Type for map from fields to features *)
 let finfo2feat = ref Cil_datatype.Fieldinfo.Map.empty
-    
+
 (** Add to {!finfo2feat} the fields in the sub-term {fterm} in
  *  the definition of {feati}.
 *)
 let rec get_feature_field feati fterm isPtr =
   match fterm.Cil_types.term_node with
   | TLval(TMem(_), TField(fi,_)) ->
-      let fl = try Cil_datatype.Fieldinfo.Map.find fi (!finfo2feat) 
+      let fl = try Cil_datatype.Fieldinfo.Map.find fi (!finfo2feat)
         with Not_found -> []
       in if
         (List.mem feati fl) (* field already mapped on fk *)
@@ -241,47 +242,47 @@ let rec get_feature_field feati fterm isPtr =
         ()
       else
         finfo2feat := Cil_datatype.Fieldinfo.Map.add fi (feati::fl) (!finfo2feat)
-            
+
   | TUnOp(_,t) | TCastE(_,t) | TCoerce(t,_) | TLogic_coerce(_,t) ->
       begin
         Mman_options.Self.debug ~level:2 ~dkey:dabs_dkey "Term UnOp %a:"
           Printer.pp_term fterm;
         get_feature_field feati t isPtr
       end
-      
-  | TBinOp(_,t1,t2) -> 
+
+  | TBinOp(_,t1,t2) ->
       begin
         Mman_options.Self.debug ~level:2 ~dkey:dabs_dkey "Term BinOp %a:"
           Printer.pp_term fterm;
-        get_feature_field feati t1 isPtr; 
+        get_feature_field feati t1 isPtr;
         get_feature_field feati t2 isPtr
       end
-      
+
   | TLval (TVar(_), _) ->
       begin
         Mman_options.Self.debug ~level:2 ~dkey:dabs_dkey "Term TLval(TVar,_)";
         ()
       end
-      
-  | TConst _ 
-  
+
+  | TConst _
+
   | TSizeOf _ | TAlignOf _ | TAlignOfE _
-  
+
   | Tnull -> ()
-       
+
   | TAddrOf _ -> () (**)
-  
+
   | _ ->
       begin
         Mman_options.Self.debug ~level:2 ~dkey:dabs_dkey "Term %a: "
           Printer.pp_term fterm;
         Mman_options.Self.not_yet_implemented "logic term in abstraction"
       end
-      
+
 let get_field_feature fi =
   begin
     if Cil_datatype.Fieldinfo.Map.is_empty (!finfo2feat) then
-      (* build the map by going through each feature *)     
+      (* build the map by going through each feature *)
       Array.iteri (fun i b ->
           let deft = (snd b) in
           begin
@@ -289,7 +290,7 @@ let get_field_feature fi =
               "Feature %s, term %a@: "
               (snd (List.nth feature_names i))
               Printer.pp_term deft;*)
-            get_feature_field i deft 
+            get_feature_field i deft
               (Logic_utils.isLogicPointerType deft.term_type)
           end)
         (!dabs).abs_term
@@ -298,7 +299,7 @@ let get_field_feature fi =
       Cil_datatype.Fieldinfo.Map.find fi (!finfo2feat)
     with Not_found -> []
   end
-  
+
 (** The index of the method {mk} in {!dabs} *)
 let get_method_idx (mk:method_kind) : int =
   match mk with
@@ -306,16 +307,16 @@ let get_method_idx (mk:method_kind) : int =
   | DA_MALLOC -> 1
   | DA_MFREE -> 2
   | DA_MREALLOC -> 3
-    
+
 let get_method_name (mk:method_kind) : string =
   let i = get_method_idx mk in
   Array.get (!dabs).meth_name i
-    
+
 
 (* ********************************************************************** *)
 (** {2 Parsing and typechecking} *)
 (* ********************************************************************** *)
-    
+
 (** Check the logic type {lty} to be a pointer to a C struct type *)
 let is_valid_cty lty =
   begin
@@ -335,9 +336,9 @@ let is_valid_cty lty =
             (* Get the original type by removing the alias *)
             let dty = Cil.unrollTypeDeep cty in
             match dty with
-            | TPtr(TComp (_,_,_) as sty,_) -> 
+            | TPtr(TComp (_,_,_) as sty,_) ->
                 begin
-                  Mman_options.Self.debug ~level:2 ~dkey:dabs_dkey 
+                  Mman_options.Self.debug ~level:2 ~dkey:dabs_dkey
                     "cty is a pointer to a C union or structure!";
                   !dabs.cty  <- dty;
                   !dabs.align <- Cil.bytesAlignOf sty;
@@ -349,13 +350,13 @@ let is_valid_cty lty =
                   false
                 end
           )
-      | _ -> 
+      | _ ->
           begin
             Mman_options.Self.failure "cty is not a C type!";
             false
           end
   end
-  
+
 (** Check that the profile of {fname} corresponds to a feature *)
 let is_fun_const (fname:string) (lf:logic_info) : bool =
   if (lf.l_tparams != []) ||
@@ -365,7 +366,7 @@ let is_fun_const (fname:string) (lf:logic_info) : bool =
     false
   end else
     true
-      
+
 (** Check that feature {fname} has one argument of type {!dabs.cty} *)
 let is_fun_cty (fname:string) (lf:logic_info) : bool =
   if (lf.l_tparams != [])
@@ -379,7 +380,7 @@ let is_fun_cty (fname:string) (lf:logic_info) : bool =
          | Ltype(lti,_) ->
              if is_feature DA_CTY lti.lt_name then
                true
-             else 
+             else
                (Mman_options.Self.error
                   "%s feature parameter of bad type@." fname;
                 false)
@@ -406,8 +407,8 @@ let is_fun_result (fname:string) (lf:logic_info)
   | _ -> (Mman_options.Self.error "%s feature not a predicate@." fname;
           false)
 
-         
-(** Read annotation for feature {!DA_CAL} and 
+
+(** Read annotation for feature {!DA_CAL} and
  *  set the {!dabs.align}, if correct.
 *)
 let read_da_cal (lf: Cil_types.logic_info) =
@@ -432,8 +433,8 @@ let read_da_cal (lf: Cil_types.logic_info) =
          (Integer.ppcm calv (Integer.of_int (!dabs).align));
      Mman_options.Self.feedback "feature 'cal': ok@."
     )
-    
-(** Read the annotations for the begin and end of chunk and free list and 
+
+(** Read the annotations for the begin and end of chunk and free list and
  * sets {!dabs}, if correct.
 *)
 let read_da_list (kind:feature_kind) (lf:logic_info) =
@@ -467,9 +468,9 @@ let read_da_list (kind:feature_kind) (lf:logic_info) =
     Mman_options.Self.feedback "feature '%s': ok@."
       fname
   end
-  
-(** Read the annotation for chunk size and 
- *  set {!dabs}, if correct 
+
+(** Read the annotation for chunk size and
+ *  set {!dabs}, if correct
 *)
 let read_da_csz (lf:logic_info) =
   (* Name already checked *)
@@ -487,14 +488,14 @@ let read_da_csz (lf:logic_info) =
      (not(is_fun_result "csz" lf (fun lt -> (lt == Linteger))))
   then
     Mman_options.Self.error "feature 'csz': bad profile@."
-  else 
+  else
     (Array.set (!dabs.abs_term)
        (featurekind2int DA_CSZ)
        (Some(List.hd lf.l_profile), cszt);
      Mman_options.Self.feedback "feature 'csz': ok@."
     )
-    
-(** Read the annotations for list fields next and previous and 
+
+(** Read the annotations for list fields next and previous and
  *  sets {!dabs}, if correct.
 *)
 let read_da_list_fld (kind:feature_kind) (lf:logic_info) =
@@ -525,7 +526,7 @@ let read_da_list_fld (kind:feature_kind) (lf:logic_info) =
       (Some(List.hd lf.l_profile), cft);
     Mman_options.Self.feedback "feature '%s': ok@." fname
   end
-  
+
 (** Read the annotation for feature {cdt} and
  *  set {dabs}, if correct
 *)
@@ -541,7 +542,7 @@ let read_da_list_fld (kind:feature_kind) (lf:logic_info) =
           t
     | _ -> Mman_options.Self.fatal "feature 'cdt': definition not a term@."
   in
-  (* Typecheck to : cty -> void* *)       
+  (* Typecheck to : cty -> void* *)
   if (not(is_fun_cty "cdat" lf)) ||
      (not(is_fun_result "cdat" lf
             Logic_utils.isLogicVoidPointerType))
@@ -552,7 +553,7 @@ let read_da_list_fld (kind:feature_kind) (lf:logic_info) =
        (featurekind2int DA_CDAT)
        (Some(List.hd lf.l_profile),cdt);
      Mman_options.Self.feedback "feature 'cdat': ok@.")*)
-    
+
 
 (** Read the annotation for feature {cdt} and
  *  set {dabs}, if correct
@@ -607,10 +608,10 @@ let read_da_cflg (kind:feature_kind) (lf:logic_info) =
       (Some(List.hd lf.l_profile),cft);
     Mman_options.Self.feedback "feature '%s': ok@." fname
   end
-  
 
 
-(** Read the annotation for {cty} and 
+
+(** Read the annotation for {cty} and
  *  set in {dabs}, if correct
 *)
 let read_type () =
@@ -628,8 +629,8 @@ let read_type () =
       (* Side effects in is_valid_cty *)
       Mman_options.Self.feedback "'cty' definition: ok@."
   end
-  
-(** Read the logic annotations and 
+
+(** Read the logic annotations and
  *  set the data abstraction {dabs}, if correct
 *)
 let read_feature (kind:feature_kind) (fname:string) =
@@ -637,7 +638,7 @@ let read_feature (kind:feature_kind) (fname:string) =
     begin
       let l = Logic_env.Logic_info.find_all fname in
       match l with
-      | [] -> 
+      | [] ->
           Mman_options.Self.feedback "feature '%s': undefined@." fname
       | lf::l' -> (
           if (List.length l') >= 1 then
@@ -655,12 +656,12 @@ let read_feature (kind:feature_kind) (fname:string) =
                    "feature '%s': internal error read_feature@." fname
         )
     end
-    
+
 let read_method km mname =
   begin
     let l = Logic_env.Logic_info.find_all mname in
     match l with
-    | [] -> 
+    | [] ->
         Mman_options.Self.feedback "method '%s': undefined@." mname
     | lf::l' -> (
         if (List.length l') >= 1 then
@@ -672,7 +673,7 @@ let read_method km mname =
             | LBterm t ->
                 (match t.term_node with
                  | TConst(LStr s) -> s
-                 | _ -> 
+                 | _ ->
                      Mman_options.Self.fatal
                        "method '%s': definition not a string constant@." mname
                 )
@@ -686,7 +687,7 @@ let read_method km mname =
           end
       )
   end
-  
+
 let read () =
   Mman_options.Self.feedback "Reading data abstraction";
   read_type ();
@@ -701,7 +702,7 @@ let read () =
 let rec log () =
   (* Print using the Frama-c format for global annotations *)
   Annotations.iter_global (fun _ g -> log_global g)
-    
+
 and log_global (g:Cil_types.global_annotation) =
   match g with
   | Dfun_or_pred (li,_) ->
@@ -719,17 +720,16 @@ and log_global (g:Cil_types.global_annotation) =
       if is_feature DA_CTY lty.lt_name then
         Mman_options.Self.debug ~dkey:dabs_dkey ~level:2
           "annotation %a: stored for cty@."
-          Printer.pp_global_annotation g 
+          Printer.pp_global_annotation g
       else
         ()
   | _ -> ()
-         
+
 
 (* ********************************************************************** *)
 (** {2 Initialisation} *)
 (* ********************************************************************** *)
-         
+
 let init () =
   read (); (* typechecking done inside *)
   log ()
-
