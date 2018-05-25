@@ -792,8 +792,7 @@ let seid_new () = (SEnvMap.cardinal (!senvs))
  * Get environment at position ei
 *)
 let senv_get eid =
-  let _ = Mman_options.Self.debug ~level:2
-          "ENV:senv_get@." in
+  let _ = Mman_options.Self.debug ~level:2 "ENV:senv_get@." in
   SEnvMap.find eid (!senvs)
 
 (**

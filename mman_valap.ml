@@ -54,38 +54,38 @@ let env_getvar (eid: Mman_env.t) (svi: Mman_svar.svarinfo)
 (**
  * Get list of variables in ei
 *)
-let env_vars (eid: Mman_env.t)
+(*let env_vars (eid: Mman_env.t)
   : (int * Mman_svar.svarinfo) list
   =
-  (* let _= Mman_options.Self.debug ~level:1 "DW:env_vars , seid:%d@." eid in *)
-    Mman_env.senv_vars eid
-  (*if Mman_options.OptNumAnalysis.get() then  
+    Mman_env.senv_vars eid *)
+
+  let env_vars (eid: Mman_env.t)
+  : (int * Mman_svar.svarinfo) list
+  =
+  let _= Mman_options.Self.debug ~level:1 "DW:env_vars , seid:%d@." eid in 
+  if Mman_options.OptNumAnalysis.get() then  
     Mman_env.penv_vars eid
   else 
     Mman_env.senv_vars eid
-  *)
+
+
+
 
 
 let env_getvinfo (eid: Mman_env.t) (sid: Mman_svar.svid)
   : Mman_svar.svarinfo
   =
-  Mman_env.senv_getvinfo eid sid
+  (*Mman_env.senv_getvinfo eid sid*)
 
-  (*
   if Mman_options.OptNumAnalysis.get() then
-      Mman_env.penv_getvinfo eid sid
+    let _ = Mman_options.Self.debug ~level:1 "DW:env_getvinfo from senv @." 
+      in  
+    Mman_env.senv_getvinfo eid sid
   else
-      Mman_env.senv_getvinfo eid sid
-  *)
-
-  (* 
-  let sv = Mman_env.penv_getvinfo eid sid in
-  if (sv.id == Mman_svar.svid_hole)
-    then
-        Mman_env.senv_getvinfo eid sid
-    else
-        sv
-  *)
+    let _ = Mman_options.Self.debug ~level:1 "DW:env_getvinfo from penv @." 
+      in  
+    Mman_env.penv_getvinfo eid sid
+   
 
 let env_size (eid: Mman_env.t)
   : int
@@ -118,13 +118,12 @@ let env_map = ref EnvAPMap.empty
 
 (**
  * Return the Apron environment corresponding to a value environment
- *
  * The set of variables pushed includes the features and a hole variable.
 *)
 let env2apron (eid: Mman_env.t)
   : Apron.Environment.t
   =
-    (*let _ =
+    let _ =
       EnvAPMap.iter
       (
         fun ei apei ->
@@ -133,30 +132,30 @@ let env2apron (eid: Mman_env.t)
           (Apron.Environment.print ~first:"[" ~sep:" " ~last:"]") (Vector.get apronenvs apei)
       )
       !env_map
-     in *)
+     in 
     try
       let apei = EnvAPMap.find eid !env_map in
       Vector.get apronenvs apei
     with Not_found ->
-      let svl =
-         	(*let _ = Mman_options.Self.debug ~level:2 "DW:env2apron: not found, eid:%d @" eid in*)
+      let svl = (* get symbolic variables list *)
+         	let _ = Mman_options.Self.debug ~level:2 "DW:env2apron: not found, eid:%d @" eid in
           if eid != -1
-          (*then (env_vars eid)*)
-            then Mman_env.senv_vars2 eid 
+          then env_vars eid
+            (*then Mman_env.senv_vars2 eid*) 
           else []
       in
       let avl =
           List.map
           (
-            fun (sv) -> 
+            fun (_i, sv) -> 
             	Apron.Var.of_string (Mman_svar.sv_tostring sv)
           )
           svl
       in 
-      let ap_env = Apron.Environment.make 
+      let ap_env = Apron.Environment.make     (* create a new envionment *)
                    (Array.of_list avl) (Array.of_list [])
       in 
-      let apei = Vector.addi apronenvs ap_env in
+      let apei = Vector.addi apronenvs ap_env in 
       let _ = (env_map := EnvAPMap.add eid apei !env_map) in
       let _ = Mman_options.Self.debug ~level:2
           "DW:env2apron: \n seid_%d -> [%d]\n%a@."
@@ -286,9 +285,9 @@ let to_var (sei: Mman_env.t) (lv: Mman_asyn.alval)
   =
   match lv with
   | Mman_asyn.AVar(vi) ->
-      (*let _  = Mman_options.Self.debug ~level:1 "DW:to_var, Mman_asyn.AVar(%a)"
+      let _  = Mman_options.Self.debug ~level:1 "DW:to_var, Mman_asyn.AVar(%a)"
           Printer.pp_varinfo vi
-      in*)
+      in
       if vi.vname ==  Mman_svar.sv_hli_name
       then
             let svi = Mman_svar.svid_hli in
@@ -298,9 +297,9 @@ let to_var (sei: Mman_env.t) (lv: Mman_asyn.alval)
             Apron.Var.of_string (Mman_svar.sv_tostring svi)
 
   | Mman_asyn.ASVar(sid) ->
-      (*let _  = Mman_options.Self.debug ~level:1 "Mman_asyn.ASVar(sid:%d), pei:%d@."
+      let _  = Mman_options.Self.debug ~level:1 "Mman_asyn.ASVar(sid:%d), pei:%d@."
               sid sei
-          in*)
+          in
       let svi = env_getvinfo sei sid in
       Apron.Var.of_string (Mman_svar.sv_tostring svi)
 
@@ -311,32 +310,32 @@ let to_var (sei: Mman_env.t) (lv: Mman_asyn.alval)
       Apron.Var.of_string (Mman_svar.sv_tostring lsvi)
 
   | Mman_asyn.AFeat(fk, Mman_asyn.AVar(vi)) ->
-      (*let _ = Mman_options.Self.debug ~level:1
+      let _ = Mman_options.Self.debug ~level:1
           "DW:to_var, Mman_asyn.AFeat(fk, Mman_asyn.AVar(%a))@."
               Printer.pp_varinfo vi
-          in*)
+      in
       let svi = env_getvar sei (Mman_svar.sv_mk_var vi) in
 
-      (*let _ = Mman_options.Self.debug ~level:1
+      let _ = Mman_options.Self.debug ~level:1
           "DW:to_var, vi %a"
           Mman_svar.Svar.pretty svi
-        in*)
+      in
 
       let fsvi = Mman_env.senv_get_feat (Mman_svar.Svar.id svi) sei fk in 
-      (*let fsvi = env_getvar sei (Mman_svar.sv_mk_feat
+      let fsvi = env_getvar sei (Mman_svar.sv_mk_feat
                                              (Some (Mman_svar.Svar.id svi))
-                                             fk) in *)
+                                             fk) in 
       Apron.Var.of_string (Mman_svar.sv_tostring fsvi)
 
   | Mman_asyn.AFeat(fk, Mman_asyn.ASVar(sid)) ->
-      (*let _ = Mman_options.Self.debug ~level:1
+      let _ = Mman_options.Self.debug ~level:1
           "DW:Mman_asyn.AFeat(fk, Mman_asyn.ASVar(%d)), peid:%d  @."
             sid sei
-          in*)
+          in
       let svi = env_getvinfo sei sid in
-      (*let _ = Mman_options.Self.debug ~level:1"MDW:%a@."
+      let _ = Mman_options.Self.debug ~level:1"MDW:%a@."
             Mman_svar.Svar.pretty svi
-         in *)
+         in 
 
       let fsvi = env_getvar sei (Mman_svar.sv_mk_feat
                                              (Some (Mman_svar.Svar.id svi))
@@ -816,8 +815,23 @@ module Model = struct
     (*TODO bug Failure("hd") => llv is empty *)
     (*if (List.length llv == 0) then d
     else *)
+    let _ = 
+      List.iter2 
+      ( fun lv le ->
+           Mman_options.Self.debug ~level:1 "DW:do_assign: %a:=%a@."
+                 Mman_asyn.pp_alval (lv) Mman_asyn.pp_aexp (le)
+              
+      )
+      llv 
+      lexp 
+    in
+    let _ = 
+      Mman_options.Self.debug ~level:1 "DW:on value  \n %a@."
+                 (pretty_code_intern Type.Basic) d
+    in 
 
     let eid = d.eid in (* eid is equal to the seid of shape *)
+    let _ = Mman_options.Self.debug ~level:2 "..............." in 
     let apv1_apvn = List.map (fun lvi -> to_var eid lvi) llv
     in
     let ape1_apen = List.map (fun ei -> to_texpr eid ei) lexp
@@ -1012,23 +1026,24 @@ let init_globals (eid: Mman_env.t)
       let _ = ( Mman_options.Self.debug ~level:2 "DW:global state: %a@."
                   (Model.pretty_code_intern Type.Basic) !global_state) in
       if (eid = (Model.env !global_state))
-      then !global_state
+      then 
+          !global_state
       else
-      (* Do assign *) 
-      let _ = Mman_options.Self.debug ~level:2 "DW:global state is top, then do assign" in
-      let vinit = Model.do_assign (Model.top_of eid) (v1_vn) (e1_en) in
-      let _ = Mman_options.Self.feedback "DW:do assign done @." in
-      let _ = Mman_options.Self.feedback "DW:do meet exp@." in
+          (* Do assign *) 
+          let _ = Mman_options.Self.debug ~level:2 "DW:global state is top, then do assign" in
+          let vinit = Model.do_assign (Model.top_of eid) (v1_vn) (e1_en) in
+          let _ = Mman_options.Self.feedback "DW:do assign done @." in
+          let _ = Mman_options.Self.feedback "DW:do meet exp@." in
 
-      (* do meet *)
-      let v = Model.meet_exp eid vinit c1_cn in
-      let _ = Mman_options.Self.feedback "DW:meet exp done @." in
-      begin
-        let _ = ( Mman_options.Self.debug ~level:1 "DW:after meep \n %a@."
-                  (Model.pretty_code_intern Type.Basic) v)
-        in
-        let _ = Mman_options.Self.feedback "DW:init_globals finished@." in
-        global_state := v;
-        v
-      end
+          (* do meet *)
+          let v = Model.meet_exp eid vinit c1_cn in
+          let _ = Mman_options.Self.feedback "DW:meet exp done @." in
+          begin
+            let _ = ( Mman_options.Self.debug ~level:1 "DW:after meep \n %a@."
+                      (Model.pretty_code_intern Type.Basic) v)
+            in
+            let _ = Mman_options.Self.feedback "DW:init_globals finished@." in
+            global_state := v;
+            v
+          end
       

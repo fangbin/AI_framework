@@ -1,3 +1,4 @@
+[mman] DW:env2apron: not found, eid:-1 @
 [mman] DW:env2apron: 
         seid_-1 -> [0]
        []
@@ -202,7 +203,21 @@
 [mman] DW:global state: ({eid_-1}top)
 [mman] DW:global state is top, then do assign
 [mman] DW:top_of eid 3
-[mman] ENV:get list of symbolic variables and program variables eid: 3,
+[mman] DW:old apron envs list: eid-1 []
+[mman] DW:env2apron: not found, eid:3 @
+[mman] DW:env_vars , seid:3
+[mman] DW:env2apron: 
+        seid_3 -> [1]
+       [0> __hli:int 1> __hole:int 2> __hst:int 3> __null:int 4> _heapend:int 5> _heapstart:int 6> c10__csz:int 7> c10__fn:int 8> c4__csz:int 9> c4__fn:int 10> c7__csz:int 11> c7__fn:int 12> i__retres:int 13> imemleft:int 14> pfrhd:int 15> pman:int 16> pp1:int 17> pp2:int]
+[mman] DW:do_assign: fn(_heapstart):=0
+[mman] DW:do_assign: csz(_heapstart):=0
+[mman] DW:do_assign: fn(_heapend):=0
+[mman] DW:do_assign: csz(_heapend):=0
+[mman] DW:on value  
+        ({eid_3}top)
+[mman] ...............
+[mman] DW:to_var, Mman_asyn.AFeat(fk, Mman_asyn.AVar(_heapstart))
+[mman] ENV:senv_get
 [mman] failure: Unexpected exception.
                 Please submit bug report (Ref. "Not_found").
 [kernel] Current source was: /Users/fangbin/Documents/github/mem_bin/bench/la/lamain.c:7
