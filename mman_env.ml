@@ -118,7 +118,7 @@ let pp_vidmap fmt (m: vidmap) =
     Format.fprintf fmt "\n{";
     VidMap.iter
       (fun i svi ->
-           Format.fprintf fmt "\t%a%s"
+           Format.fprintf fmt "%a%s\t"
              Mman_svar.Svar.pretty svi
              (if i mod 5 = 4 then ";\n" else ";")
       )
@@ -194,7 +194,7 @@ let penv_equal e1 e2 =
   equal_vidmap e1.pvars e2.pvars
 
 let penv_print fmt (e: penvinfo) =
-  Format.fprintf fmt "penv_%d = (%d,[%d] %a )"
+  Format.fprintf fmt "penv_%d = (%d,[%d],%a)\n "
     e.pe_id
     e.pe_ucnt
     (VidMap.cardinal e.pvars)
@@ -398,7 +398,7 @@ let penv_add e =
        (* first use of this environment, set its index number *)
        Vector.addi penvs {e with pe_id = (peid_new ())})
   in
-  let enew = penv_newuse (Vector.get penvs ei) in
+  let enew = penv_newuse (Vector.get penvs ei) in 
   begin
     Vector.set penvs ei enew;
     ei
@@ -571,14 +571,14 @@ let penvs_init_globals () =
             (Mman_dabs.is_chunk_struct vinfo.Cil_types.vtype) ||
             (Mman_dabs.is_chunk_ptr vinfo.Cil_types.vtype)
             (* TODO: to consider pointer type:void * *)
-         then
+          then
           (* adds vinfo program variable and
            * its location on stack, if used in the program *)
           let lastid, svl = sv_add_pvar vinfo !svid in
-          begin
-            svid := lastid + 1;
-            gvlist := List.append (!gvlist) svl
-          end
+            begin
+              svid := lastid + 1;
+              gvlist := List.append (!gvlist) svl
+            end
       );
     (* Set the environment of globals at position 0 *)
     Vector.add penvs
@@ -597,51 +597,54 @@ let rec penvs_init_gfun () =
   Globals.Functions.iter
     (fun kf -> (try
                   let _ = (Kernel_function.get_definition kf) in
-                  penvs_init_from_kfun kf
+                    penvs_init_from_kfun kf
                 with Kernel_function.No_Definition | Not_found -> ())
     )
+  and penvs_init_from_kfun kf =
+    (* copy the global vars *)
+    let _ = Mman_options.Self.debug ~level:2 "Initialize penv for function '%a'@."
+        Kernel_function.pretty kf in
+    let lvars = ref (copy_vidmap (Vector.get penvs 0).pvars) in (* global variables *)
+    let svid = ref (1 + (max_key_vidmap (Vector.get penvs 0).pvars)) in (* the number of pvariables + 1 *)
 
-and penvs_init_from_kfun kf =
-  (* copy the global vars *)
-  let _ = Mman_options.Self.debug ~level:2 "Initialize penv for '%a'@."
-      Kernel_function.pretty kf in
-  let lvars = ref (copy_vidmap (Vector.get penvs 0).pvars) in
-  let svid = ref (1 + (max_key_vidmap (Vector.get penvs 0).pvars)) in
-  (* copy the formals, if any *)
-  let _ = List.iter
-  	 (fun vi ->
-      let idn, lv = sv_add_pvar vi !svid in
-      begin
-        svid := idn + 1; (* normally increments svid, no address taken on formals *)
-        List.iter (fun (id, svi) -> lvars := VidMap.add id svi !lvars) lv
-      end) (Kernel_function.get_formals kf)
-  in
-  (* copy the locals (including the return __retres) *)
-  let _ = List.iter (fun vi ->
-      let idn, lv = sv_add_pvar vi !svid in
-      begin
-        svid := idn + 1; (* address may be taken on locals *)
-        List.iter (fun (id, svi) -> lvars := VidMap.add id svi !lvars) lv
-      end) (Kernel_function.get_locals kf)
-  in
-  (* build the environment of this function *)
-  let kfenv = { pe_id = peid_new ();
-                pe_ucnt = 1;
-                pvars = !lvars
-              } in
-  (* add the final env to envs *)
-  let eid = penv_add kfenv in
-  (* iterate over the statements (in deep)
-   *   add the mapping stmt -> penvid to stmt2env
-  *)
-  List.iter
-    (fun s ->
-       stmt2penv := Cil_datatype.Stmt.Map.add s eid !stmt2penv)
-    (try
-       (Kernel_function.get_definition kf).sallstmts
-     (* {!Cfg.computeCFGInfo} called by !{Db.Value} *)
-     with Kernel_function.No_Definition | Not_found -> []
-    )
+    (* copy the formals, if any *)
+    let _ = 
+      List.iter
+        (fun vi ->
+          let idn, lv = sv_add_pvar vi !svid in
+          begin
+            svid := idn + 1; (* normally increments svid, no address taken on formals *)
+            List.iter (fun (id, svi) -> lvars := VidMap.add id svi !lvars) lv
+          end) 
+        (Kernel_function.get_formals kf)
+    in
+
+    (* copy the locals (including the return __retres) *)
+    let _ = List.iter (fun vi ->
+        let idn, lv = sv_add_pvar vi !svid in
+        begin
+          svid := idn + 1; (* address may be taken on locals *)
+          List.iter (fun (id, svi) -> lvars := VidMap.add id svi !lvars) lv
+        end) (Kernel_function.get_locals kf)
+    in
+    (* build the environment of this function *)
+    let kfenv = { pe_id = peid_new ();
+                  pe_ucnt = 1;  (* TODO: now the counter of any penv will be 2 *)
+                  pvars = !lvars
+                } in
+    (* add the final env to envs *)
+    let eid = penv_add kfenv in
+    (* iterate over the statements (in deep)
+    *   add the mapping stmt -> penvid to stmt2env
+    *)
+    List.iter
+      (fun s ->
+        stmt2penv := Cil_datatype.Stmt.Map.add s eid !stmt2penv)
+      (try
+        (Kernel_function.get_definition kf).sallstmts
+      (* {!Cfg.computeCFGInfo} called by !{Db.Value} *)
+      with Kernel_function.No_Definition | Not_found -> []
+      )
 
 
 
@@ -789,8 +792,8 @@ let seid_new () = (SEnvMap.cardinal (!senvs))
  * Get environment at position ei
 *)
 let senv_get eid =
-  (*let _ = Mman_options.Self.debug ~level:2
-          "ENV:senv_get@." in*)
+  let _ = Mman_options.Self.debug ~level:2
+          "ENV:senv_get@." in
   SEnvMap.find eid (!senvs)
 
 (**

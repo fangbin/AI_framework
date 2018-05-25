@@ -81,6 +81,7 @@ let method_names = [
   (DA_MREALLOC, "mrealoc");
 ]
 
+
 (** Stored abstraction *)
 type dabs_ty = {
   (** Header type informations, it gives the minimal alignment
@@ -98,13 +99,15 @@ type dabs_ty = {
   mutable meth_name: string array;
 }
 
+
+
+
 (* ********************************************************************** *)
 (** {2 Globals} *)
 (* ********************************************************************** *)
 
 (** Error raised while reading and checking features abstraction *)
 exception ErrorDataAbs of string
-
 
 (** Debug info *)
 let dabs_dkey = Mman_options.Self.register_category "mman:dabs"
@@ -122,9 +125,14 @@ let dabs : dabs_ty ref =
 (* ********************************************************************** *)
 (** {2 Queries} *)
 (* ********************************************************************** *)
-
+(* get the name at the index f-th from the global arrary: feature_names
+* input: index 
+$ output: feature at index 
+*)
 let int2featurekind (f:int) : feature_kind =
-  if f <= 0 || f >= 14 then DA_OTHER
+  if f <= 0 || f >= 14 
+  then 
+    DA_OTHER
   else
     (fst (List.nth feature_names f))
 
@@ -146,21 +154,28 @@ let featurekind2int (f:feature_kind) : int =
   | DA_CPF -> 13
   | DA_OTHER -> 14
 
+(* given a feature name, return the kind of the feature *)
 let get_feature (fname:string) : feature_kind =
   let fk = ref DA_OTHER in
-  let check_name = (fun kn ->
-      if (String.compare (snd kn) fname) == 0
-      then fk := (fst kn)
-      else ())
-  in (
-    List.iter check_name feature_names;
-    !fk)
+  let check_name = 
+    (
+      fun kn ->
+        if (String.compare (snd kn) fname) == 0
+          then fk := (fst kn)
+        else ()
+      )
+    in 
+    ( List.iter check_name feature_names;
+    !fk )
 
+(* given a feature kind, return the feature name *)
 let get_fname (fk: feature_kind) : string =
   List.assoc fk feature_names
 
+
 let is_feature (fk:feature_kind) (s:string) =
   (String.compare (List.assoc fk feature_names) s) == 0
+
 
 let logic_utils_drop_at (t:Cil_types.term) =
   match t.term_node with
@@ -210,6 +225,7 @@ let get_chunk_features () : feature_kind list =
          (Cil_datatype.Typ.equal sty ty)
      | _ -> false
 
+
  let is_chunk_ptr (ty: Cil_types.typ) : bool =
    if !dabs.cty == Cil.voidType
    then false
@@ -236,7 +252,7 @@ let rec get_feature_field feati fterm isPtr =
       let fl = try Cil_datatype.Fieldinfo.Map.find fi (!finfo2feat)
         with Not_found -> []
       in if
-        (List.mem feati fl) (* field already mapped on fk *)
+        (List.mem feati fl)                        (* field already mapped on fk *)
         || ((Cil.isPointerType fi.ftype) != isPtr) (* field and feature of different types *)
       then
         ()

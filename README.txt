@@ -24,9 +24,6 @@ or with debug information from frama-c
 
 
 
-
-
-
 ============================
 Registered as a plugin of frama-c :
 frama-c -mman
@@ -39,3 +36,6 @@ run sh
 > frama-c -mman -debug 2 ../mem_bin/bench/la/lamain.c  
 
 
+# structure 
+
+mman_svar.ml 

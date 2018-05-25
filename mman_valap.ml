@@ -603,7 +603,7 @@ module Model = struct
      vap = Apron.Abstract1.bottom man_apron ap_eid}
 
   let top_of eid =
-    (*let _ = Mman_options.Self.debug ~level:2 "DW:top_of eid %d\n" eid in *)
+    let _ = Mman_options.Self.debug ~level:2 "DW:top_of eid %d\n" eid in 
     let ap_eid = env2apron eid in
       { eid = eid;
         vap = Apron.Abstract1.top man_apron ap_eid }
@@ -1009,10 +1009,13 @@ let init_globals (eid: Mman_env.t)
     : Model.t
     =
       let _ = Mman_options.Self.feedback "DW:MV-init_globals, eid:%d @." eid in
+      let _ = ( Mman_options.Self.debug ~level:2 "DW:global state: %a@."
+                  (Model.pretty_code_intern Type.Basic) !global_state) in
       if (eid = (Model.env !global_state))
       then !global_state
       else
       (* Do assign *) 
+      let _ = Mman_options.Self.debug ~level:2 "DW:global state is top, then do assign" in
       let vinit = Model.do_assign (Model.top_of eid) (v1_vn) (e1_en) in
       let _ = Mman_options.Self.feedback "DW:do assign done @." in
       let _ = Mman_options.Self.feedback "DW:do meet exp@." in

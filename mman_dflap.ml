@@ -111,7 +111,7 @@ let init_gcnd : Mman_asyn.aconstr list ref = ref []
 let rec init_globals () 
   : unit
   =
-  let _ = Mman_options.Self.feedback "DW:init globals...@." in 
+  let _ = Mman_options.Self.feedback "DF:init globals...@." in 
   if not(!init_done) then
     begin
       let gl, ge, gc = Mman_asyn.init_globals () in 
@@ -119,7 +119,7 @@ let rec init_globals ()
       init_gexp := ge;
       init_gcnd := gc;
       
-      let _ = Mman_options.Self.feedback "DW:initialization done\n--------------------------------------------@." in 
+      let _ = Mman_options.Self.feedback "DF:init_globals done\n--------------------------------------------@." in 
       init_done := true
     end
   
@@ -775,7 +775,7 @@ let rec compute_from_entry_point () =
   let kf, _ = Globals.entry_point () in
   begin
     (* compute initial state *)
-    let _ = Mman_options.Self.feedback "DW:Entry_point: %a@." 
+    let _ = Mman_options.Self.feedback "DF:Entry_point: %a@." 
           Cil_datatype.Kf.pretty kf 
     in 
     let init_state = get_init_state kf
@@ -789,41 +789,44 @@ and get_init_state kf =
   let init_stmt = Kernel_function.find_first_stmt kf in
   let eid_stmt = Mman_env.penv_of_stmt init_stmt in
   let _ = init_globals () in
+  (*let _ = Mman_options.Self.feedback ~level:2 "DF:init_global_assigns:%a." in 
   let _ = 
       List.iter2
       ( fun lv ex ->
-        Mman_options.Self.feedback "DF:init_global_assigns: %a := %a @."
+        Mman_options.Self.feedback "\t %a := %a @."
         Mman_asyn.pp_alval lv 
         Mman_asyn.pp_aexp ex
       ) 
       !init_glv
       !init_gexp
   in 
+  let _ = Mman_options.Self.debug ~level:2 "DF:constraints:%a@." in 
   let _ = 
       List.iter 
       (
-        fun c -> Mman_options.Self.debug ~level:1 "DF:constraint: %a@."
+        fun c -> Mman_options.Self.debug ~level:1 "\t %a@."
                  Mman_asyn.pp_aconstr c
       ) 
       !init_gcnd 
-  in 
+  in *)
   let init_state = try
       Call_state.find init_stmt
       with Not_found -> (
       (* compute initials from inital globals and restricted locals *)
 		  let _ = Mman_options.Self.feedback "DF:initial_state_stmt (%a), peid:%d@."
-                Cil_datatype.Stmt.pretty init_stmt  eid_stmt  in
+                Cil_datatype.Stmt.pretty init_stmt  eid_stmt  in 
       let glb_state = MV.init_globals eid_stmt
             !init_glv !init_gexp !init_gcnd in 
+      let _ = Mman_options.Self.feedback "DF:initial state" in 
       let _ = ( Mman_options.Self.debug ~level:2 "DF:global state: %a@."
                   (MV.Model.pretty_code_intern Type.Basic) glb_state) in
-        (* *)
+      (* *)
       let eid = glb_state.eid in 
       let glb_loc_state = set_fun_locals kf eid glb_state in
       glb_loc_state
       )
   in
-  let _ = Mman_options.Self.debug  ~level:1
+  let _ = Mman_options.Self.debug  ~level:2
       "DF:initial state (%a): %a \n----------------------- @."
       Cil_datatype.Stmt.pretty init_stmt
       MV.Model.pretty init_state

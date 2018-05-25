@@ -204,8 +204,8 @@ let sv_getref sv =
 
 let sv_null_name = "__null"
 let sv_hole_name = "__hole"
-let sv_hli_name = "__hli"
-let sv_hst_name = "__hst"
+let sv_hli_name  = "__hli"
+let sv_hst_name  = "__hst"
   
 (** 
  * Return the string printing of this variable
