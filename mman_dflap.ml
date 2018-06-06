@@ -448,8 +448,12 @@ module Compute(AnPar: ComputeArg) = struct
             transfer_call s kf lv argl aval) 
         in
         map_on_all_succs s newaval
-          
+    
+    (*| Instr(Call( ))*)
+        
     | Instr(i) ->
+        let _ = Mman_options.Self.debug ~level:1 "DF:%a@." Printer.pp_instr i
+        in
         let _ = Mman_options.Self.not_yet_implemented "Instruction" in
         begin
           Mman_options.Self.debug ~dkey:dflw_dkey ~level:2 "Instr %a@."

@@ -732,7 +732,7 @@ let rec compute_from_entry_point () =
     (* compute initial state *)
     let init_state = get_init_state kf
     in
-    let _ = Mman_options.Self.feedback "@.DF:compute_from_entry_point, initial_state: %a@."                 
+    let _ = Mman_options.Self.feedback "@.DF:compute_from_entry_point, initial_state: %a@."
                 MV.Model.pretty init_state
     in 
     compute kf init_state

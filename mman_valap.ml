@@ -42,13 +42,12 @@ open Mman_asyn
 let env_getvar (eid: Mman_env.t) (svi: Mman_svar.svarinfo)
   : Mman_svar.svarinfo
   =
-   Mman_env.senv_getvar eid svi
-(*
+   (*Mman_env.senv_getvar eid svi*)
+
   if Mman_options.OptNumAnalysis.get() then
       Mman_env.penv_getvar eid svi
   else
       Mman_env.senv_getvar eid svi
-*)
 
 
 (**
@@ -62,7 +61,7 @@ let env_getvar (eid: Mman_env.t) (svi: Mman_svar.svarinfo)
   let env_vars (eid: Mman_env.t)
   : (int * Mman_svar.svarinfo) list
   =
-  let _= Mman_options.Self.debug ~level:1 "DW:env_vars , seid:%d@." eid in 
+  let _= Mman_options.Self.debug ~level:1 "DW:env_vars , peid:%d@." eid in 
   if Mman_options.OptNumAnalysis.get() then  
     Mman_env.penv_vars eid
   else 
@@ -78,13 +77,13 @@ let env_getvinfo (eid: Mman_env.t) (sid: Mman_svar.svid)
   (*Mman_env.senv_getvinfo eid sid*)
 
   if Mman_options.OptNumAnalysis.get() then
-    let _ = Mman_options.Self.debug ~level:1 "DW:env_getvinfo from senv @." 
-      in  
-    Mman_env.senv_getvinfo eid sid
-  else
     let _ = Mman_options.Self.debug ~level:1 "DW:env_getvinfo from penv @." 
       in  
     Mman_env.penv_getvinfo eid sid
+  else
+    let _ = Mman_options.Self.debug ~level:1 "DW:env_getvinfo from senv @." 
+      in  
+    Mman_env.senv_getvinfo eid sid
    
 
 let env_size (eid: Mman_env.t)
@@ -123,7 +122,7 @@ let env_map = ref EnvAPMap.empty
 let env2apron (eid: Mman_env.t)
   : Apron.Environment.t
   =
-    let _ =
+    (*let _ =
       EnvAPMap.iter
       (
         fun ei apei ->
@@ -132,15 +131,17 @@ let env2apron (eid: Mman_env.t)
           (Apron.Environment.print ~first:"[" ~sep:" " ~last:"]") (Vector.get apronenvs apei)
       )
       !env_map
-     in 
+     in *)
     try
       let apei = EnvAPMap.find eid !env_map in
       Vector.get apronenvs apei
     with Not_found ->
       let svl = (* get symbolic variables list *)
-         	let _ = Mman_options.Self.debug ~level:2 "DW:env2apron: not found, eid:%d @" eid in
+         	let _ = Mman_options.Self.debug ~level:2 "DW:env2apron: corresponding apron env not found @"in
           if eid != -1
-          then env_vars eid
+          then 
+          let _ = Mman_options.Self.debug ~level:2 "DW:env2apron get symbolic variables list @"in
+            env_vars eid
             (*then Mman_env.senv_vars2 eid*) 
           else []
       in
@@ -152,13 +153,13 @@ let env2apron (eid: Mman_env.t)
           )
           svl
       in 
-      let ap_env = Apron.Environment.make     (* create a new envionment *)
+      let ap_env = Apron.Environment.make                 (* create a new apenv envionment *)
                    (Array.of_list avl) (Array.of_list [])
       in 
       let apei = Vector.addi apronenvs ap_env in 
       let _ = (env_map := EnvAPMap.add eid apei !env_map) in
       let _ = Mman_options.Self.debug ~level:2
-          "DW:env2apron: \n seid_%d -> [%d]\n%a@."
+          "DW:env2apron: \n eid[%d] -> apei[%d]\n%a@."
           eid apei
           (Apron.Environment.print ~first:"[" ~sep:" " ~last:"]") ap_env
       in
@@ -214,13 +215,13 @@ let update_env2apron (eid: Mman_env.t)
         in
       let svl =
           if eid != -1
-          (*then (env_vars eid) *)
-          then Mman_env.senv_vars2 eid
+          then (env_vars eid) 
+          (*then Mman_env.senv_vars2 eid*)
           else []
       in
       let avl = List.map
           (
-            fun sv ->
+            fun (_, sv) ->
                   Apron.Var.of_string (Mman_svar.sv_tostring sv)
           )
           svl
@@ -314,14 +315,13 @@ let to_var (sei: Mman_env.t) (lv: Mman_asyn.alval)
           "DW:to_var, Mman_asyn.AFeat(fk, Mman_asyn.AVar(%a))@."
               Printer.pp_varinfo vi
       in
-      let svi = env_getvar sei (Mman_svar.sv_mk_var vi) in
-
+      let svi = env_getvar sei (Mman_svar.sv_mk_var vi) 
+      in
       let _ = Mman_options.Self.debug ~level:1
           "DW:to_var, vi %a"
           Mman_svar.Svar.pretty svi
       in
-
-      let fsvi = Mman_env.senv_get_feat (Mman_svar.Svar.id svi) sei fk in 
+      (*let fsvi = Mman_env.senv_get_feat (Mman_svar.Svar.id svi) sei fk in*) 
       let fsvi = env_getvar sei (Mman_svar.sv_mk_feat
                                              (Some (Mman_svar.Svar.id svi))
                                              fk) in 
@@ -815,12 +815,12 @@ module Model = struct
     (*TODO bug Failure("hd") => llv is empty *)
     (*if (List.length llv == 0) then d
     else *)
+    let _ = Mman_options.Self.debug ~level:1 "DW:do_assign: @." in 
     let _ = 
       List.iter2 
       ( fun lv le ->
-           Mman_options.Self.debug ~level:1 "DW:do_assign: %a:=%a@."
-                 Mman_asyn.pp_alval (lv) Mman_asyn.pp_aexp (le)
-              
+           Mman_options.Self.debug ~level:1 " %a:=%a@."
+                 Mman_asyn.pp_alval (lv) Mman_asyn.pp_aexp (le)              
       )
       llv 
       lexp 

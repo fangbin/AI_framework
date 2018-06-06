@@ -582,9 +582,11 @@ let penvs_init_globals () =
       );
     (* Set the environment of globals at position 0 *)
     Vector.add penvs
-      { pe_id = 0;
+      { 
+        pe_id = 0;
         pe_ucnt = 1;
-        pvars = of_list_vidmap !gvlist }
+        pvars = of_list_vidmap !gvlist 
+      }
   end
 
 (**
@@ -1213,9 +1215,9 @@ let senv_get_feats svid eid
            match svi.Mman_svar.kind with
               | Feature(Some(optvid), fk) ->
                     if optvid == svid then
-                      (*let _ = Mman_options.Self.debug ~level:2 "ENV:its feature (%d,%s)@."
+                      let _ = Mman_options.Self.debug ~level:2 "ENV:its feature (%d,%s)@."
                               optvid (Mman_dabs.get_fname fk)
-                      in*)
+                      in
                       featl := !featl @[(fk,i)]
               |_->   ()
       )
