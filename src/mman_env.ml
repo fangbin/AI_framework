@@ -794,7 +794,7 @@ let seid_new () = (SEnvMap.cardinal (!senvs))
  * Get environment at position ei
 *)
 let senv_get eid =
-  let _ = Mman_options.Self.debug ~level:2 "ENV:senv_get@." in
+  (*let _ = Mman_options.Self.debug ~level:2 "ENV:senv_get@." in*)
   SEnvMap.find eid (!senvs)
 
 (**
@@ -1115,9 +1115,8 @@ let senv_embed (ei0: t) (s0: envmap) (ei1: t) (s1: envmap)
   let sinfo0 = senv_get ei0 in
   let sinfo1 = senv_get ei1 in
 
-
   if (sinfo0.peid != sinfo1.peid) ||
-     ((VidMap.cardinal sinfo0.svars) != (VidMap.cardinal sinfo1.svars))
+     ((VidMap.cardinal sinfo0.svars) != (VidMap.cardinal sinfo1.svars)) (* different number of svars *)
   then
     let _ = Mman_options.Self.feedback "MEV:senv_embed, different peid...@." in
     EnvMap.empty

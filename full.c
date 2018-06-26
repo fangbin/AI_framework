@@ -17,6 +17,8 @@ void *laAlloc(int nbytes);
 
 HEADER _heapstart = {.ptr = (struct hdr *)0, .size = (unsigned int)0};
 HEADER _heapend = {.ptr = (struct hdr *)0, .size = (unsigned int)0};
+HEADER *frhd;
+static short memleft;
 /*@ requires /* ip:61 */valid_read_string{Here}(format);
     requires /* ip:60 */valid_read_string{Here}(param0);
     assigns \result, __fc_stdout->__fc_FILE_data;
@@ -35,12 +37,10 @@ void warm_boot(char *str)
 {
   /* sid:1 */
   printf_va_1("%s\n",str);
-  /* sid:97 */
+  /* sid:99 */
   return;
 }
 
-HEADER *frhd;
-static short memleft;
 void laFree(void *ap)
 {
   /* Locals: nxt, prev, f */
@@ -70,8 +70,8 @@ void laFree(void *ap)
       /* sid:15 */
       f->ptr = nxt;
     }
-    /* sid:99 */
-    /*block:begin*/ { /* sid:100 */
+    /* sid:101 */
+    /*block:begin*/ { /* sid:102 */
                       goto return_label; } /*block:end*/
   }
   else {
@@ -117,8 +117,8 @@ void laFree(void *ap)
         else {
           
         }
-        /* sid:101 */
-        /*block:begin*/ { /* sid:102 */
+        /* sid:103 */
+        /*block:begin*/ { /* sid:104 */
                           goto return_label; } /*block:end*/
       }
       else {
@@ -146,9 +146,20 @@ void laFree(void *ap)
     /* sid:47 */
     f->ptr = nxt;
   }
-  return_label: /* internal */ /* sid:103 */
+  return_label: /* internal */ /* sid:105 */
   return;
 }
+
+/*@ requires /* ip:62 */valid_read_string{Here}(format);
+    assigns \result, __fc_stdout->__fc_FILE_data;
+    assigns \result
+      \from (indirect: __fc_stdout->__fc_FILE_id),
+            __fc_stdout->__fc_FILE_data, (indirect: *(format + (0 ..)));
+    assigns __fc_stdout->__fc_FILE_data
+      \from (indirect: __fc_stdout->__fc_FILE_id),
+            __fc_stdout->__fc_FILE_data, (indirect: *(format + (0 ..)));
+ */
+int printf_va_2(char const *format);
 
 void *laAlloc(int nbytes)
 {
@@ -200,12 +211,14 @@ void *laAlloc(int nbytes)
         }
         /* sid:69 */
         memleft = (short)((int)memleft - nunits);
-        /* sid:105 */
+        /* sid:70 */
+        printf_va_2("allocate success.\n");
+        /* sid:107 */
         /*block:begin*/
           {
-          /* sid:71 */
+          /* sid:72 */
           __retres = (void *)(nxt + 1);
-          /* sid:106 */
+          /* sid:108 */
           goto return_label;
         }
         /*block:end*/
@@ -215,34 +228,34 @@ void *laAlloc(int nbytes)
       }
     }
     /*block:end*/
-    /* sid:73 */
-    prev = nxt;
     /* sid:74 */
+    prev = nxt;
+    /* sid:75 */
     nxt = nxt->ptr;
   }
-  /* sid:75 */
-  warm_boot((char *)"Allocation Failed!");
   /* sid:76 */
+  warm_boot((char *)"Allocation Failed!");
+  /* sid:77 */
   __retres = (void *)0;
-  return_label: /* internal */ /* sid:107 */
+  return_label: /* internal */ /* sid:109 */
   return __retres;
 }
 
 void laInit(void)
 {
-  /* sid:78 */
-  _heapstart.ptr = (struct hdr *)sbrk(65360);
   /* sid:79 */
-  _heapend.ptr = (struct hdr *)sbrk(0);
+  _heapstart.ptr = (struct hdr *)sbrk(65360);
   /* sid:80 */
-  frhd = _heapstart.ptr;
+  _heapend.ptr = (struct hdr *)sbrk(0);
   /* sid:81 */
-  frhd->ptr = (struct hdr *)0;
+  frhd = _heapstart.ptr;
   /* sid:82 */
-  frhd->size = (unsigned int)((char *)_heapend.ptr - (char *)_heapstart.ptr) / sizeof(HEADER);
+  frhd->ptr = (struct hdr *)0;
   /* sid:83 */
+  frhd->size = (unsigned int)((char *)_heapend.ptr - (char *)_heapstart.ptr) / sizeof(HEADER);
+  /* sid:84 */
   memleft = (short)frhd->size;
-  /* sid:109 */
+  /* sid:111 */
   return;
 }
 
@@ -271,25 +284,25 @@ int main(void)
 {
   /* Locals: __retres, man, p1, p2 */
   int __retres;
-  /* sid:86 */
-  laInit();
   /* sid:87 */
-  void *man = (void *)0;
+  laInit();
   /* sid:88 */
-  void *p1 = laAlloc(20);
+  void *man = (void *)0;
   /* sid:89 */
-  laAlloc(20);
+  void *p1 = laAlloc(20);
   /* sid:90 */
-  void *p2 = laAlloc(20);
-  /* sid:91 */
   laAlloc(20);
+  /* sid:91 */
+  void *p2 = laAlloc(20);
   /* sid:92 */
-  laFree(p1);
+  laAlloc(20);
   /* sid:93 */
-  laFree(p2);
+  laFree(p1);
   /* sid:94 */
+  laFree(p2);
+  /* sid:95 */
   __retres = 0;
-  /* sid:111 */
+  /* sid:113 */
   return __retres;
 }
 

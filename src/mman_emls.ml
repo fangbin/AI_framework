@@ -69,7 +69,7 @@ type atominfo =
   | Chk of svid * (feature_kind * svid) list
   | Cls of svid * svid * svid
   (*| Fck of svid * (feature_kind * svid) list
-  | Fls of svid * svid * svid*)
+  | Fls of svid * svid * svid *)
            
 type meminfo =
   {
@@ -345,9 +345,9 @@ and embed_mem (sei0: MEV.t) (g0: meminfo) (sei1: MEV.t) (g1: meminfo)
   (* same environment size, see homeomorphism *)
   let emptymap = Mman_env.EnvMap.empty in
   let cmplst = (List.length g0.mls) - (List.length g1.mls) in
-  if cmplst < 0 then 1, emptymap (* less atoms in g0, so more general *)
+  if cmplst < 0 then 1, emptymap        (* less atoms in g0, so more general *)
   else if cmplst > 0 then -1, emptymap
-  else (* same number of atoms, find their homeomorphism *)
+  else                                  (* same number of atoms (edges), find their homeomorphism *)
     try (
       (* start with mapping of program variables *)
       let vmap = Mman_env.senv_embed sei0 g0.stack sei1 g1.stack in
@@ -1300,6 +1300,129 @@ and remove_atom (svi: Mman_svar.svid) (g: meminfo)
     atoms = MEV.EnvMap.remove svi g.atoms
   }
 
+(**************************************************************************)
+(**  initial shape value *)
+(**************************************************************************)
+
+(* new Blk atom *)
+let new_Blk (sv1:Mman_svar.svid) (sv2:Mman_svar.svid) = 
+  Blk (sv1,sv2)
+
+(* new Chd atom *)
+let new_Chd (sv:Mman_svar.svid) (fkl:(feature_kind * svid) list ) = 
+  Chd (sv, fkl)
+
+(* new Chk atom *)
+let new_Chk (sv:Mman_svar.svid) (fkl:(feature_kind * svid) list ) = 
+  Chk (sv, fkl)
+
+(* new Cls atom *)
+let new_Cls (sv1:Mman_svar.svid) (sv2:Mman_svar.svid) (sv3:Mman_svar.svid) = 
+  Cls (sv1,sv2,sv3)
+
+let new_mem (st:MEV.envmap) (ls:svid list) (at:atominfo MEV.EnvMap.t)
+    = 
+     { stack = st;
+        mls = ls;
+        atoms = at
+      }
+
+let new_msh (seid:MEV.t) (mem:meminfo)
+    = {
+        seid = seid;
+        mem = S(mem);
+    }
+ 
+let init_state (pv:int) (sid: MEV.t) 
+  : valinfo
+  =
+  begin 
+      let _ = Mman_options.Self.debug ~level:1 " MSH:init shape value @."  
+      in 
+      let mi = empty_meminfo in 
+      let st = MEV.EnvMap.add pv Mman_svar.svid_hst mi.stack in 
+      let at = Blk(Mman_svar.svid_hst,Mman_svar.svid_hli) in         
+      let ls = [(Mman_svar.svid_hst)]  in 
+      let atmp = MEV.EnvMap.add Mman_svar.svid_hst at mi.atoms in          
+      let mi = {stack = st; mls = ls; atoms = atmp } in 
+      {
+        seid = sid;
+        mem = S (mi);
+      }
+end 
+
+(* change seid of shape *)
+let change_env (seid:MEV.t) (d:valinfo) 
+ :valinfo
+ = 
+ match d.mem with
+ | Bot -> d
+ | Top -> d
+ | S(g) -> 
+ 	  let oldsei = d.seid in 
+ 	  let oldsenv = Mman_env.senv_get oldsei in 
+ 	  let oldpeid = oldsenv.peid in 
+ 	  let oldpenv = Mman_env.penv_get oldpeid in 
+
+
+ 	  let newsenv = Mman_env.senv_get seid in 
+ 	  let newpeid = newsenv.peid in
+ 	  let newpenv = Mman_env.penv_get newpeid in 
+
+ 	  if (oldpeid == newpeid) 
+ 	  then 
+	      let ng = { stack = g.stack;
+	                 mls = g.mls;
+	                 atoms = g.atoms
+	               }  
+	      in
+	       { seid = seid; 
+	         mem = S(ng) 
+	       } 
+	  else 
+	  	(* project out vars *)
+      begin 
+          let _ = Mman_options.Self.debug ~level:1 " MSH:change_env, project out vars ... @."  
+      	  in 
+	      let svl = ref [] in 
+	      MEV.VidMap.iter 
+	      (
+	      	fun svid svi ->
+	      		(
+	      			let sv = Mman_env.senv_getvar seid svi in 
+	      			(* can't found in newpenv *)
+	      			if (sv.id == Mman_svar.svid_hole) && (svid != Mman_svar.svid_hole)
+	      			then 
+	      			svl := !svl @[svid]      		 
+	      		)
+
+	      )
+	      oldpenv.pvars 
+	      ;
+	      (* remove svl in stack *)
+	      let nst = ref MEV.EnvMap.empty in
+	      nst := g.stack;
+	      List.iter
+	      (
+	      	fun pvi ->
+	      		nst := MEV.EnvMap.remove pvi !nst 
+	      )
+	      !svl
+	      ;
+	      let ng = { stack = !nst;
+	                 mls = g.mls;
+	                 atoms = g.atoms
+	               }  
+	      in
+
+	      let _ = Mman_options.Self.debug ~level:1 " MSH:change_env done  ... @."  
+      	  in 
+	       { seid = seid; 
+	         mem = S(ng) 
+	       } 
+	   end 
+
+
 
 (**************************************************************************)
 (** {2 Assignment} *)
@@ -1427,9 +1550,6 @@ and mutate_feat (seid: MEV.t) (g: meminfo)
           
           | ALval(ASVar(sviR)) ->
                 sviR  
-
-
-
           |_ -> Mman_svar.svid_hole 
         in   
 
@@ -2097,9 +2217,32 @@ let unfold (lv: Mman_asyn.alval) (sh:valinfo)
     | _ -> []
 
 (* TODO:*)
+
+(* TODO
+ * fold 
+ * cls(a,b)[w_1] * cls(b,c)[w_2]=> cls(a,c)[W] /\ W = w_1.w_2 /\ constaints  
+ * blk(a,b)*blk(b,c) => blk(a,c)
+ *  
+*)
+
+
+let fold_blk (atom1:Mman_dabs.feature_kind) (atom2:Mman_dabs.feature_kind)
+  : Mman_dabs.feature_kind * Mman_asyn.aconstr
+  = match(atom1, atom2) with 
+  |  Blk(sv1,sv2), Blk(sv2,sv3) 
+              -> 
+              let newconstr = ACmp(ASUP,ALval(ASVar(sv3)), ALval(ASVar(sv3))) in 
+              let newblk = new_blk(sv1, sv3) in 
+              (newblk, newconstr)
+  | _, _ -> 
+
 let fold (_p:Mman_asyn.aconstr) (_vl:Mman_svar.svarinfo) (_g:valinfo)
   : valinfo
   = _g 
+
+
+
+
 
 (**************************************************************************)
 (** {2 Normalize abstract values} *)
@@ -2138,124 +2281,3 @@ let stack_of (sh:valinfo) (svid: Mman_svar.svid)
       !res 
     end 
 
-(**************************************************************************)
-(**  initial shape value *)
-(**************************************************************************)
-
-(* new Blk atom *)
-let new_Blk (sv1:Mman_svar.svid) (sv2:Mman_svar.svid) = 
-  Blk (sv1,sv2)
-
-(* new Chd atom *)
-let new_Chd (sv:Mman_svar.svid) (fkl:(feature_kind * svid) list ) = 
-  Chd (sv, fkl)
-
-(* new Chk atom *)
-let new_Chk (sv:Mman_svar.svid) (fkl:(feature_kind * svid) list ) = 
-  Chk (sv, fkl)
-
-(* new Cls atom *)
-let new_Cls (sv1:Mman_svar.svid) (sv2:Mman_svar.svid) (sv3:Mman_svar.svid) = 
-  Cls (sv1,sv2,sv3)
-
-let new_mem (st:MEV.envmap) (ls:svid list) (at:atominfo MEV.EnvMap.t)
-    = 
-     { stack = st;
-        mls = ls;
-        atoms = at
-      }
-
-let new_msh (seid:MEV.t) (mem:meminfo)
-    = {
-        seid = seid;
-        mem = S(mem);
-    }
- 
-let init_state (pv:int) (sid: MEV.t) 
-  : valinfo
-  =
-  begin 
-      let _ = Mman_options.Self.debug ~level:1 " MSH:init shape value @."  
-      in 
-      let mi = empty_meminfo in 
-      let st = MEV.EnvMap.add pv Mman_svar.svid_hst mi.stack in 
-      let at = Blk(Mman_svar.svid_hst,Mman_svar.svid_hli) in         
-      let ls = [(Mman_svar.svid_hst)]  in 
-      let atmp = MEV.EnvMap.add Mman_svar.svid_hst at mi.atoms in          
-      let mi = {stack = st; mls = ls; atoms = atmp } in 
-      {
-        seid = sid;
-        mem = S (mi);
-      }
-end 
-
-(* change seid of shape *)
-let change_env (seid:MEV.t) (d:valinfo) 
- :valinfo
- = 
- match d.mem with
- | Bot -> d
- | Top -> d
- | S(g) -> 
- 	  let oldsei = d.seid in 
- 	  let oldsenv = Mman_env.senv_get oldsei in 
- 	  let oldpeid = oldsenv.peid in 
- 	  let oldpenv = Mman_env.penv_get oldpeid in 
-
-
- 	  let newsenv = Mman_env.senv_get seid in 
- 	  let newpeid = newsenv.peid in
- 	  let newpenv = Mman_env.penv_get newpeid in 
-
- 	  if (oldpeid == newpeid) 
- 	  then 
-	      let ng = { stack = g.stack;
-	                 mls = g.mls;
-	                 atoms = g.atoms
-	               }  
-	      in
-	       { seid = seid; 
-	         mem = S(ng) 
-	       } 
-	  else 
-	  	(* project out vars *)
-      begin 
-          let _ = Mman_options.Self.debug ~level:1 " MSH:change_env, project out vars ... @."  
-      	  in 
-	      let svl = ref [] in 
-	      MEV.VidMap.iter 
-	      (
-	      	fun svid svi ->
-	      		(
-	      			let sv = Mman_env.senv_getvar seid svi in 
-	      			(* can't found in newpenv *)
-	      			if (sv.id == Mman_svar.svid_hole) && (svid != Mman_svar.svid_hole)
-	      			then 
-	      			svl := !svl @[svid]      		 
-	      		)
-
-	      )
-	      oldpenv.pvars 
-	      ;
-	      (* remove svl in stack *)
-	      let nst = ref MEV.EnvMap.empty in
-	      nst := g.stack;
-	      List.iter
-	      (
-	      	fun pvi ->
-	      		nst := MEV.EnvMap.remove pvi !nst 
-	      )
-	      !svl
-	      ;
-	      let ng = { stack = !nst;
-	                 mls = g.mls;
-	                 atoms = g.atoms
-	               }  
-	      in
-
-	      let _ = Mman_options.Self.debug ~level:1 " MSH:change_env done  ... @."  
-      	  in 
-	       { seid = seid; 
-	         mem = S(ng) 
-	       } 
-	   end 

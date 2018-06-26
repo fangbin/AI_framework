@@ -1,6 +1,0 @@
-[kernel] user error: package or module './Mman' not found
-[kernel] warning: no input file.
-[kernel] Parsing FRAMAC_SHARE/libc/__fc_builtin_for_normalization.i (no preprocessing)
-[kernel] user error: cannot find entry point `main'.
-                     Please use option `-main' for specifying a valid entry point.
-[kernel] Frama-C aborted: invalid user input.

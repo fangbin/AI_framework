@@ -16,10 +16,10 @@ mman_asyn.cmx : /Users/fangbin/.opam/4.05.0/lib/ocaml/string.cmx \
     /Users/fangbin/.opam/4.05.0/lib/ocaml/int64.cmx \
     /Users/fangbin/.opam/4.05.0/lib/ocaml/int32.cmx \
     /Users/fangbin/.opam/4.05.0/lib/ocaml/format.cmx
-mman_core.cmo : mman_options.cmo mman_env.cmo mman_dflap.cmo mman_dabs.cmo \
-    /Users/fangbin/.opam/4.05.0/lib/ocaml/format.cmi
-mman_core.cmx : mman_options.cmx mman_env.cmx mman_dflap.cmx mman_dabs.cmx \
-    /Users/fangbin/.opam/4.05.0/lib/ocaml/format.cmx
+mman_core.cmo : mman_options.cmo mman_env.cmo mman_dflow.cmo mman_dflap.cmo \
+    mman_dabs.cmo /Users/fangbin/.opam/4.05.0/lib/ocaml/format.cmi
+mman_core.cmx : mman_options.cmx mman_env.cmx mman_dflow.cmx mman_dflap.cmx \
+    mman_dabs.cmx /Users/fangbin/.opam/4.05.0/lib/ocaml/format.cmx
 mman_dabs.cmo : /Users/fangbin/.opam/4.05.0/lib/ocaml/string.cmi \
     mman_options.cmo /Users/fangbin/.opam/4.05.0/lib/ocaml/list.cmi \
     /Users/fangbin/.opam/4.05.0/lib/ocaml/array.cmi
