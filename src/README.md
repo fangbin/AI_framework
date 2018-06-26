@@ -7,7 +7,7 @@
 ![The structure of tool-w500](https://lh3.googleusercontent.com/-oU_lkts2hyQ/WzIJ6bjnR1I/AAAAAAAAAC4/wg1NBQuJZYkL-NBgBiFZOeyfDvPf7QNNACHMYCw/I/Screenshot%2B2018-06-26%2Bat%2B11.39.28.png)
 
 #### mman_register
-The entry point of the plug-in, this module: (i) checks the pre- conditions for the plug-in launching (really needed?), (ii) initialise the plug-in project, and (iii) call the mman_core module. Follows the principles given for the development of a Frama-C plugin, Section 3.
+The entry point of the plug-in, this module: (i) checks the preconditions for the plug-in launching, (ii) initialise the plug-in project, and (iii) call the mman_core module. Follows the principles given for the development of a Frama-C plugin, Section 3.
 
 
 #### mman_options
