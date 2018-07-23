@@ -27,7 +27,8 @@ PLUGIN_CMO=mman_options \
 	mman_dflap \
 	mman_value \
 	mman_dflow \
-    mman_core mman_register
+	mman_core \
+	mman_register
 
 #	mman_options \
 #	mman_dabs \

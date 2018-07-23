@@ -1,4 +1,13 @@
 
+
+### The structure of tool
+
+ 
+![The structure of tool-w500](https://lh3.googleusercontent.com/-oU_lkts2hyQ/WzIJ6bjnR1I/AAAAAAAAAC4/wg1NBQuJZYkL-NBgBiFZOeyfDvPf7QNNACHMYCw/I/Screenshot%2B2018-06-26%2Bat%2B11.39.28.png)
+
+The structure of the tool is explained in /src/.
+
+
 ### Mman
 This is the distribution of the Mman plugin of Frama-C for the analysis of heap-maniputating programs such as free-list dynamic memory allocators. The software is now under construction.
 
