@@ -1,9 +1,9 @@
 (**************************************************************************)
 (*                                                                        *)
-(*  This file is part of CELIA.                                           *)
+(*  This file is part of PPMM.                                            *)
 (*                                                                        *)
-(*  Copyright (C) 2015-2016 *)
-(*    IRIF  (University Paris Diderot and CNRS)                           *)
+(*  Copyright (C) 2017-2018 											  *)
+(*    @author: fang bin                                                   *)
 (*                                                                        *)
 (*                                                                        *)
 (*  you can redistribute it and/or modify it under the terms of the GNU   *)
@@ -40,6 +40,8 @@ let run_compute () =
     (* Step 0: check and initialise data abstraction *)
     Mman_options.Self.feedback "check and initialise data abstraction@.";
     Mman_dabs.init (); 
+    
+    
     Mman_options.Self.feedback "--------------------------------------------";
     Mman_options.Self.feedback "Analysed code in full.c@.";
    
@@ -50,10 +52,10 @@ let run_compute () =
 
     (* Step 1: compute from the generic entry point *)
     Mman_options.Self.feedback "Analysing the application starting at 'MAIN'@.";
-    (*Mman_dflap.compute_from_entry_point ();*)
+    Mman_dflap.compute_from_entry_point ();
      
     (*Mman_options.Self.feedback "Analysing the application starting at 'MAIN'@.";*)
-    Mman_dflow.compute_from_entry_point ();
+    (*Mman_dflow.compute_from_entry_point ();*)
     
     (* Step 2: compute specs using previous results for each function *)
     (* 2a: for minit *) 

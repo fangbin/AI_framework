@@ -925,7 +925,7 @@ let senv_addsvar (eid: t) (svl: Mman_svar.Svar.t list)
   (*let maxkey = (VidMap.cardinal se.svars) + pe_size -1  in*)
   let maxkey = (VidMap.cardinal se.svars) + 30 in (* set the max number of program variables*)
   let svars = ref (copy_vidmap se.svars) in
-  let rkey = ref (maxkey ) in
+  let rkey = ref (maxkey) in
   let nsvl =
     List.map
     (fun svi ->

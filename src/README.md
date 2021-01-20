@@ -27,7 +27,7 @@ The module encode the abstract syntax, i.e., the CIL instructions (i.e., simple 
 The module provides the main analysis functions called by the mman_core module. For this, it instantiate the Frama-C module Dataflows which provides a fix-point computation. The abstract value parameter of this computation is the abstract domain built for this analysis, i.e., the mman_value module. The analysis done is inter-procedural but not relational. Shall also include a meaning for generalisation of the invariants obtained by the analysis.
 
 #### mman_value
-This module is an interface for the different implementations of the abstract domains needed by the analysis. It uses the module **mman_env** to manage (insert, project out) the list of program and symbolic variable. The implementation available for this module, **mman_val**, encodes a cofibered product between an extended shape domain (module **mman_eshape.ml**) managing the heap and free lists and a data word domain (module **mman_dword.ml**).
+This module is an interface for the different implementations of the abstract domains needed by the analysis. It uses the module **mman_env** to manage (insert, project out) the list of program and symbolic variable. The implementation available for this module, **mman_valsw**, encodes a cofibered product between an extended shape domain (module **mman_eshape.ml**) managing the heap and free lists and a data word domain (module **mman_dword.ml**).
 
 
 #### mman_env, mman_svar

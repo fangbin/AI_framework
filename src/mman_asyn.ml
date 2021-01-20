@@ -1,9 +1,9 @@
 (**************************************************************************)
 (*                                                                        *)
-(*  This file is part of CELIA.                                           *)
+(*  This file is part of PPMM.                                            *)
 (*                                                                        *)
-(*  Copyright (C) 2015-2016 *)
-(*    IRIF  (University of Paris Diderot and CNRS)                        *)
+(*  Copyright (C) 2017-2018 											  *)
+(*    @author: fang bin                                                   *)
 (*                                                                        *)
 (*                                                                        *)
 (*  you can redistribute it and/or modify it under the terms of the GNU   *)
@@ -19,6 +19,9 @@
 (*  for more details (enclosed in the file LICENSE).                      *)
 (*                                                                        *)
 (**************************************************************************)
+
+
+(* @author bin fang *)
 
 (** Abstract syntax tree used for expressions obtained 
  *  by translating Cil expressions using the data abstraction 

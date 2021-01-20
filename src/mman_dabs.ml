@@ -1,9 +1,9 @@
 (**************************************************************************)
 (*                                                                        *)
-(*  This file is part of CELIA.                                           *)
+(*  This file is part of PPMM.                                            *)
 (*                                                                        *)
-(*  Copyright (C) 2015-2016 *)
-(*    IRIF  (University of Paris Diderot and CNRS)                        *)
+(*  Copyright (C) 2017-2018 											  *)
+(*    @author: fang bin                                                   *)
 (*                                                                        *)
 (*                                                                        *)
 (*  you can redistribute it and/or modify it under the terms of the GNU   *)
@@ -19,6 +19,7 @@
 (*  for more details (enclosed in the file LICENSE).                      *)
 (*                                                                        *)
 (**************************************************************************)
+
 
 (** {1 Data abstraction utilities} *)
 
@@ -656,7 +657,7 @@ let read_feature (kind:feature_kind) (fname:string) =
       match l with
       | [] ->
           Mman_options.Self.feedback "feature '%s': undefined@." fname
-      | lf::l' -> (
+      | [lf]::l' -> (
           if (List.length l') >= 1 then
             Mman_options.Self.warning
               "feature '%s': multiple definitions, last ignored@." fname;
@@ -679,7 +680,7 @@ let read_method km mname =
     match l with
     | [] ->
         Mman_options.Self.feedback "method '%s': undefined@." mname
-    | lf::l' -> (
+    | [lf]::l' -> (
         if (List.length l') >= 1 then
           Mman_options.Self.warning
             "method '%s': multiple definitions, last ignored@." mname

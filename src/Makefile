@@ -1,6 +1,6 @@
-#
-# Makefile for the MMAN plugin
-#
+#####################################################
+# Makefile for the analyer: Mman
+#####################################################
 
 FRAMAC_SHARE :=$(shell frama-c.byte -print-path)
 FRAMAC_LIBDIR :=$(shell frama-c.byte -print-libpath)
@@ -12,12 +12,12 @@ PLUGIN_NAME = Mman
 #PLUGIN_DYNAMIC = yes
 
 # Plugin packaging
-PLUGIN_DEPENDENCIES=Value
-PLUGIN_REQUIRES=apron
-PLUGIN_REQUIRES:=apron.polkaMPQ apron.apron gmp
+PLUGIN_DEPENDENCIES = Value
+PLUGIN_REQUIRES = apron
+PLUGIN_REQUIRES := apron.polkaMPQ apron.apron gmp
 
 # Plugin object files
-PLUGIN_CMO=mman_options \
+PLUGIN_CMO = mman_options \
 	mman_dabs \
 	mman_svar \
 	mman_env \
@@ -48,15 +48,15 @@ PLUGIN_CMO=mman_options \
 
 # PLUGIN_CMI=
 
-PLUGIN_GUI_CMO=mman_gui
+PLUGIN_GUI_CMO = mman_gui
 
 # Plugin compilation flags
-INCLUDES+=$(shell ocamlfind query -r -i-format apron)
-PLUGIN_BFLAGS+=$(INCLUDES)$(LDFLAGS)
-PLUGIN_OFLAGS+=$(INCLUDES)$(LDFLAGS)
+INCLUDES += $(shell ocamlfind query -r -i-format apron)
+PLUGIN_BFLAGS += $(INCLUDES)$(LDFLAGS)
+PLUGIN_OFLAGS += $(INCLUDES)$(LDFLAGS)
 PLUGIN_EXTRA_BYTE = 
 PLUGIN_EXTRA_OPT = 
-LDLIBS+= -ccopt "-L/usr/local/lib/ocaml -L/Users/yuezhuang/.opam/system/lib/apron -L/Users/yuezhuang/.opam/system/lib/gmp -lapron -lppl -lgmp"
+LDLIBS += -ccopt "-L/usr/local/lib/ocaml -L/Users/yuezhuang/.opam/system/lib/apron -L/Users/yuezhuang/.opam/system/lib/gmp -lapron -lppl -lgmp"
 PLUGIN_LINK_BFLAGS+=$(LDLIBS)
 PLUGIN_LINK_OFLAGS+=$(LDLIBS)
 

@@ -1,5 +1,5 @@
 description = "Frama-C Mman plug-in"
-version = "Aluminium-20160501"
+version = "Phosphorus-20170501"
 requires = "apron.polkaMPQ apron.apron gmp frama-c-value"
 archive(byte) = "top/Mman.cmo"
 archive(native) = "top/Mman.cmx"
