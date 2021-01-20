@@ -1,27 +1,10 @@
-(**************************************************************************)
-(*                                                                        *)
-(*  This file is part of CELIA.                                           *)
-(*                                                                        *)
-(*  Copyright (C) 2015-2016 *)
-(*    IRIF  (University of Paris Diderot and CNRS)                        *)
-(*                                                                        *)
-(*                                                                        *)
-(*  you can redistribute it and/or modify it under the terms of the GNU   *)
-(*  Lesser General Public License as published by the Free Software       *)
-(*  Foundation, version 3.                                                *)
-(*                                                                        *)
-(*  It is distributed in the hope that it will be useful,                 *)
-(*  but WITHOUT ANY WARRANTY; without even the implied warranty of        *)
-(*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *)
-(*  GNU Lesser General Public License for more details.                   *)
-(*                                                                        *)
-(*  See the GNU Lesser General Public License version 3.                  *)
-(*  for more details (enclosed in the file LICENSE).                      *)
-(*                                                                        *)
-(**************************************************************************)
-
-(** Provides utilities for manipulating symbolic variables
-    including program variables *)
+(* 
+* framework of shape analysis 
+* author fang bin 
+* 2019-11-12
+* 
+* this file: symbolic variable 
+*)
 
 open Cil_types
 open Mman_dabs
@@ -32,35 +15,38 @@ open Mman_dabs
 
 type svtyp = 
     SVInt           (* int *)
-  | SVPtr of svtyp  (* typed pointer, where svtyp is int, void, chk, ptr *)
+  | SVPtr of svtyp  (* typed pointer, where svtyp is int, void, ptr *)
   | SVChunk         (* type cty *)
-  | SVWord          (* sequence of chunks *)
+  | SVWord          (* sequence of chunks in a list or a array *)
   | SVOth           (* internal use only *)
+  | SVStruct            (* struct *)
+
 
 type svid = int
   
 type svkind =
-
-  | (* a program variable *)
-    PVar of Cil_types.varinfo ref
-        
-  | (* a symbolic variable (integer or location) *)
-    SVar
-        
-  | (* a symbolic feature variable 
+  | PVar of Cil_types.varinfo ref   
+    (* a program variable *)      
+  
+  | SVar                           
+    (* a symbolic variable (integer or location) *)
+  
+  | Feature of svid option * Mman_dabs.feature_kind 
+    (* a symbolic feature variable 
      * Feat(None,fkind) is a global feature
      * Feat(Some(id),fkind) is a chunk feature
     *)
-    Feature of svid option * Mman_dabs.feature_kind
+
+  (*| Field of svid option * Mman_fields.field_kind *)
 
   | (* a location (storing address) of a program variable *)
     Loc of svid
 
-  | (* a word variable  attached to some symbolic address denoting
+  | Word of svid
+    (* a word variable  attached to some symbolic address denoting
      * the starting chunk of the word
     *)
-    Word of svid
-
+  
   | Hst (* the start of the data segment of this process, constant location *)
     
   | Hli (* the end of the data segment of this process, updated by sbrk *)
@@ -82,7 +68,7 @@ type svarinfo = {
       Used to build environments as maps from ids to svinfo. *)
 
   mutable kind: svkind;
-  (** Kind of this symbolic variable: program, address, feature, word,... *)
+  (** Kind of this symbolic variable: program, address, feature, word, fields ... *)
   
   mutable typ: svtyp;
   (** The type of this variable. Class of the program variable, if any *)

@@ -1,9 +1,9 @@
 (**************************************************************************)
 (*                                                                        *)
-(*  This file is part of CELIA.                                           *)
+(*  This file is part of PPMM.                                            *)
 (*                                                                        *)
-(*  Copyright (C) 2015-2016 											  *)
-(*    IRIF  (University of Paris Diderot and CNRS)                        *)
+(*  Copyright (C) 2017-2018 											  *)
+(*    @author: fang bin                                                   *)
 (*                                                                        *)
 (*                                                                        *)
 (*  you can redistribute it and/or modify it under the terms of the GNU   *)
@@ -22,7 +22,7 @@
 
 (* let mman_msg = "analyse the free-list based memory allocator in the input file"*)
 
-let mman_msg = "Analyse Concurrent DMA"
+let mman_msg = "Analysing..."
 
 module Self = Plugin.Register
     (struct

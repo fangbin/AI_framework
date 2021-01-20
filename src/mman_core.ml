@@ -1,25 +1,3 @@
-(**************************************************************************)
-(*                                                                        *)
-(*  This file is part of CELIA.                                           *)
-(*                                                                        *)
-(*  Copyright (C) 2015-2016 *)
-(*    IRIF  (University Paris Diderot and CNRS)                           *)
-(*                                                                        *)
-(*                                                                        *)
-(*  you can redistribute it and/or modify it under the terms of the GNU   *)
-(*  Lesser General Public License as published by the Free Software       *)
-(*  Foundation, version 3.                                                *)
-(*                                                                        *)
-(*  It is distributed in the hope that it will be useful,                 *)
-(*  but WITHOUT ANY WARRANTY; without even the implied warranty of        *)
-(*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *)
-(*  GNU Lesser General Public License for more details.                   *)
-(*                                                                        *)
-(*  See the GNU Lesser General Public License version 3.                  *)
-(*  for more details (enclosed in the file LICENSE).                      *)
-(*                                                                        *)
-(**************************************************************************)
-
 (** {1 Provides entry points for the analysis} *)
 
 
@@ -44,21 +22,22 @@ let run_compute () =
     Mman_options.Self.feedback "Analysed code in full.c@.";
    
     File.pretty_ast ~fmt:(Format.formatter_of_out_channel (open_out "full.c")) ();
+    
     Mman_env.penvs_init (); 
    
     Mman_options.Self.feedback "--------------------------------------------";
 
     (* Step 1: compute from the generic entry point *)
     Mman_options.Self.feedback "Analysing the application starting at 'MAIN'@.";
-    (*Mman_dflap.compute_from_entry_point ();*)
+    Mman_dflap.compute_from_entry_point ();
      
     (*Mman_options.Self.feedback "Analysing the application starting at 'MAIN'@.";*)
-    Mman_dflow.compute_from_entry_point ();
+    (*Mman_dflow.compute_from_entry_point ();*)
     
     (* Step 2: compute specs using previous results for each function *)
     (* 2a: for minit *) 
     Mman_options.Self.feedback "Analysing 'minit'";
-    (*Mman_dflap.compute_for_minit ();*)
+    Mman_dflap.compute_for_minit ();
     (*Mman_dflow.compute_for_minit ();*)
 
     (* 2b: for malloc *) 

@@ -1,25 +1,3 @@
-(**************************************************************************)
-(*                                                                        *)
-(*  This file is part of CELIA.                                           *)
-(*                                                                        *)
-(*  Copyright (C) 2015-2016 *)
-(*    IRIF  (University of Paris Diderot and CNRS)                        *)
-(*                                                                        *)
-(*                                                                        *)
-(*  you can redistribute it and/or modify it under the terms of the GNU   *)
-(*  Lesser General Public License as published by the Free Software       *)
-(*  Foundation, version 3.                                                *)
-(*                                                                        *)
-(*  It is distributed in the hope that it will be useful,                 *)
-(*  but WITHOUT ANY WARRANTY; without even the implied warranty of        *)
-(*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *)
-(*  GNU Lesser General Public License for more details.                   *)
-(*                                                                        *)
-(*  See the GNU Lesser General Public License version 3.                  *)
-(*  for more details (enclosed in the file LICENSE).                      *)
-(*                                                                        *)
-(**************************************************************************)
-
 (** Analysis of statements and function bodies 
  *  based on the Mman_valap.Model.t abstract domain.
  *)
@@ -41,13 +19,13 @@ module MV = Mman_valap
  * Simplified lattice of values 
 *)
 module ValapJoinSemiLattice = struct
-    type t = MV.Model.t
-    let join = MV.Model.join
-    let bottom = MV.Model.bottom
-    let is_included = MV.Model.is_included
-    let join_and_is_included = MV.Model.join_and_is_included
-    let pretty = MV.Model.pretty
-  end
+  type t = MV.Model.t
+  let join = MV.Model.join
+  let bottom = MV.Model.bottom
+  let is_included = MV.Model.is_included
+  let join_and_is_included = MV.Model.join_and_is_included
+  let pretty = MV.Model.pretty
+end
 
 (** 
  * Analysis arguments:
