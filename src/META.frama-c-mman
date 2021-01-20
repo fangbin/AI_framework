@@ -1,6 +1,11 @@
 description = "Frama-C Mman plug-in"
+<<<<<<< HEAD
 version = "Phosphorus-20170501"
 requires = "apron.polkaMPQ apron.apron gmp frama-c-value"
+=======
+version = "18.0"
+requires = "apron.polkaMPQ apron.apron gmp frama-c-eva"
+>>>>>>> c3fc159eba69639c35e68964f7f37dc048186509
 archive(byte) = "top/Mman.cmo"
 archive(native) = "top/Mman.cmx"
 plugin(native) = "top/Mman.cmxs"

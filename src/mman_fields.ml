@@ -1,31 +1,4 @@
-<<<<<<< HEAD
-(**************************************************************************)
-(*                                                                        *)
-(*  This file is part of PPMM.                                            *)
-(*                                                                        *)
-(*  Copyright (C) 2017-2018 											  *)
-(*    @author: fang bin                                                   *)
-(*                                                                        *)
-(*                                                                        *)
-(*  you can redistribute it and/or modify it under the terms of the GNU   *)
-(*  Lesser General Public License as published by the Free Software       *)
-(*  Foundation, version 3.                                                *)
-(*                                                                        *)
-(*  It is distributed in the hope that it will be useful,                 *)
-(*  but WITHOUT ANY WARRANTY; without even the implied warranty of        *)
-(*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *)
-(*  GNU Lesser General Public License for more details.                   *)
-(*                                                                        *)
-(*  See the GNU Lesser General Public License version 3.                  *)
-(*  for more details (enclosed in the file LICENSE).                      *)
-(*                                                                        *)
-(**************************************************************************)
-
-
-=======
->>>>>>> c3fc159eba69639c35e68964f7f37dc048186509
 (** {1 Data abstraction utilities} *)
-
 
 open Cil_types
 
@@ -660,11 +633,7 @@ let read_feature (kind:feature_kind) (fname:string) =
       match l with
       | [] ->
           Mman_options.Self.feedback "feature '%s': undefined@." fname
-<<<<<<< HEAD
-      | [lf]::l' -> (
-=======
       | [lf] :: l' -> (
->>>>>>> c3fc159eba69639c35e68964f7f37dc048186509
           if (List.length l') >= 1 then
             Mman_options.Self.warning
               "feature '%s': multiple definitions, last ignored@." fname;
@@ -687,11 +656,7 @@ let read_method km mname =
     match l with
     | [] ->
         Mman_options.Self.feedback "method '%s': undefined@." mname
-<<<<<<< HEAD
-    | [lf]::l' -> (
-=======
     | [lf] :: l' -> (
->>>>>>> c3fc159eba69639c35e68964f7f37dc048186509
         if (List.length l') >= 1 then
           Mman_options.Self.warning
             "method '%s': multiple definitions, last ignored@." mname

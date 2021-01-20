@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 (**************************************************************************)
 (*                                                                        *)
 (*  This file is part of PPMM.                                            *)
@@ -20,6 +21,8 @@
 (*                                                                        *)
 (**************************************************************************)
 
+=======
+>>>>>>> c3fc159eba69639c35e68964f7f37dc048186509
 (** Analysis of statements and function bodies 
  *  based on the Mman_valap.Model.t abstract domain.
  *)
@@ -41,13 +44,13 @@ module MV = Mman_valap
  * Simplified lattice of values 
 *)
 module ValapJoinSemiLattice = struct
-    type t = MV.Model.t
-    let join = MV.Model.join
-    let bottom = MV.Model.bottom
-    let is_included = MV.Model.is_included
-    let join_and_is_included = MV.Model.join_and_is_included
-    let pretty = MV.Model.pretty
-  end
+  type t = MV.Model.t
+  let join = MV.Model.join
+  let bottom = MV.Model.bottom
+  let is_included = MV.Model.is_included
+  let join_and_is_included = MV.Model.join_and_is_included
+  let pretty = MV.Model.pretty
+end
 
 (** 
  * Analysis arguments:

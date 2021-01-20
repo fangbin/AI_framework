@@ -3,6 +3,10 @@
 #include "getopt.h"
 #include "stdarg.h"
 #include "stdio.h"
+<<<<<<< HEAD
+=======
+#include "sys/time.h"
+>>>>>>> c3fc159eba69639c35e68964f7f37dc048186509
 #include "unistd.h"
 struct hdr {
    struct hdr *ptr ;
@@ -17,8 +21,13 @@ void *laAlloc(int nbytes);
 
 HEADER _heapstart = {.ptr = (struct hdr *)0, .size = (unsigned int)0};
 HEADER _heapend = {.ptr = (struct hdr *)0, .size = (unsigned int)0};
+<<<<<<< HEAD
 /*@ requires /* ip:61 */valid_read_string{Here}(format);
     requires /* ip:60 */valid_read_string{Here}(param0);
+=======
+/*@ requires /* ip:111 */valid_read_string{Here}(format);
+    requires /* ip:110 */valid_read_string{Here}(param0);
+>>>>>>> c3fc159eba69639c35e68964f7f37dc048186509
     assigns \result, __fc_stdout->__fc_FILE_data;
     assigns \result
       \from (indirect: __fc_stdout->__fc_FILE_id),

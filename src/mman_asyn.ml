@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 (**************************************************************************)
 (*                                                                        *)
 (*  This file is part of PPMM.                                            *)
@@ -23,6 +24,8 @@
 
 (* @author bin fang *)
 
+=======
+>>>>>>> c3fc159eba69639c35e68964f7f37dc048186509
 (** Abstract syntax tree used for expressions obtained 
  *  by translating Cil expressions using the data abstraction 
 *)

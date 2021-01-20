@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 (**************************************************************************)
 (*                                                                        *)
 (*  This file is part of PPMM.                                            *)
@@ -21,6 +22,8 @@
 (**************************************************************************)
 
 
+=======
+>>>>>>> c3fc159eba69639c35e68964f7f37dc048186509
 (** Analysis of statements and function bodies 
  *  based on the Mman_value.Model.t abstract domain.
  *)

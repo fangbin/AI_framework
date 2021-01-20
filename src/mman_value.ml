@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 (**************************************************************************)
 (*                                                                        *)
 (*  This file is part of PPMM.                                            *)
@@ -21,6 +22,8 @@
 (**************************************************************************)
 
 
+=======
+>>>>>>> c3fc159eba69639c35e68964f7f37dc048186509
 (** {1 Abstract domain for shape and numerical constraints} *)
 
 (** An abstract value of this domain is a cofibered product

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 (**************************************************************************)
 (*                                                                        *)
 (*  This file is part of PPMM.                                            *)
@@ -20,6 +21,8 @@
 (*                                                                        *)
 (**************************************************************************)
 
+=======
+>>>>>>> c3fc159eba69639c35e68964f7f37dc048186509
 (** {1 Provides entry points for the analysis} *)
 
 
@@ -46,6 +49,7 @@ let run_compute () =
     Mman_options.Self.feedback "Analysed code in full.c@.";
    
     File.pretty_ast ~fmt:(Format.formatter_of_out_channel (open_out "full.c")) ();
+    
     Mman_env.penvs_init (); 
    
     Mman_options.Self.feedback "--------------------------------------------";
@@ -60,7 +64,7 @@ let run_compute () =
     (* Step 2: compute specs using previous results for each function *)
     (* 2a: for minit *) 
     Mman_options.Self.feedback "Analysing 'minit'";
-    (*Mman_dflap.compute_for_minit ();*)
+    Mman_dflap.compute_for_minit ();
     (*Mman_dflow.compute_for_minit ();*)
 
     (* 2b: for malloc *) 
